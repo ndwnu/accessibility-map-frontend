@@ -1,0 +1,87 @@
+// Colors
+$primary-100: #fcede2;
+$primary-400: rgb(196, 218, 217);
+$primary-600: rgb(64, 50, 50);
+$primary-900: #be531c;
+
+$secondary-400: #6c757d;
+
+$gray-100: #f5f5f5;
+$gray-200: #e5e5e5;
+$gray-300: #d9d9d6;
+$gray-900: #332f21;
+
+$white: #ffffff;
+$black: #000000;
+
+$theme-colors: (
+  'primary': $primary-400,
+  'secondary': $secondary-400,
+  'success': #00c389,
+  'danger': #c31328,
+  'warning': #ff9b00,
+  'info': #2cccd3,
+  'dark': #000000,
+  'light': $gray-100,
+);
+
+// Typography
+$font-family-base: 'Object Sans', 'Helvetica Neue', sans-serif;
+$font-size-base: 0.875rem;
+$headings-font-weight: 700;
+$link-color: $primary-400;
+
+$border-color: $gray-200;
+$body-bg: $gray-100;
+$card-bg: $white;
+
+// Forms
+$form-select-bg: $white;
+$input-bg: $white;
+$form-check-input-checked-bg-color: $primary-400;
+
+// Spinners
+$spinner-width: 2rem;
+$spinner-height: $spinner-width;
+$spinner-border-width: 0.25em;
+$spinner-animation-speed: 0.75s;
+
+$spinner-width-sm: 1rem;
+$spinner-height-sm: $spinner-width-sm;
+$spinner-border-width-sm: 0.2em;
+
+// Accordions
+$accordion-bg: $white;
+$accordion-button-bg: $white;
+$accordion-button-active-bg: $white;
+$accordion-button-active-color: $black;
+
+// Dropdowns
+$dropdown-spacer: 0.125rem;
+$dropdown-item-padding-y: 0.1rem;
+$dropdown-item-padding-x: 0.5rem;
+$dropdown-link-active-color: transparent;
+$dropdown-link-active-bg: transparent;
+
+.dropdown-menu {
+  --bs-body-bg: #{$white};
+}
+
+// List groups
+.list-group {
+  --bs-list-group-bg: #{$white};
+}
+
+$enable-negative-margins: true;
+
+// Shadows
+:root {
+  --shadow-color: 0deg 0% 0%;
+  --shadow-elevation-low: 0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.23),
+    0.4px 1.3px 1.4px -3.3px hsl(var(--shadow-color) / 0.17);
+  --shadow-elevation-medium: 0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.21),
+    0.4px 1.5px 1.5px -1.7px hsl(var(--shadow-color) / 0.18), 1.9px 6.7px 6.9px -3.3px hsl(var(--shadow-color) / 0.14);
+  --shadow-elevation-high: 0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.3),
+    1px 3.5px 3.6px -1.1px hsl(var(--shadow-color) / 0.26), 3.5px 12.5px 12.9px -2.2px hsl(var(--shadow-color) / 0.22),
+    9.9px 34.9px 36.2px -3.3px hsl(var(--shadow-color) / 0.18);
+}

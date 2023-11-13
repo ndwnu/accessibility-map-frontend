@@ -1,0 +1,89 @@
+<header
+  class="navigation nav-header brand-line"
+  [ngClass]="{
+    'local-banner': environmentType === 'local',
+    'staging-banner': environmentType === 'staging'
+  }"
+>
+  <div class="container">
+    @if(menuItems.length) {
+    <button class="border-0 text-dark bg-transparent d-lg-none" (click)="isMenuOpen.set(true)" aria-label="Menu">
+      <em class="bx bx-menu align-middle d-lg-none"></em>
+    </button>
+    }
+    <div class="nav-header__logo">
+      @if (logoUrl) {
+      <img [src]="logoUrl" class="image-logo" alt="logo" />
+      }
+      <div class="d-flex flex-column">
+        <span class="title">{{ applicationTitle }}</span>
+        @if(environmentType === 'local') {
+        <span class="environment">Local</span>
+        } @if(environmentType === 'staging') {
+        <span class="environment">Staging</span>
+        }
+      </div>
+    </div>
+
+    @if(menuItems.length) {
+    <nav class="navigation__menu d-none d-lg-block">
+      <ul class="list-unstyled mb-0">
+        @for(item of menuItems; track $index) {
+        <li class="navigation__menu__item">
+          <a
+            class="navigation__menu__link"
+            [routerLink]="item.path"
+            [routerLinkActive]="'navigation__menu__link--active'"
+            >{{ item.label }}</a
+          >
+        </li>
+        }
+      </ul>
+    </nav>
+    }
+
+    <div class="navigation__user">
+      <ng-content #secondaryMenu />
+    </div>
+  </div>
+</header>
+
+<div
+  class="mobile-nav d-lg-none"
+  [ngClass]="{
+    'mobile-nav--open': isMenuOpen()
+  }"
+>
+  <header class="nav-header brand-line">
+    <div class="container">
+      @if(menuItems.length) {
+      <button class="border-0 text-dark bg-transparent d-lg-none" (click)="isMenuOpen.set(false)">
+        <em class="bx bx-x align-middle"></em>
+      </button>
+      }
+      <div class="nav-header__logo">
+        @if (logoUrl) {
+        <img [src]="logoUrl" class="image-logo" alt="logo" />
+        }
+        <span class="title">{{ applicationTitle }}</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <div class="mobile-nav__menu">
+      <ul class="list-unstyled mb-0">
+        @for(item of menuItems; track $index) {
+        <li class="navigation__menu__item navigation__menu__item--block">
+          <a
+            class="navigation__menu__link"
+            [routerLink]="item.path"
+            [routerLinkActive]="'navigation__menu__link--active'"
+            (click)="isMenuOpen.set(false)"
+            >{{ item.label }}</a
+          >
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</div>
