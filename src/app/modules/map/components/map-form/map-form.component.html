@@ -1,0 +1,80 @@
+<form [formGroup]="form">
+  <p class="text-muted">
+    Vul hieronder de gegevens van je voertuig in om de bereikbaarheid van een gemeente te bekijken.
+  </p>
+  <div class="mb-3">
+    <label class="form-label" for="municipalityId">Gemeente *</label>
+    <select class="form-select" formControlName="municipalityId" id="municipalityId">
+      @for(muncipality of municipalities; track muncipality.id) {
+      <option value="{{ muncipality.id }}">{{ muncipality.properties.name }}</option>
+      }
+    </select>
+    <div class="form-text">Op dit moment zijn allen de gemeente Amersfoort en Utrecht opvraagbaar.</div>
+  </div>
+  <hr />
+  <h3>Voertuigdetails</h3>
+  <label class="form-label" for="vehicleType">Voertuigtype *</label>
+  <div class="mb-3">
+    <select class="form-select" formControlName="vehicleType" id="vehicleType">
+      @for(option of vehicleTypes; track option.key) {
+      <option value="{{ option.key }}">{{ option.value }}</option>
+      }
+    </select>
+    <ber-form-control-validation [control]="form.get('vehicleType')" />
+  </div>
+  <label for=" vehicleLength" class="form-label">Lengte</label>
+  <div class="mb-3">
+    <div class="input-group">
+      <input type="number" min="0" class="form-control" formControlName="vehicleLength" id="vehicleLength" />
+      <span class="input-group-text">meter</span>
+    </div>
+    <ber-form-control-validation [control]="form.get('vehicleLength')" />
+  </div>
+  <label for="vehicleWidth" class="form-label">Breedte</label>
+  <div class="mb-3">
+    <div class="input-group">
+      <input type="number" min="0" class="form-control" formControlName="vehicleWidth" id="vehicleWidth" />
+      <span class="input-group-text">meter</span>
+    </div>
+    <ber-form-control-validation [control]="form.get('vehicleWidth')" />
+  </div>
+  <label for="vehicleHeight" class="form-label">Hoogte</label>
+  <div class="mb-3">
+    <div class="input-group">
+      <input type="number" min="0" class="form-control" formControlName="vehicleHeight" id="vehicleHeight" />
+      <span class="input-group-text">meter</span>
+    </div>
+    <ber-form-control-validation [control]="form.get('vehicleHeight')" />
+  </div>
+  <label for="vehicleWeight" class="form-label">Gewicht @if(vehicleWeightRequired()){*}</label>
+  <div class="mb-3">
+    <div class="input-group">
+      <input type="number" min="0" class="form-control" formControlName="vehicleWeight" id="vehicleWeight" />
+      <span class="input-group-text">ton</span>
+    </div>
+    <ber-form-control-validation [control]="form.get('vehicleWeight')" />
+  </div>
+  <label for="vehicleAxleWeight" class="form-label">Aslast</label>
+  <div class="mb-3">
+    <div class="input-group">
+      <input type="number" min="0" class="form-control" formControlName="vehicleAxleWeight" id="vehicleAxleWeight" />
+      <span class="input-group-text">ton</span>
+    </div>
+    <ber-form-control-validation [control]="form.get('vehicleAxleWeight')" />
+  </div>
+  <div class="mb-3 form-check form-switch">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      formControlName="vehicleHasTrailer"
+      id="vehicleHasTrailer"
+    />
+    <label class="form-check-label" for="vehicleHasTrailer">Voertuig heeft aanhanger</label>
+  </div>
+</form>
+<div class="text-end">
+  <button type="button" class="btn btn-outline-dark" (click)="submitForm()">
+    {{ loading ? 'Ophalen data...' : 'Toon bereikbaarheid' }}
+  </button>
+</div>

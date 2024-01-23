@@ -1,3 +1,30 @@
 <div style="height: 100%">
-  <ber-main-map />
+  @defer (on idle) {
+  <ber-main-map #map [expressions]="expressions">
+    <button class="btn btn-lg btn-primary shadow-lg" (click)="open(content)">Bekijk bereikbaarheid</button>
+  </ber-main-map>
+  } @placeholder {
+  <div class="d-flex justify-content-center align-items-center" style="height: 100%">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Kaart is aan het laden...</span>
+    </div>
+  </div>
+
+  }
 </div>
+
+<ng-template #content let-offcanvas>
+  <div class="offcanvas-header">
+    <h2 class="offcanvas-title" id="offcanvas-basic-title">Bereikbaarheid</h2>
+    <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ber-map-form
+      [form]="form"
+      [municipalities]="municipalities()"
+      [vehicleWeightRequired]="vehicleWeightRequired()"
+      [loading]="loading()"
+      (formSubmit)="formSubmitted()"
+    ></ber-map-form>
+  </div>
+</ng-template>

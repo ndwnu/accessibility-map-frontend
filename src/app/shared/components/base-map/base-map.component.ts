@@ -14,7 +14,7 @@ import {
 
 import { Feature, GeoJsonObject } from 'geojson';
 
-import { FilterExpression, LngLatLike, Map } from 'maplibre-gl';
+import { FilterSpecification, LngLatLike, Map } from 'maplibre-gl';
 import { CommonModule } from '@angular/common';
 import { MapState } from '@shared/models';
 import { NgChanges } from '@shared/types/ng-changes.type';
@@ -49,7 +49,7 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   @Input() mapState?: MapState;
   @Input() enableFeatureInteraction = true;
   @Input() enableMapIdle = true;
-  @Input() expressions: FilterExpression[] = [];
+  @Input() expressions: FilterSpecification | undefined = undefined;
 
   map!: Map;
   private mapRendered = signal(false);
@@ -58,12 +58,16 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
     if (changes?.zoomPosition?.currentValue) {
       this.zoomToLocation(this.zoomPosition!);
     }
+
+    if (changes.expressions?.currentValue) {
+      this.addExpressionsToLayer(this.expressions);
+    }
   }
 
   ngAfterViewInit() {
     this.createMap();
     this.map.once('render', () => this.onRenderMap());
-    this.map.once('load', () => this.onLoadMapTotal());
+    this.map.once('load', () => this.onLoadMapBase());
     if (this.enableMapIdle) {
       this.map.on('idle', () => this.onIdle());
     }
@@ -85,6 +89,14 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
+  addExpressionsToLayer(expressions: FilterSpecification | undefined) {
+    const layerId = 'NWB';
+    const existingLayer = this.map?.getLayer(layerId);
+    if (this.map && existingLayer) {
+      this.map.setFilter(layerId, expressions);
+    }
+  }
+
   private onRenderMap() {
     this.mapRendered.set(true);
     this.updateMapState();
@@ -92,7 +104,7 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
 
   protected abstract onLoadMap(): void;
 
-  protected onLoadMapTotal() {
+  protected onLoadMapBase() {
     this.onLoadMap();
 
     if (this.zoomPosition) {

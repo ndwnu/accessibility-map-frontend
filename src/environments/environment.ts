@@ -4,6 +4,8 @@
 
 import { Environment } from './environment.interface';
 
+const NWB_ROAD_SECTIONS_VECTOR_URL = 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/';
+
 export const environment: Environment = {
   production: false,
   environmentType: 'local',
@@ -12,6 +14,10 @@ export const environment: Environment = {
   mapStyles: {
     nwbRoadSection: 'https://maps.ndw.nu/styles/layers/nwb/roadSections/default.json',
   },
+  vectorTiles: {
+    NWB: NWB_ROAD_SECTIONS_VECTOR_URL,
+  },
+  accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
   ...window.environment,
 };
 

@@ -10,9 +10,7 @@ export const MAP_MIN_ZOOM = 7;
 const STYLE_URL = 'https://maps.ndw.nu/styles/osm-default-with-nwb-roads.json';
 
 @UntilDestroy()
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class MapService {
   createMap(container: HTMLElement): Map {
     return new Map({

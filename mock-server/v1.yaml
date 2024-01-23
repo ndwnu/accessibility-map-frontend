@@ -1,0 +1,163 @@
+---
+openapi: '3.0.0'
+info:
+  title: 'Accessibility map API'
+  description: "Query the accessibility for vehicle characteristics within a\
+    \ municipality."
+  version: '1'
+servers:
+  - url: '/v1'
+  - url: '/api/rest/static-road-data/accessibility-map/v1'
+security:
+  - iamNdw: []
+paths:
+  /municipalities/{municipalityId}:
+    get:
+      tags:
+        - 'accessibility-map'
+      summary: 'Returns inaccessible road sections for a specified municipality per direction'
+      operationId: 'getInaccessibleRoadSections'
+      parameters:
+        - $ref: '#/components/parameters/MunicipalityIdPathParam'
+        - $ref: '#/components/parameters/VehicleType'
+        - $ref: '#/components/parameters/VehicleLengthParam'
+        - $ref: '#/components/parameters/VehicleWidthParam'
+        - $ref: '#/components/parameters/VehicleHeightParam'
+        - $ref: '#/components/parameters/VehicleWeightParam'
+        - $ref: '#/components/parameters/VehicleAxleWeightParam'
+        - $ref: '#/components/parameters/VehicleHasTrailerParam'
+
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoadSections'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+components:
+  securitySchemes:
+    iamNdw:
+      type: 'oauth2'
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://iam.ndw.nu/auth/realms/ndw/protocol/openid-connect/token'
+          refreshUrl: 'https://iam.ndw.nu/auth/realms/ndw/protocol/openid-connect/token'
+          scopes: {}
+  parameters:
+    MunicipalityIdPathParam:
+      in: 'path'
+      name: 'municipalityId'
+      description: 'The CBS municipality id'
+      required: true
+      schema:
+        type: 'string'
+        example: 'GM0344'
+        pattern: '^(GM)(?=\d{4}$)\d*[1-9]\d*'
+    VehicleType:
+      in: 'query'
+      name: 'vehicleType'
+      description: 'The type of vehicle'
+      required: true
+      schema:
+        $ref: '#/components/schemas/VehicleType'
+    VehicleLengthParam:
+      in: 'query'
+      name: vehicleLength
+      description: The length of the specified vehicle in metres
+      required: false
+      schema:
+        type: number
+        format: float
+        minimum: 0.0
+        maximum: 22.0
+    VehicleWidthParam:
+      in: 'query'
+      name: vehicleWidth
+      description: The width of the specified vehicle in metres
+      required: false
+      schema:
+        type: number
+        format: float
+        minimum: 0.0
+        maximum: 3.0
+    VehicleHeightParam:
+      in: 'query'
+      name: vehicleHeight
+      description: The height of the specified vehicle in metres
+      required: false
+      schema:
+        type: number
+        format: float
+        minimum: 0.0
+        maximum: 4.0
+    VehicleWeightParam:
+      in: 'query'
+      name: vehicleWeight
+      description: 'The weight of the specified vehicle in metric tonnes including load and trailer.
+        This field is required when selecting vehicle type commercial-vehicle.'
+      required: false
+      schema:
+        type: number
+        format: float
+        minimum: 0.0
+        maximum: 60
+    VehicleAxleWeightParam:
+      in: 'query'
+      name: vehicleAxleWeight
+      description: The axle weight of the specified vehicle in metric tonnes
+      required: false
+      schema:
+        type: number
+        format: float
+        minimum: 0.0
+        maximum: 12.0
+    VehicleHasTrailerParam:
+      in: 'query'
+      name: vehicleHasTrailer
+      description: Indication whether a vehicle has a trailer
+      required: false
+      schema:
+        type: boolean
+        default: false
+  schemas:
+    RoadSections:
+      type: 'object'
+      properties:
+        inaccessibleRoadSections:
+          type: 'array'
+          items:
+            $ref: '#/components/schemas/RoadSection'
+    RoadSection:
+      type: 'object'
+      properties:
+        roadSectionId:
+          type: integer
+          format: int32
+        forwardAccessible:
+          type: boolean
+        backwardAccessible:
+          type: boolean
+    VehicleType:
+      type: 'string'
+      enum:
+        - car
+        - commercial_vehicle
+        - bus
+        - motorcycle
+        - tractor
+
+    APIError:
+      type: 'object'
+      properties:
+        message:
+          type: 'string'
