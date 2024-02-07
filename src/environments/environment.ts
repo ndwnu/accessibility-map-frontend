@@ -18,6 +18,10 @@ export const environment: Environment = {
     NWB: NWB_ROAD_SECTIONS_VECTOR_URL,
   },
   accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
+  rdw: {
+    registeredVehicleUrl: 'https://opendata.rdw.nl/resource/m9d7-ebf2.json',
+    axleUrl: 'https://opendata.rdw.nl/resource/3huj-srit.json',
+  },
   ...window.environment,
 };
 

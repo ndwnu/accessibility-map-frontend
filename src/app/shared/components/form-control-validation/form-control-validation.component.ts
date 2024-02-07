@@ -58,6 +58,9 @@ export class FormControlValidationComponent implements AfterViewInit {
     if (errorName === 'max') {
       return this.errorMessages[errorName].replace('{data}', data['max']);
     }
-    return this.errorMessages[errorName];
+    if (errorName in this.errorMessages) {
+      return this.errorMessages[errorName];
+    }
+    return data['customMessage'];
   }
 }

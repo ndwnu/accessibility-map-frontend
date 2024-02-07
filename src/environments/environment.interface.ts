@@ -14,4 +14,8 @@ export interface Environment {
     [K in VectorSource]: string;
   };
   accessibilityUrl: string;
+  rdw: {
+    registeredVehicleUrl: string;
+    axleUrl: string;
+  };
 }

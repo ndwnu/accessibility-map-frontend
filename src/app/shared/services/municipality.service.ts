@@ -8,7 +8,7 @@ export class MunicipalityService {
   private readonly _http = inject(HttpClient);
   private readonly baseURL = environment.accessibilityUrl;
 
-  getMunciaplityFeatures() {
+  getMunicipalityFeatures() {
     const url = `${this.baseURL}/municipalities`;
     return this._http.get<MuncipalityFeatureCollection>(url);
   }

@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/no-input-rename */
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
 import { FormControlValidationComponent } from '@shared/components/form-control-validation/form-control-validation.component';
 import { MuncipalityFeature } from '@shared/models';
@@ -11,23 +11,18 @@ import { MuncipalityFeature } from '@shared/models';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormControlValidationComponent],
   templateUrl: './map-form.component.html',
+  styleUrl: './map-form.component.scss',
 })
 export class MapFormComponent {
   @Input({ required: true }) form!: FormGroup;
   @Input() municipalities: MuncipalityFeature[] = [];
-  vehicleWeightRequired = signal<boolean>(false);
-  @Input({ alias: 'vehicleWeightRequired' }) set _vehicleWeightRequired(required: boolean | undefined) {
-    if (required === undefined) return;
-    this.vehicleWeightRequired.set(required);
-    const vehicleWeightControl = this.form.controls['vehicleWeight'];
-    if (this.form) {
-      vehicleWeightControl.addValidators(required ? [Validators.required] : []);
-      vehicleWeightControl.removeValidators(required ? [] : [Validators.required]);
-      vehicleWeightControl.updateValueAndValidity();
-    }
-  }
+  @Input() vehicleWeightRequired = false;
   @Input() loading = false;
+  @Input() maxVehicleLoad: number | undefined;
+  @Input() maxVehicleAxleWeight: number | undefined;
   @Output() formSubmit = new EventEmitter();
+  @Output() fetchInfoClicked = new EventEmitter();
+  @Output() formClear = new EventEmitter();
 
   vehicleTypes = Object.keys(VEHICLE_TYPES).map((key) => ({
     key,
@@ -40,5 +35,9 @@ export class MapFormComponent {
       return;
     }
     this.formSubmit.emit();
+  }
+
+  clearForm() {
+    this.formClear.emit();
   }
 }

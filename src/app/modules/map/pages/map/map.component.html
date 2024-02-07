@@ -22,9 +22,13 @@
     <ber-map-form
       [form]="form"
       [municipalities]="municipalities()"
-      [vehicleWeightRequired]="vehicleWeightRequired()"
+      [vehicleWeightRequired]="vehicleLoadRequired() || false"
+      [maxVehicleLoad]="maxVehicleLoad()"
+      [maxVehicleAxleWeight]="maxVehicleAxleWeight()"
       [loading]="loading()"
       (formSubmit)="formSubmitted()"
+      (formClear)="formClear()"
+      (fetchInfoClicked)="fetchVehicleInfo()"
     ></ber-map-form>
   </div>
 </ng-template>
