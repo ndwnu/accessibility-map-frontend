@@ -8,13 +8,11 @@ import { FormService } from '@modules/map/services/form.service';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AccessibilityDataService } from '@shared/services/accessibility-data.service';
-import { MapExpressionService } from '@shared/services/map-expression.service';
 import { MapLayerService } from '@shared/services/map-layer.service';
 import { MunicipalityService } from '@shared/services/municipality.service';
-import { convertMunicipalityToNLS } from '@shared/utils/convert-municipality-id';
 
 import { FilterSpecification } from 'maplibre-gl';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { RdwService } from '@shared/services/rdw.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VehicleInfo } from '@shared/models/vehicle-info.model';
@@ -28,18 +26,10 @@ const MIN_LICENSE_PLATE_LENGTH = 5;
   standalone: true,
   imports: [CommonModule, MainMapComponent, MapFormComponent, HttpClientModule, ReactiveFormsModule],
   templateUrl: './map.component.html',
-  providers: [
-    MapExpressionService,
-    MapLayerService,
-    AccessibilityDataService,
-    FormService,
-    MunicipalityService,
-    RdwService,
-  ],
+  providers: [MapLayerService, AccessibilityDataService, FormService, MunicipalityService, RdwService],
 })
 export class MapComponent {
   private readonly _accessibilityDataService = inject(AccessibilityDataService);
-  private readonly _expressions = inject(MapExpressionService);
   private readonly _formService = inject(FormService);
   private readonly _mapLayerService = inject(MapLayerService);
   private readonly _municipalityService = inject(MunicipalityService);
@@ -53,7 +43,18 @@ export class MapComponent {
   form = this._formService.createMapForm();
 
   get vehicleLoadRequired$() {
-    return this.form.controls.vehicleType.valueChanges.pipe(map((vehicleType) => vehicleType === 'commercial_vehicle'));
+    return this.form.controls.vehicleType.valueChanges.pipe(
+      map((vehicleType) => vehicleType === 'commercial_vehicle'),
+      tap((required) =>
+        required
+          ? this._formService.setValidationRules(this.form, {
+              minValues: {},
+              maxValues: {},
+              required: { vehicleWeight: true, vehicleLoad: true },
+            })
+          : this._formService.setValidationRules(this.form, { minValues: {}, maxValues: {}, required: {} }),
+      ),
+    );
   }
   vehicleLoadRequired = toSignal(this.vehicleLoadRequired$);
 
@@ -72,7 +73,9 @@ export class MapComponent {
 
   municipalities$ = this._municipalityService
     .getMunicipalityFeatures()
-    .pipe(map((response) => response.features.sort((a, b) => a.properties?.name?.localeCompare(b.properties?.name))));
+    .pipe(
+      map((response) => [...response.features].sort((a, b) => a.properties?.name?.localeCompare(b.properties?.name))),
+    );
   municipalities = toSignal(this.municipalities$, { initialValue: [] });
 
   open(content: TemplateRef<any>) {
@@ -149,11 +152,6 @@ export class MapComponent {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (response) => {
-          const { roadOperatorType, roadOperatorCode } = convertMunicipalityToNLS(this.form.value.municipalityId);
-          this.expressions = this._expressions.getRoadsForRoadAuthorityExpressions(
-            roadOperatorType,
-            roadOperatorCode.toString(),
-          );
           this._mapLayerService.showInaccesibleRoadSections(this.mapComponent?.map!, response.inaccessibleRoadSections);
           this.zoomToMunicipality();
         },
@@ -181,7 +179,7 @@ export class MapComponent {
     )?.geometry;
     if (municipalityPoint && municipalityPoint.coordinates.length >= 2) {
       const [longitude, latitude] = municipalityPoint.coordinates;
-      this.mapComponent?.map?.flyTo({ center: [longitude, latitude] as [number, number], zoom: 14 });
+      this.mapComponent?.map?.flyTo({ center: [longitude, latitude] as [number, number], zoom: 12 });
     } else {
       console.log('No municipality point found');
     }

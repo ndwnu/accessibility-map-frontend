@@ -3,6 +3,12 @@ import { VECTOR_SOURCE_META, VectorSource, VectorSourceMeta } from '@shared/cons
 import { InaccessibleRoadSection } from '@shared/models';
 import { DataDrivenPropertyValueSpecification, LayerSpecification, Map } from 'maplibre-gl';
 
+const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'FP', 'VP', 'VZ', 'OVB', 'CADO', 'RP', 'VV'];
+const INACCESSIBLE_ROAD_SECTION_COLOR = '#FF0044';
+const INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR = '#FF8866';
+const ACCESSIBLE_ROAD_SECTION_COLOR = '#558844';
+const LINE_OPACITY = 0.5;
+
 @Injectable()
 export class MapLayerService {
   private readonly lineLayout: LayerSpecification['layout'] = {
@@ -34,8 +40,13 @@ export class MapLayerService {
         },
         paint: {
           ...this.linePaint,
-          'line-color': 'green',
-          'line-opacity': 0.5,
+          'line-color': [
+            'case',
+            ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]],
+            INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
+            ACCESSIBLE_ROAD_SECTION_COLOR,
+          ],
+          'line-opacity': LINE_OPACITY,
         },
       },
     ] as LayerSpecification[];
@@ -48,8 +59,10 @@ export class MapLayerService {
       map.setPaintProperty(nwbSourceId, 'line-color', [
         'case',
         ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
-        'red',
-        'green',
+        INACCESSIBLE_ROAD_SECTION_COLOR,
+        ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]],
+        INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
+        ACCESSIBLE_ROAD_SECTION_COLOR,
       ]);
     }
   }
