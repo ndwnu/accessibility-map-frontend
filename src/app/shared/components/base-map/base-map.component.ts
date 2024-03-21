@@ -83,12 +83,6 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
-  fitOrganizationBounds(geojson?: GeoJsonObject) {
-    if (geojson) {
-      this._map.fitGeoJsonBounds(this.map, geojson);
-    }
-  }
-
   addExpressionsToLayer(expressions: FilterSpecification | undefined) {
     const layerId = 'NWB';
     const existingLayer = this.map?.getLayer(layerId);

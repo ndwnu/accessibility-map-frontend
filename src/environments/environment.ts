@@ -6,13 +6,14 @@ import { Environment } from './environment.interface';
 
 const NWB_ROAD_SECTIONS_VECTOR_URL = 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/';
 
+// TODO: #69406 - add setenv.js and infra variables
 export const environment: Environment = {
   production: false,
   environmentType: 'local',
   apiBaseUrl: '/api',
   baseUrl: 'http://localhost:4200',
   mapStyles: {
-    nwbRoadSection: 'https://maps.ndw.nu/styles/layers/nwb/roadSections/default.json',
+    default: 'https://maps.staging.ndw.nu/styles/osm-default-with-nwb-roads-white.json',
   },
   vectorTiles: {
     NWB: NWB_ROAD_SECTIONS_VECTOR_URL,
