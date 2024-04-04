@@ -49,8 +49,10 @@ export class RdwService {
     switch (vehicleType) {
       case 'Personenauto':
         return 'car';
-      case 'Bedrijfsauto':
-        return 'commercial_vehicle';
+      case 'Bedrijfsauto (bestelbus)':
+        return 'commercial_vehicle_van';
+      case 'Bedrijfsauto (vrachtwagen)':
+        return 'commercial_vehicle_truck';
       case 'Bus':
         return 'bus';
       case 'Motor':

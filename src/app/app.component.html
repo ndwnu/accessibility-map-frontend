@@ -1,2 +1,15 @@
-<ber-nav applicationTitle="Bereikbaarheidskaart" logoUrl="assets/images/logo-nwb.svg"></ber-nav>
-<router-outlet></router-outlet>
+<ndw-main-navigation
+  applicationName="Bereikbaarheidskaart"
+  [brand]="brandEnum.NWB"
+  [isCollapsible]="false"
+  [menuItems]="menuItems"
+/>
+<router-outlet />
+
+<ng-template #stepOne>
+  <ber-step-one [form]="stepOneForm" (next)="goToNextStep(2)" />
+</ng-template>
+
+<ng-template #stepTwo>
+  <ber-step-two />
+</ng-template>

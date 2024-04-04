@@ -1,7 +1,8 @@
 export const VEHICLE_TYPES = {
-  car: 'Auto',
-  commercial_vehicle: 'Bedrijfsauto',
   bus: 'Bus',
+  car: 'Personenauto',
+  commercial_vehicle_truck: 'Bedrijfsauto (vrachtwagen)',
+  commercial_vehicle_van: 'Bedrijfsauto (bestelbus)',
   motorcycle: 'Motor',
   tractor: 'Tractor',
 } as const;

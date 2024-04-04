@@ -107,7 +107,7 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
     this.resizeMap();
   }
 
-  public resizeMap() {
+  resizeMap() {
     if (this.map) {
       this.map.resize();
     }

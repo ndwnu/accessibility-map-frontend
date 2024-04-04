@@ -1,0 +1,67 @@
+<ndw-card>
+  <ng-container title> Bereikbaarheid </ng-container>
+  <ng-container body>
+    <div class="content">
+      <p>Na het invoeren van uw gegevens ziet u op de kaart of uw bestemming bereikbaar is.</p>
+      <form [formGroup]="form()">
+        <ndw-form-field label="Kenteken">
+          <div class="license-plate">
+            <div class="license-plate_prefix">
+              <img src="assets/images/kenteken-prefix.svg" />
+            </div>
+            <input
+              ndwInput
+              type="text"
+              class="license-plate_input"
+              formControlName="licensePlate"
+              [attr.disabled]="licensePlateUnknown || undefined"
+            />
+          </div>
+        </ndw-form-field>
+        <div class="checkbox">
+          <input
+            ndwInput
+            type="checkbox"
+            formControlName="unknownLicensePlate"
+            id="no-license-plate"
+            [checked]="licensePlateUnknown"
+            (change)="toggleLicensePlateUnknown()"
+          />
+          <label for="no-license-plate">Ik heb geen kenteken</label>
+        </div>
+        @if (licensePlateUnknown) {
+        <ndw-form-field label="Voertuigtype">
+          <select ndwInput formControlName="vehicleType" required>
+            <option selected disabled>Selecteer voertuigtype</option>
+            @for (vehicleType of vehicleTypes; track $index) {
+            <option [value]="vehicleType.key">{{ vehicleType.value }}</option>
+            }
+          </select>
+        </ndw-form-field>
+        }
+        <ndw-form-field label="Hoogte van uw voertuig">
+          <input
+            ndwInput
+            type="number"
+            formControlName="height"
+            min="0"
+            placeholder="0.00"
+            step="0.01"
+            [value]="vehicleHeight"
+            required
+          />
+        </ndw-form-field>
+        <div class="checkbox">
+          <input ndwInput type="checkbox" formControlName="trailer" id="trailer" />
+          <label for="trailer">Ik heb een aanhanger en/of oplegger</label>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+  <ng-container footer>
+    <div class="footer">
+      Stap 1 van 3
+      <button ndwButton large [disabled]="checkFormValidity()" (click)="onNext()">Volgende</button>
+    </div>
+  </ng-container>
+</ndw-card>

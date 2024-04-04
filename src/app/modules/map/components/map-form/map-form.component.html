@@ -20,7 +20,7 @@
         id="licensePlate"
         formControlName="licensePlate"
         class="form-control form-control-sm"
-        placeholder="AB-123-Z"
+        placeholder="G-000-BB"
       />
       <div class="input-group-append">
         <button
@@ -108,8 +108,8 @@
   </div>
 </form>
 <div class="text-end d-grid gap-2 d-flex justify-content-end">
-  <button type="button" class="btn btn-outline-dark" (click)="clearForm()">Opnieuw</button>
-  <button type="button" class="btn btn-outline-dark" (click)="submitForm()">
+  <button ndwButton secondary large type="button" (click)="clearForm()">Opnieuw</button>
+  <button ndwButton large type="button" (click)="submitForm()">
     {{ loading ? 'Ophalen data...' : 'Toon bereikbaarheid' }}
   </button>
 </div>

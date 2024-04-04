@@ -26,7 +26,9 @@
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
       "@modules/*": ["src/app/modules/*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

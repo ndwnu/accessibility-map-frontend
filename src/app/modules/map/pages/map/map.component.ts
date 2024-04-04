@@ -17,6 +17,7 @@ import { RdwService } from '@shared/services/rdw.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VehicleInfo } from '@shared/models/vehicle-info.model';
 import { AccessibilityFilter } from '@shared/models';
+import { CardComponent } from '@noway/ndw';
 
 const MIN_LICENSE_PLATE_LENGTH = 5;
 
@@ -24,9 +25,10 @@ const MIN_LICENSE_PLATE_LENGTH = 5;
 @Component({
   selector: 'ber-map',
   standalone: true,
-  imports: [CommonModule, MainMapComponent, MapFormComponent, HttpClientModule, ReactiveFormsModule],
+  imports: [CardComponent, CommonModule, HttpClientModule, MainMapComponent, MapFormComponent, ReactiveFormsModule],
   templateUrl: './map.component.html',
   providers: [MapLayerService, AccessibilityDataService, FormService, MunicipalityService, RdwService],
+  styleUrl: './map.component.scss',
 })
 export class MapComponent {
   private readonly _accessibilityDataService = inject(AccessibilityDataService);
@@ -37,6 +39,8 @@ export class MapComponent {
   private readonly _rdwService = inject(RdwService);
 
   @ViewChild('map') mapComponent: MainMapComponent | undefined;
+  @ViewChild('content') mapForm?: TemplateRef<any>;
+
   loading = signal(false);
   expressions: FilterSpecification | undefined = undefined;
 
@@ -44,7 +48,7 @@ export class MapComponent {
 
   get vehicleLoadRequired$() {
     return this.form.controls.vehicleType.valueChanges.pipe(
-      map((vehicleType) => vehicleType === 'commercial_vehicle'),
+      map((vehicleType) => vehicleType === 'commercial_vehicle_van'),
       tap((required) =>
         required
           ? this._formService.setValidationRules(this.form, {
@@ -79,7 +83,10 @@ export class MapComponent {
   municipalities = toSignal(this.municipalities$, { initialValue: [] });
 
   open(content: TemplateRef<any>) {
-    this._offcanvasService.open(content, { ariaLabelledBy: 'Gemeente selectie en voertuigdetails formulier' });
+    this._offcanvasService.open(content, {
+      ariaLabelledBy: 'Gemeente selectie en voertuigdetails formulier',
+      position: 'end',
+    });
   }
 
   fetchVehicleInfo() {

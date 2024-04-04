@@ -1,7 +1,4 @@
-@import 'abstracts/variables';
-
-@import 'base/typography';
-
+@import '@angular/cdk/overlay-prebuilt.css';
+@import 'abstracts';
 @import 'components/input';
-
 @import 'vendors/bootstrap';

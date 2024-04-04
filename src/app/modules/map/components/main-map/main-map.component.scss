@@ -1,3 +1,14 @@
+:host {
+  position: relative;
+}
+
+.content {
+  margin-top: var(--ndw-spacing-xl);
+  position: absolute;
+  left: var(--ndw-spacing-xl);
+  z-index: 200;
+}
+
 .map-wrapper {
   position: relative;
   width: 100%;
