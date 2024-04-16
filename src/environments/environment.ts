@@ -4,21 +4,19 @@
 
 import { Environment } from './environment.interface';
 
-const NWB_ROAD_SECTIONS_VECTOR_URL = 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/';
-
-// TODO: #69406 - add setenv.js and infra variables
 export const environment: Environment = {
   production: false,
-  environmentType: 'local',
   apiBaseUrl: '/api',
   baseUrl: 'http://localhost:4200',
   mapStyles: {
     default: 'https://maps.staging.ndw.nu/styles/osm-default-with-nwb-roads-white.json',
   },
   vectorTiles: {
-    NWB: NWB_ROAD_SECTIONS_VECTOR_URL,
+    NWB: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/',
   },
-  accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
+  nls: {
+    accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
+  },
   rdw: {
     registeredVehicleUrl: 'https://opendata.rdw.nl/resource/m9d7-ebf2.json',
     axleUrl: 'https://opendata.rdw.nl/resource/3huj-srit.json',

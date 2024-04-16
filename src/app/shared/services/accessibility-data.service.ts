@@ -6,7 +6,7 @@ import { AccessibilityFilter, InaccessibleRoadSectionsResponse } from '@shared/m
 @Injectable()
 export class AccessibilityDataService {
   private readonly _http = inject(HttpClient);
-  baseURL = environment.accessibilityUrl;
+  baseURL = environment.nls.accessibilityUrl;
 
   getInaccessibleRoadSections(filter: AccessibilityFilter) {
     const municipalityId = filter.municipalityId;
