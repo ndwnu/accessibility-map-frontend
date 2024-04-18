@@ -25,6 +25,8 @@ export class MapLayerService {
         map.addLayer(layer);
       });
     });
+
+    map.addLayer(this.generateOneWayArrowLayer());
   }
 
   generateVectorLayers(source: VectorSourceMeta, visible: boolean): LayerSpecification[] {
@@ -65,5 +67,38 @@ export class MapLayerService {
         ACCESSIBLE_ROAD_SECTION_COLOR,
       ]);
     }
+  }
+
+  private generateOneWayArrowLayer(): LayerSpecification {
+    const ONE_WAY_ARROW_SIZE = 0.5;
+    const ONE_WAY_ARROW_OPACITY = 0.3;
+    const ONE_WAY_ARROW_SPACING_MAX = 200;
+    const ONE_WAY_ARROW_SPACING_MIN = 70;
+    const ONE_WAY_DRIVING_DIRECTION = 'H';
+
+    return {
+      id: 'oneway-arrow',
+      type: 'symbol',
+      source: 'roadSections',
+      'source-layer': 'roadSections',
+      layout: {
+        'symbol-placement': 'line',
+        'symbol-spacing': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          15,
+          ONE_WAY_ARROW_SPACING_MAX,
+          18,
+          ONE_WAY_ARROW_SPACING_MIN,
+        ],
+        'icon-image': 'arrow-icon',
+        'icon-size': ONE_WAY_ARROW_SIZE,
+      },
+      paint: {
+        'icon-opacity': ['interpolate', ['linear'], ['zoom'], 14.9, 0, 15, ONE_WAY_ARROW_OPACITY],
+      },
+      filter: ['==', ['get', 'drivingDirection'], ONE_WAY_DRIVING_DIRECTION],
+    };
   }
 }

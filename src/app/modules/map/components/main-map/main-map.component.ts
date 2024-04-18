@@ -18,7 +18,20 @@ export class MainMapComponent extends BaseMapComponent {
   private readonly _layer = inject(MapLayerService);
 
   protected async onLoadMap() {
+    this.loadArrowImage();
+
     this._source.addVectorSources(this.map);
     this._layer.addVectorLayers(this.map);
+  }
+
+  private loadArrowImage() {
+    this.map.loadImage('assets/images/arrow.png', (error, image) => {
+      if (!image || error) {
+        console.error('Failed to load arrow image:', error);
+        return;
+      }
+
+      this.map.addImage('arrow-icon', image);
+    });
   }
 }
