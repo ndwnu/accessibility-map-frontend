@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
       positionStrategy,
     });
 
-    this.openModal(1);
+    // this.openModal(1);
   }
 
   goToNextStep(step: number) {

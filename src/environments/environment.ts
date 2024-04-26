@@ -9,7 +9,7 @@ export const environment: Environment = {
   apiBaseUrl: '/api',
   baseUrl: 'http://localhost:4200',
   mapStyles: {
-    default: 'https://maps.staging.ndw.nu/styles/osm-default-with-nwb-roads-white.json',
+    default: 'https://maps.ndw.nu/styles/osm-default-with-nwb-roads-white.json',
   },
   vectorTiles: {
     NWB: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/',

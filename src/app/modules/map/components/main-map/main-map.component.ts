@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BaseMapComponent } from '@shared/components/base-map/base-map.component';
+import { BaseMapComponent } from '@modules/map/components/base-map/base-map.component';
 import { MapService } from '@shared/services/map.service';
 import { MapSourceService } from '@shared/services/map-source.service';
-import { MapLayerService } from '@shared/services/map-layer.service';
+import { MapElement } from '@modules/map/elements/models';
+import { AccessibilityElement } from '@modules/map/elements/accessibility-element';
 
 @Component({
   selector: 'ber-main-map',
@@ -11,17 +12,21 @@ import { MapLayerService } from '@shared/services/map-layer.service';
   imports: [CommonModule],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
-  providers: [MapService, MapSourceService, MapLayerService],
+  providers: [MapService, MapSourceService],
 })
 export class MainMapComponent extends BaseMapComponent {
-  private readonly _source = inject(MapSourceService);
-  private readonly _layer = inject(MapLayerService);
+  mapElements: MapElement[] = [];
 
   protected async onLoadMap() {
     this.loadArrowImage();
 
-    this._source.addVectorSources(this.map);
-    this._layer.addVectorLayers(this.map);
+    this.mapElements = [new AccessibilityElement('ACCESSIBILITY', this.map)];
+
+    this.mapElements.forEach((element) => {
+      element.createSources();
+      element.createLayers();
+      element.setupClickHandlers();
+    });
   }
 
   private loadArrowImage() {

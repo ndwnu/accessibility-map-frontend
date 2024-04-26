@@ -8,11 +8,10 @@ import {
   OnChanges,
   OnDestroy,
   Output,
-  signal,
   ViewChild,
 } from '@angular/core';
 
-import { Feature, GeoJsonObject } from 'geojson';
+import { Feature } from 'geojson';
 
 import { FilterSpecification, LngLatLike, Map } from 'maplibre-gl';
 import { CommonModule } from '@angular/common';
@@ -23,18 +22,7 @@ import { MapService } from '@shared/services/map.service';
 @Component({
   standalone: true,
   imports: [CommonModule],
-  template: ` <div #map class="map-container"></div> `,
-  styles: [
-    `
-      #map {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-    `,
-  ],
+  template: ``,
 })
 export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDestroy {
   readonly _map = inject(MapService);
@@ -42,7 +30,7 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   @Output() featureClick: EventEmitter<Feature[]> = new EventEmitter();
   @Output() mapIdle: EventEmitter<MapState> = new EventEmitter();
 
-  @ViewChild('map', { static: true }) mapElement!: ElementRef;
+  @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
 
   @Input() features: Feature[] = [];
   @Input() zoomPosition?: LngLatLike;
@@ -52,7 +40,6 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   @Input() expressions: FilterSpecification | undefined = undefined;
 
   map!: Map;
-  private mapRendered = signal(false);
 
   ngOnChanges(changes: NgChanges<BaseMapComponent>) {
     if (changes?.zoomPosition?.currentValue) {
@@ -67,14 +54,15 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   ngAfterViewInit() {
     this.createMap();
     this.map.once('render', () => this.onRenderMap());
-    this.map.once('load', () => this.onLoadMapBase());
-    if (this.enableMapIdle) {
-      this.map.on('idle', () => this.onIdle());
-    }
+    this.map.once('load', () => this.initiateMapLoading());
   }
 
   ngOnDestroy() {
     this.map?.remove();
+  }
+
+  resizeMap() {
+    this.map?.resize();
   }
 
   fitBounds() {
@@ -91,34 +79,13 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
-  private onRenderMap() {
-    this.mapRendered.set(true);
-    this.updateMapState();
-  }
+  private onRenderMap() {}
 
   protected abstract onLoadMap(): void;
 
-  protected onLoadMapBase() {
+  protected initiateMapLoading() {
     this.onLoadMap();
-
-    if (this.zoomPosition) {
-      this.zoomToLocation(this.zoomPosition);
-    }
     this.resizeMap();
-  }
-
-  resizeMap() {
-    if (this.map) {
-      this.map.resize();
-    }
-  }
-
-  private onIdle() {
-    this.mapIdle.emit({
-      mapZoom: this.map.getZoom(),
-      mapCenter: this.map.getCenter(),
-      bounds: this.map.getBounds(),
-    });
   }
 
   private zoomToLocation(lngLat: LngLatLike) {
@@ -129,13 +96,6 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   private createMap() {
-    this.map = this._map.createMap(this.mapElement.nativeElement);
-  }
-
-  private updateMapState() {
-    if (this.mapState?.mapZoom && this.mapState?.mapCenter) {
-      this.map.setZoom(this.mapState.mapZoom);
-      this.map.setCenter(this.mapState.mapCenter);
-    }
+    this.map = this._map.createMap(this.mapElementRef.nativeElement);
   }
 }

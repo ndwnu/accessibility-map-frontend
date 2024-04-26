@@ -8,7 +8,6 @@ import { FormService } from '@modules/map/services/form.service';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AccessibilityDataService } from '@shared/services/accessibility-data.service';
-import { MapLayerService } from '@shared/services/map-layer.service';
 import { MunicipalityService } from '@shared/services/municipality.service';
 
 import { FilterSpecification } from 'maplibre-gl';
@@ -16,8 +15,10 @@ import { map, tap } from 'rxjs';
 import { RdwService } from '@shared/services/rdw.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VehicleInfo } from '@shared/models/vehicle-info.model';
-import { AccessibilityFilter } from '@shared/models';
+import { AccessibilityFilter, InaccessibleRoadSection } from '@shared/models';
 import { CardComponent } from '@noway/ndw';
+import { AccessibilitySource } from '@modules/map/elements/accessibility-source';
+import { AccessibilityElement } from '@modules/map/elements/accessibility-element';
 
 const MIN_LICENSE_PLATE_LENGTH = 5;
 
@@ -27,13 +28,12 @@ const MIN_LICENSE_PLATE_LENGTH = 5;
   standalone: true,
   imports: [CardComponent, CommonModule, HttpClientModule, MainMapComponent, MapFormComponent, ReactiveFormsModule],
   templateUrl: './map.component.html',
-  providers: [MapLayerService, AccessibilityDataService, FormService, MunicipalityService, RdwService],
+  providers: [AccessibilityDataService, FormService, MunicipalityService, RdwService],
   styleUrl: './map.component.scss',
 })
 export class MapComponent {
   private readonly _accessibilityDataService = inject(AccessibilityDataService);
   private readonly _formService = inject(FormService);
-  private readonly _mapLayerService = inject(MapLayerService);
   private readonly _municipalityService = inject(MunicipalityService);
   private readonly _offcanvasService = inject(NgbOffcanvas);
   private readonly _rdwService = inject(RdwService);
@@ -159,7 +159,7 @@ export class MapComponent {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (response) => {
-          this._mapLayerService.showInaccesibleRoadSections(this.mapComponent?.map!, response.inaccessibleRoadSections);
+          this.updateLayerStyles(response.inaccessibleRoadSections);
           this.zoomToMunicipality();
         },
         error: (error) => {
@@ -189,6 +189,17 @@ export class MapComponent {
       this.mapComponent?.map?.flyTo({ center: [longitude, latitude] as [number, number], zoom: 12 });
     } else {
       console.log('No municipality point found');
+    }
+  }
+
+  private updateLayerStyles(inaccessibleRoadSections: InaccessibleRoadSection[]) {
+    const element = this.mapComponent?.mapElements.find((element) => element instanceof AccessibilityElement);
+    if (element) {
+      element.sources.forEach((source) => {
+        if (source instanceof AccessibilitySource) {
+          source.updateLayerStyles(this.mapComponent?.map!, inaccessibleRoadSections);
+        }
+      });
     }
   }
 }
