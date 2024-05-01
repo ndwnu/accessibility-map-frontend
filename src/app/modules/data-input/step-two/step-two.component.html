@@ -1,4 +1,27 @@
 <ndw-card>
-  <ng-container title> Stap 2 </ng-container>
-  <ng-container body> To do </ng-container>
+  <ng-container title> Gemeente kiezen </ng-container>
+  <ng-container body>
+    <div class="content">
+      <p>Selecteer de gemeente van uw bestemming.</p>
+      <form [formGroup]="form()">
+        <ndw-form-field label="Gemeente van bestemming">
+          <select ndwInput formControlName="municipalityId" required>
+            <option selected disabled>Selecteer gemeente</option>
+            @for (municipality of municipalities; track municipality.id) {
+            <option [value]="municipality.id">{{ municipality.name }}</option>
+            }
+          </select>
+        </ndw-form-field>
+      </form>
+    </div>
+  </ng-container>
+  <ng-container footer>
+    <ber-actions
+      [currentStep]="2"
+      [disableNext]="form().invalid"
+      [steps]="3"
+      (next)="onNext()"
+      (previous)="onPrevious()"
+    />
+  </ng-container>
 </ndw-card>

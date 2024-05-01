@@ -8,3 +8,8 @@ export interface MuncipalityProperties {
   name: string;
   searchDistance: number;
 }
+
+export interface MunicipalityIdAndName {
+  id: string;
+  name: string;
+}

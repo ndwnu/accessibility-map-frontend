@@ -4,21 +4,31 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
-import { IconService, MainNavigationComponent, MenuItem, NdwBrand } from '@noway/ndw';
-import icons from '@noway/ndw/assets/icons/icons.json';
-import { StepOneComponent, StepTwoComponent } from '@modules/data-input';
-import { DataInputFormGroup, StepOneFormGroup } from '@shared/models';
+import { IconService, MainNavigationComponent, MenuItem, NdwBrand } from '@ndwnu/design-system';
+import icons from '@ndwnu/design-system/assets/icons/icons.json';
+import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
+import { DataInputFormGroup, StepOneFormGroup, StepTwoFormGroup, VehicleInfo } from '@shared/models';
+import { RdwService } from '@shared/services';
 
 @Component({
   selector: 'ber-root',
   standalone: true,
-  imports: [CommonModule, MainNavigationComponent, RouterOutlet, StepOneComponent, StepTwoComponent],
+  imports: [
+    CommonModule,
+    MainNavigationComponent,
+    RouterOutlet,
+    StepOneComponent,
+    StepThreeComponent,
+    StepTwoComponent,
+  ],
+  providers: [RdwService],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   stepOneRef = viewChild.required<TemplateRef<StepOneComponent>>('stepOne');
   stepTwoRef = viewChild.required<TemplateRef<StepTwoComponent>>('stepTwo');
+  stepThreeRef = viewChild.required<TemplateRef<StepThreeComponent>>('stepThree');
 
   brandEnum = NdwBrand;
 
@@ -29,6 +39,7 @@ export class AppComponent implements OnInit {
       label: 'Kaart',
     },
   ];
+  vehicleInfo?: VehicleInfo;
 
   private readonly iconService = inject(IconService);
   private readonly overlay = inject(Overlay);
@@ -44,10 +55,17 @@ export class AppComponent implements OnInit {
       height: new FormControl(null, Validators.required),
       trailer: new FormControl(false),
     }),
+    stepTwo: new FormGroup<StepTwoFormGroup>({
+      municipalityId: new FormControl(null, Validators.required),
+    }),
   });
 
   protected get stepOneForm(): FormGroup {
     return this.form.get('stepOne') as FormGroup;
+  }
+
+  protected get stepTwoForm(): FormGroup {
+    return this.form.get('stepTwo') as FormGroup;
   }
 
   ngOnInit() {
@@ -61,12 +79,20 @@ export class AppComponent implements OnInit {
       positionStrategy,
     });
 
-    // this.openModal(1);
+    this.openModal(1);
   }
 
-  goToNextStep(step: number) {
+  goToMap() {
+    this.closeModal();
+  }
+
+  goToStep(step: number) {
     this.closeModal();
     this.openModal(step);
+  }
+
+  setVehicleInfo(vehicleInfo: VehicleInfo) {
+    this.vehicleInfo = vehicleInfo;
   }
 
   private closeModal() {
@@ -77,6 +103,9 @@ export class AppComponent implements OnInit {
     let contentRef: TemplateRef<unknown> = this.stepOneRef();
     if (step === 2) {
       contentRef = this.stepTwoRef();
+    }
+    if (step === 3) {
+      contentRef = this.stepThreeRef();
     }
 
     const templatePortal = new TemplatePortal(contentRef, this.viewContainerRef);

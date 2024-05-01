@@ -1,0 +1,19 @@
+<ndw-card>
+  <ng-container title> Voertuiggegevens </ng-container>
+  <ng-container body>
+    <div class="content">
+      <p>Uw voertuiggegevens. Pas de gegevens aan als deze anders zijn tijdens uw rit.</p>
+      <!-- TODO in #70489 -->
+      <form [formGroup]="form()"></form>
+    </div>
+  </ng-container>
+  <ng-container footer>
+    <ber-actions
+      [currentStep]="3"
+      [disableComplete]="form().invalid"
+      [steps]="3"
+      (complete)="onComplete()"
+      (previous)="onPrevious()"
+    />
+  </ng-container>
+</ndw-card>

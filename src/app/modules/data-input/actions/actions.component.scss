@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.next {
+  align-items: center;
+  color: var(--ndw-color-grey-300);
+  display: flex;
+  gap: var(--ndw-spacing-sm);
+  justify-content: flex-end;
+}

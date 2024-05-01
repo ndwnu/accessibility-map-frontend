@@ -16,7 +16,7 @@ import { RdwService } from '@shared/services/rdw.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VehicleInfo } from '@shared/models/vehicle-info.model';
 import { AccessibilityFilter, InaccessibleRoadSection } from '@shared/models';
-import { CardComponent } from '@noway/ndw';
+import { CardComponent } from '@ndwnu/design-system';
 import { AccessibilitySource } from '@modules/map/elements/accessibility-source';
 import { AccessibilityElement } from '@modules/map/elements/accessibility-element';
 

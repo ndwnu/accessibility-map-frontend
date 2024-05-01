@@ -7,9 +7,13 @@
 <router-outlet />
 
 <ng-template #stepOne>
-  <ber-step-one [form]="stepOneForm" (next)="goToNextStep(2)" />
+  <ber-step-one [form]="stepOneForm" (next)="goToStep(2)" (vehicleInfo)="setVehicleInfo($event)" />
 </ng-template>
 
 <ng-template #stepTwo>
-  <ber-step-two />
+  <ber-step-two [form]="stepTwoForm" (next)="goToStep(3)" (previous)="goToStep(1)" />
+</ng-template>
+
+<ng-template #stepThree>
+  <ber-step-three [form]="form" [vehicleInfo]="vehicleInfo" (complete)="goToMap()" (previous)="goToStep(2)" />
 </ng-template>

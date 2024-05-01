@@ -6,11 +6,12 @@ ndw-card {
 
   .content,
   .footer {
-    display: grid;
     width: 100%;
   }
 
   .content {
+    min-height: 24rem;
+
     .radio-button-group {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -52,10 +53,12 @@ ndw-card {
           text-align: center;
           text-transform: uppercase;
 
-          &[disabled] {
+          &.disabled {
             background-color: var(--ndw-color-grey-100);
             border-color: var(--ndw-color-grey-200);
             color: var(--ndw-color-grey-400);
+            pointer-events: none;
+            user-select: none;
           }
         }
       }
@@ -64,13 +67,5 @@ ndw-card {
     .checkbox {
       margin-bottom: var(--ndw-spacing-sm);
     }
-  }
-
-  .footer {
-    align-items: center;
-    color: var(--ndw-color-grey-300);
-    display: flex;
-    gap: var(--ndw-spacing-sm);
-    justify-content: flex-end;
   }
 }

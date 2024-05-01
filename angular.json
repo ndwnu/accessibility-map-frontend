@@ -28,7 +28,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "node_modules/@noway/ndw/assets",
+                "input": "node_modules/@ndwnu/design-system/assets",
                 "output": "/assets"
               }
             ],
@@ -36,7 +36,7 @@
               "src/assets/styles/main.scss",
               "node_modules/boxicons/css/boxicons.min.css",
               "node_modules/maplibre-gl/dist/maplibre-gl.css",
-              "node_modules/@noway/ndw/core/styles/nwb-styles.scss"
+              "node_modules/@ndwnu/design-system/core/styles/nwb-styles.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src/assets/styles", "node_modules/bootstrap"]

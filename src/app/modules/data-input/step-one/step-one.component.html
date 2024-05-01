@@ -4,7 +4,7 @@
     <div class="content">
       <p>Na het invoeren van uw gegevens ziet u op de kaart of uw bestemming bereikbaar is.</p>
       <form [formGroup]="form()">
-        <ndw-form-field label="Kenteken">
+        <ndw-form-field label="Kenteken" [error]="licensePlateError ? 'Kenteken niet gevonden' : undefined">
           <div class="license-plate">
             <div class="license-plate_prefix">
               <img src="assets/images/kenteken-prefix.svg" />
@@ -14,7 +14,7 @@
               type="text"
               class="license-plate_input"
               formControlName="licensePlate"
-              [attr.disabled]="licensePlateUnknown || undefined"
+              [ngClass]="{ disabled: licensePlateUnknown }"
             />
           </div>
         </ndw-form-field>
@@ -59,9 +59,6 @@
     </div>
   </ng-container>
   <ng-container footer>
-    <div class="footer">
-      Stap 1 van 3
-      <button ndwButton large [disabled]="checkFormValidity()" (click)="onNext()">Volgende</button>
-    </div>
+    <ber-actions [currentStep]="1" [steps]="3" [disableNext]="isInvalidForm()" (next)="onNext()" />
   </ng-container>
 </ndw-card>
