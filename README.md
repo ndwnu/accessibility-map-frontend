@@ -1,27 +1,46 @@
-# BereikbaarheidFrontend
+# Bereikbaarheidskaart
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0-rc.3.
+In the Netherlands, we have 189,411 kilometers of roads. Not all of these roads are accessible to all vehicles. There are about 40 traffic signs prohibiting various vehicles with restrictions on weight, length, width, or height. Suppose you have a truck with specific height, width, length, weight, or load. Where in the Netherlands are you allowed to drive? The accessibility map provides insight into this question.
 
-## Development server
+## Live
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Check out the live version of the project at [https://bereikbaarheid.ndw.nu/](https://bereikbaarheid.ndw.nu/).
 
-## Code scaffolding
+## Getting Started
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Follow these steps to get started with Bereikbaarheidskaart:
 
-## Build
+1. **Clone the Repository:**
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+git clone https://github.com/ndw/accessibility-map-frontend.git
+```
 
-## Running unit tests
+2. **Install Dependencies:**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+cd accessibility-map-frontend
+npm install
+```
 
-## Running end-to-end tests
+3. **Run the Development Server:**
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+ng serve
+```
 
-## Further help
+4. **Open in Browser:**
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Navigate to **http://localhost:4200/** in your browser to view the application.
+
+## Contributions
+
+This project is maintained by Nationaal Dataportaal Wegverkeer ([NDW](https://www.ndw.nu/))
+
+## License
+
+Bereikbaarheidskaart is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any inquiries or questions regarding Bereikbaarheidskaart, you can reach out to us at [info@ndw.nl](mailto:info@ndw.nl).
