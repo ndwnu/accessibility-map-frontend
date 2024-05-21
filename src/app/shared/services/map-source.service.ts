@@ -3,7 +3,9 @@ import { environment } from '@env/environment';
 import { VECTOR_SOURCE_META } from '@shared/constants/map.constants';
 import { Map } from 'maplibre-gl';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class MapSourceService {
   addVectorSources(map: Map) {
     VECTOR_SOURCE_META.forEach((layer) => {

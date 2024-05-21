@@ -7,7 +7,7 @@
         <ndw-form-field label="Kenteken" [error]="licensePlateError ? 'Kenteken niet gevonden' : undefined">
           <div class="license-plate">
             <div class="license-plate_prefix">
-              <img src="assets/images/kenteken-prefix.svg" />
+              <img src="assets/images/kenteken-prefix.svg" alt="Onderscheidingsteken met de NL landcode." />
             </div>
             <input
               ndwInput
@@ -59,6 +59,6 @@
     </div>
   </ng-container>
   <ng-container footer>
-    <ber-actions [currentStep]="1" [steps]="3" [disableNext]="isInvalidForm()" (next)="onNext()" />
+    <ber-actions [currentStep]="1" [steps]="3" [disableNext]="form().invalid" (next)="onNext()" />
   </ng-container>
 </ndw-card>

@@ -1,7 +1,0 @@
-plugin: openapi
-resources:
-  - method: GET
-    path: /municipalities/{municipalityId}
-    response:
-      statusCode: 200
-specFile: v1.yaml

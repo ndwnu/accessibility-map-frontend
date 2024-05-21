@@ -3,8 +3,43 @@
   <ng-container body>
     <div class="content">
       <p>Uw voertuiggegevens. Pas de gegevens aan als deze anders zijn tijdens uw rit.</p>
-      <!-- TODO in #70489 -->
-      <form [formGroup]="form()"></form>
+      <form [formGroup]="form()">
+        <ndw-form-field label="Rijklaar gewicht in kg" [disabled]="true">
+          <input ndwInput type="number" formControlName="vehicleCurbWeight" min="0" placeholder="0" step="1" />
+        </ndw-form-field>
+        <ndw-form-field
+          [label]="'Lading in kg (max: ' + maxLoad() + ')'"
+          [error]="
+            vehicleLoadControl?.errors
+              ? 'De lading moet ingevuld zijn en mag niet meer zijn dan ' + maxLoad()
+              : undefined
+          "
+        >
+          <input ndwInput type="number" formControlName="vehicleLoad" min="0" placeholder="0" step="1" required />
+        </ndw-form-field>
+        <hr />
+        <ndw-form-field label="Totaal gewicht in kg" [disabled]="true">
+          <input ndwInput type="number" formControlName="vehicleTotalWeight" min="0" placeholder="0" step="1" />
+        </ndw-form-field>
+
+        <ndw-form-field
+          [label]="'Aslast in kg (max: ' + vehicleInfo()?.maxAxleWeight + ')'"
+          [error]="
+            vehicleAxleLoadControl?.errors
+              ? 'De aslast moet gevuld zijn en mag niet meer zijn dan ' + vehicleInfo()?.maxAxleWeight
+              : undefined
+          "
+        >
+          <input ndwInput type="number" formControlName="vehicleAxleLoad" min="0" placeholder="0" step="1" required />
+        </ndw-form-field>
+        <!-- TODO when this field is empty from RDW result, the form is valid yet it is required -->
+        <ndw-form-field label="Lengte in meter">
+          <input ndwInput type="number" formControlName="vehicleLength" min="0" placeholder="0" step="1" required />
+        </ndw-form-field>
+        <ndw-form-field label="Breedte in meter">
+          <input ndwInput type="number" formControlName="vehicleWidth" min="0" placeholder="0" step="1" required />
+        </ndw-form-field>
+      </form>
     </div>
   </ng-container>
   <ng-container footer>

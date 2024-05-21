@@ -1,18 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@env/environment';
-import {
-  AccessibilityFilter,
-  InaccessibleRoadSectionsResponse,
-  MuncipalityFeature,
-  MuncipalityFeatureCollection,
-} from '@shared/models';
-import { Observable, map } from 'rxjs';
+import { AccessibilityFilter, InaccessibleRoadSection, InaccessibleRoadSectionsResponse } from '@shared/models';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AccessibilityDataService {
   private readonly _http = inject(HttpClient);
   baseURL = environment.nls.accessibilityUrl;
+
+  private inaccessibleRoadSections = new BehaviorSubject<InaccessibleRoadSection[]>([]);
+  inaccessibleRoadSections$ = this.inaccessibleRoadSections.asObservable();
 
   getInaccessibleRoadSections(filter: AccessibilityFilter): Observable<InaccessibleRoadSectionsResponse> {
     const municipalityId = filter.municipalityId;
@@ -32,9 +32,7 @@ export class AccessibilityDataService {
     return this._http.get<InaccessibleRoadSectionsResponse>(url, { params });
   }
 
-  getMunicipalities(): Observable<MuncipalityFeature[]> {
-    return this._http
-      .get<MuncipalityFeatureCollection>(`${this.baseURL}/municipalities`)
-      .pipe(map((response) => response.features));
+  setInaccessibleRoadSections(inaccessibleRoadSections: InaccessibleRoadSection[]) {
+    this.inaccessibleRoadSections.next(inaccessibleRoadSections);
   }
 }

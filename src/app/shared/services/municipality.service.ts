@@ -1,15 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@env/environment';
-import { MuncipalityFeatureCollection } from '@shared/models';
+import { MuncipalityFeature, MuncipalityFeatureCollection } from '@shared/models';
+import { of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class MunicipalityService {
   private readonly _http = inject(HttpClient);
   private readonly baseURL = environment.nls.accessibilityUrl;
+  private cachedMunicipalities: MuncipalityFeature[] | undefined;
 
-  getMunicipalityFeatures() {
+  getMunicipalities() {
+    if (this.cachedMunicipalities) {
+      return of(this.cachedMunicipalities);
+    }
+
     const url = `${this.baseURL}/municipalities`;
-    return this._http.get<MuncipalityFeatureCollection>(url);
+    return this._http.get<MuncipalityFeatureCollection>(url).pipe(
+      map((response) => response.features),
+      tap((data) => {
+        this.cachedMunicipalities = data;
+      }),
+    );
+  }
+
+  getSyncMunicipality(municipalityId: string) {
+    return this.cachedMunicipalities?.find((f) => f.id === municipalityId);
   }
 }

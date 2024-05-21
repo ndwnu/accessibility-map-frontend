@@ -32,7 +32,7 @@ export class AccessibilitySource implements MapSource {
       {
         id: 'color',
         specification: {
-          id: 'accessibilty',
+          id: 'accessibility',
           source: this.sourceId,
           'source-layer': this.sourceLayer,
           type: 'line',
@@ -91,9 +91,8 @@ export class AccessibilitySource implements MapSource {
 
   updateLayerStyles(map: Map, inaccessibleRoadSections: InaccessibleRoadSection[]) {
     const inaccessibleRoadSectionIds = inaccessibleRoadSections.map((section) => section.roadSectionId);
-    // TODO: difference between id and sourceId is confusing
-    if (map.getLayer(this.sourceId)) {
-      map.setPaintProperty(this.sourceId, 'line-color', [
+    if (map.getLayer('accessibility')) {
+      map.setPaintProperty('accessibility', 'line-color', [
         'case',
         ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
         INACCESSIBLE_ROAD_SECTION_COLOR,

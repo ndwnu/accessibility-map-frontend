@@ -16,7 +16,9 @@ const DEFAULT_MAX_VALUES: { [controlName: string]: number } = {
   vehicleAxleWeight: 12,
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class FormService {
   createMapForm() {
     const form = new FormGroup({

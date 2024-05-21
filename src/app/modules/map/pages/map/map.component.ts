@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, computed, inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, TemplateRef, viewChild, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MainMapComponent } from '@modules/map/components/main-map/main-map.component';
 import { MapFormComponent } from '@modules/map/components/map-form/map-form.component';
@@ -19,6 +19,7 @@ import { AccessibilityFilter, InaccessibleRoadSection } from '@shared/models';
 import { CardComponent } from '@ndwnu/design-system';
 import { AccessibilitySource } from '@modules/map/elements/accessibility-source';
 import { AccessibilityElement } from '@modules/map/elements/accessibility-element';
+import { MapService } from '@shared/services';
 
 const MIN_LICENSE_PLATE_LENGTH = 5;
 
@@ -28,35 +29,43 @@ const MIN_LICENSE_PLATE_LENGTH = 5;
   standalone: true,
   imports: [CardComponent, CommonModule, HttpClientModule, MainMapComponent, MapFormComponent, ReactiveFormsModule],
   templateUrl: './map.component.html',
-  providers: [AccessibilityDataService, FormService, MunicipalityService, RdwService],
   styleUrl: './map.component.scss',
 })
-export class MapComponent {
-  private readonly _accessibilityDataService = inject(AccessibilityDataService);
-  private readonly _formService = inject(FormService);
-  private readonly _municipalityService = inject(MunicipalityService);
-  private readonly _offcanvasService = inject(NgbOffcanvas);
-  private readonly _rdwService = inject(RdwService);
+export class MapComponent implements OnInit {
+  private readonly accessibilityDataService = inject(AccessibilityDataService);
+  private readonly formService = inject(FormService);
+  private readonly mapService = inject(MapService);
+  private readonly municipalityService = inject(MunicipalityService);
+  private readonly offcanvasService = inject(NgbOffcanvas);
+  private readonly rdwService = inject(RdwService);
 
-  @ViewChild('map') mapComponent: MainMapComponent | undefined;
+  mapComponent = viewChild<MainMapComponent>('map');
   @ViewChild('content') mapForm?: TemplateRef<any>;
 
   loading = signal(false);
   expressions: FilterSpecification | undefined = undefined;
 
-  form = this._formService.createMapForm();
+  form = this.formService.createMapForm();
+
+  ngOnInit() {
+    this.accessibilityDataService.inaccessibleRoadSections$.pipe(untilDestroyed(this)).subscribe({
+      next: (inaccessibleRoadSections) => {
+        this.updateLayerStyles(inaccessibleRoadSections);
+      },
+    });
+  }
 
   get vehicleLoadRequired$() {
     return this.form.controls.vehicleType.valueChanges.pipe(
       map((vehicleType) => vehicleType === 'commercial_vehicle_van'),
       tap((required) =>
         required
-          ? this._formService.setValidationRules(this.form, {
+          ? this.formService.setValidationRules(this.form, {
               minValues: {},
               maxValues: {},
               required: { vehicleWeight: true, vehicleLoad: true },
             })
-          : this._formService.setValidationRules(this.form, { minValues: {}, maxValues: {}, required: {} }),
+          : this.formService.setValidationRules(this.form, { minValues: {}, maxValues: {}, required: {} }),
       ),
     );
   }
@@ -75,15 +84,13 @@ export class MapComponent {
       : undefined,
   );
 
-  municipalities$ = this._municipalityService
-    .getMunicipalityFeatures()
-    .pipe(
-      map((response) => [...response.features].sort((a, b) => a.properties?.name?.localeCompare(b.properties?.name))),
-    );
+  municipalities$ = this.municipalityService
+    .getMunicipalities()
+    .pipe(map((response) => [...response].sort((a, b) => a.properties?.name?.localeCompare(b.properties?.name))));
   municipalities = toSignal(this.municipalities$, { initialValue: [] });
 
   open(content: TemplateRef<any>) {
-    this._offcanvasService.open(content, {
+    this.offcanvasService.open(content, {
       ariaLabelledBy: 'Gemeente selectie en voertuigdetails formulier',
       position: 'end',
     });
@@ -92,7 +99,7 @@ export class MapComponent {
   fetchVehicleInfo() {
     const { licensePlate } = this.form.getRawValue();
     if (licensePlate && licensePlate.length >= MIN_LICENSE_PLATE_LENGTH) {
-      this._rdwService
+      this.rdwService
         .getVehicleInfo(licensePlate)
         .pipe(untilDestroyed(this))
         .subscribe({
@@ -126,7 +133,7 @@ export class MapComponent {
       vehicleLoad,
       vehicleAxleWeight: vehicleInfo.maxAxleWeight,
     });
-    this._formService.setValidationRules(this.form, {
+    this.formService.setValidationRules(this.form, {
       minValues: {
         vehicleLength: vehicleInfo.length,
         vehicleWidth: vehicleInfo.width,
@@ -147,14 +154,14 @@ export class MapComponent {
 
   formClear() {
     this.form.reset();
-    this._formService.setValidationRules(this.form, { minValues: {}, maxValues: {}, required: {} });
+    this.formService.setValidationRules(this.form, { minValues: {}, maxValues: {}, required: {} });
     this.vehicleInfoFromRdwSignal.set(null);
     this.form.controls.vehicleWeight.enable();
   }
 
   formSubmitted() {
     this.loading.set(true);
-    this._accessibilityDataService
+    this.accessibilityDataService
       .getInaccessibleRoadSections(this.mapFormToFilterCriteria(this.form.getRawValue()))
       .pipe(untilDestroyed(this))
       .subscribe({
@@ -167,7 +174,7 @@ export class MapComponent {
         },
         complete: () => {
           this.loading.set(false);
-          this._offcanvasService.dismiss();
+          this.offcanvasService.dismiss();
         },
       });
   }
@@ -186,18 +193,19 @@ export class MapComponent {
     )?.geometry;
     if (municipalityPoint && municipalityPoint.coordinates.length >= 2) {
       const [longitude, latitude] = municipalityPoint.coordinates;
-      this.mapComponent?.map?.flyTo({ center: [longitude, latitude] as [number, number], zoom: 12 });
+      this.mapComponent()?.map?.flyTo({ center: [longitude, latitude] as [number, number], zoom: 12 });
     } else {
       console.log('No municipality point found');
     }
   }
 
   private updateLayerStyles(inaccessibleRoadSections: InaccessibleRoadSection[]) {
-    const element = this.mapComponent?.mapElements.find((element) => element instanceof AccessibilityElement);
+    const element = this.mapComponent()?.mapElements.find((element) => element instanceof AccessibilityElement);
     if (element) {
       element.sources.forEach((source) => {
-        if (source instanceof AccessibilitySource) {
-          source.updateLayerStyles(this.mapComponent?.map!, inaccessibleRoadSections);
+        const map = this.mapService.map;
+        if (source instanceof AccessibilitySource && map) {
+          source.updateLayerStyles(map, inaccessibleRoadSections);
         }
       });
     }

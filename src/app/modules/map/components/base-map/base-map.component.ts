@@ -65,12 +65,6 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
     this.map?.resize();
   }
 
-  fitBounds() {
-    if (this.map && this.features) {
-      this._map.fitBounds(this.map, this.features);
-    }
-  }
-
   addExpressionsToLayer(expressions: FilterSpecification | undefined) {
     const layerId = 'NWB';
     const existingLayer = this.map?.getLayer(layerId);

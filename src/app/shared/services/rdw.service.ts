@@ -6,7 +6,9 @@ import { VehicleInfo } from '@shared/models/vehicle-info.model';
 import { VehicleType } from '@modules/map/models';
 import { RdwAxleResponse, RdwRegisteredVehiclesResponse } from '@shared/models';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class RdwService {
   private readonly _http = inject(HttpClient);
 
@@ -26,9 +28,9 @@ export class RdwService {
             length: parseFloat(vehicleInformation[0].lengte) / 100.0,
             width: parseFloat(vehicleInformation[0].breedte) / 100.0,
             height: 0.0,
-            emptyWeight: parseFloat(vehicleInformation[0].massa_ledig_voertuig) / 1000.0,
-            weight: parseFloat(vehicleInformation[0].massa_rijklaar) / 1000.0,
-            maxWeight: parseFloat(vehicleInformation[0].toegestane_maximum_massa_voertuig) / 1000.0,
+            emptyWeight: parseFloat(vehicleInformation[0].massa_ledig_voertuig),
+            weight: parseFloat(vehicleInformation[0].massa_rijklaar),
+            maxWeight: parseFloat(vehicleInformation[0].toegestane_maximum_massa_voertuig),
             maxAxleWeight: this.getMaxAxleWeight(axles),
           } as VehicleInfo;
         } else {
@@ -39,10 +41,7 @@ export class RdwService {
   }
 
   private getMaxAxleWeight(axleResponse: RdwAxleResponse[]): number | undefined {
-    return axleResponse.reduce(
-      (max, axle) => Math.max(parseFloat(axle.wettelijk_toegestane_maximum_aslast) / 1000.0, max),
-      0,
-    );
+    return axleResponse.reduce((max, axle) => Math.max(parseFloat(axle.wettelijk_toegestane_maximum_aslast), max), 0);
   }
 
   private mapVehicleType(vehicleType: string): VehicleType | undefined {
@@ -57,8 +56,6 @@ export class RdwService {
         return 'bus';
       case 'Motor':
         return 'motorcycle';
-      case 'Tractor':
-        return 'tractor';
       default:
         return undefined;
     }

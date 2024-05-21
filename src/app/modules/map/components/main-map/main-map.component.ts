@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseMapComponent } from '@modules/map/components/base-map/base-map.component';
-import { MapService } from '@shared/services/map.service';
-import { MapSourceService } from '@shared/services/map-source.service';
 import { MapElement } from '@modules/map/elements/models';
 import { AccessibilityElement } from '@modules/map/elements/accessibility-element';
 
@@ -12,7 +10,6 @@ import { AccessibilityElement } from '@modules/map/elements/accessibility-elemen
   imports: [CommonModule],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
-  providers: [MapService, MapSourceService],
 })
 export class MainMapComponent extends BaseMapComponent {
   mapElements: MapElement[] = [];

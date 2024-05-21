@@ -3,7 +3,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CardComponent, FormFieldComponent, InputDirective } from '@ndwnu/design-system';
 import { MunicipalityIdAndName, StepTwoFormGroup } from '@shared/models';
-import { AccessibilityDataService } from '@shared/services';
+import { MunicipalityService } from '@shared/services';
 import { map } from 'rxjs';
 
 import { ActionsComponent } from '../actions';
@@ -13,7 +13,6 @@ import { ActionsComponent } from '../actions';
   selector: 'ber-step-two',
   standalone: true,
   imports: [ActionsComponent, CardComponent, FormFieldComponent, InputDirective, ReactiveFormsModule],
-  providers: [AccessibilityDataService],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss',
 })
@@ -25,10 +24,10 @@ export class StepTwoComponent implements OnInit {
 
   municipalities: MunicipalityIdAndName[] = [];
 
-  private accessibilityDataService = inject(AccessibilityDataService);
+  private municipalityService = inject(MunicipalityService);
 
   ngOnInit() {
-    this.accessibilityDataService
+    this.municipalityService
       .getMunicipalities()
       .pipe(
         map((municipalities) =>

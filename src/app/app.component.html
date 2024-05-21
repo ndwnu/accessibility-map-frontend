@@ -15,5 +15,10 @@
 </ng-template>
 
 <ng-template #stepThree>
-  <ber-step-three [form]="form" [vehicleInfo]="vehicleInfo" (complete)="goToMap()" (previous)="goToStep(2)" />
+  <ber-step-three
+    [form]="stepThreeForm"
+    [vehicleInfo]="vehicleInfo()"
+    (complete)="goToMap()"
+    (previous)="goToStep(2)"
+  />
 </ng-template>
