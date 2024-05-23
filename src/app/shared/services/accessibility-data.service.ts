@@ -11,6 +11,9 @@ export class AccessibilityDataService {
   private readonly _http = inject(HttpClient);
   baseURL = environment.nls.accessibilityUrl;
 
+  private selectedMunicipalityId = new BehaviorSubject<string | undefined>(undefined);
+  selectedMunicipalityId$ = this.selectedMunicipalityId.asObservable();
+
   private inaccessibleRoadSections = new BehaviorSubject<InaccessibleRoadSection[]>([]);
   inaccessibleRoadSections$ = this.inaccessibleRoadSections.asObservable();
 
@@ -34,5 +37,9 @@ export class AccessibilityDataService {
 
   setInaccessibleRoadSections(inaccessibleRoadSections: InaccessibleRoadSection[]) {
     this.inaccessibleRoadSections.next(inaccessibleRoadSections);
+  }
+
+  setSelectedMunicipalityId(municipalityId: string) {
+    this.selectedMunicipalityId.next(municipalityId);
   }
 }

@@ -122,6 +122,7 @@ export class AppComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.accessibilityDataService.setInaccessibleRoadSections(response.inaccessibleRoadSections);
+          this.accessibilityDataService.setSelectedMunicipalityId(this.form.value.stepTwo?.municipalityId!);
           this.zoomToMunicipality();
         },
         error: (error) => {

@@ -11,7 +11,7 @@ import { AccessibilityDataService } from '@shared/services/accessibility-data.se
 import { MunicipalityService } from '@shared/services/municipality.service';
 
 import { FilterSpecification } from 'maplibre-gl';
-import { map, tap } from 'rxjs';
+import { combineLatest, filter, map, tap } from 'rxjs';
 import { RdwService } from '@shared/services/rdw.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VehicleInfo } from '@shared/models/vehicle-info.model';
@@ -48,11 +48,19 @@ export class MapComponent implements OnInit {
   form = this.formService.createMapForm();
 
   ngOnInit() {
-    this.accessibilityDataService.inaccessibleRoadSections$.pipe(untilDestroyed(this)).subscribe({
-      next: (inaccessibleRoadSections) => {
-        this.updateLayerStyles(inaccessibleRoadSections);
-      },
-    });
+    combineLatest([
+      this.accessibilityDataService.inaccessibleRoadSections$,
+      this.accessibilityDataService.selectedMunicipalityId$,
+    ])
+      .pipe(
+        filter(([_, municipalityId]) => !!municipalityId),
+        untilDestroyed(this),
+      )
+      .subscribe({
+        next: ([inaccessibleRoadSections, selectedMunicipalityId]) => {
+          this.updateLayerStyles(inaccessibleRoadSections, selectedMunicipalityId!);
+        },
+      });
   }
 
   get vehicleLoadRequired$() {
@@ -166,7 +174,7 @@ export class MapComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (response) => {
-          this.updateLayerStyles(response.inaccessibleRoadSections);
+          this.updateLayerStyles(response.inaccessibleRoadSections, this.form.get('municipalityId')?.value!);
           this.zoomToMunicipality();
         },
         error: (error) => {
@@ -199,13 +207,13 @@ export class MapComponent implements OnInit {
     }
   }
 
-  private updateLayerStyles(inaccessibleRoadSections: InaccessibleRoadSection[]) {
+  private updateLayerStyles(inaccessibleRoadSections: InaccessibleRoadSection[], municipalityId: string) {
     const element = this.mapComponent()?.mapElements.find((element) => element instanceof AccessibilityElement);
     if (element) {
       element.sources.forEach((source) => {
         const map = this.mapService.map;
         if (source instanceof AccessibilitySource && map) {
-          source.updateLayerStyles(map, inaccessibleRoadSections);
+          source.updateLayerStyles(map, inaccessibleRoadSections, municipalityId);
         }
       });
     }

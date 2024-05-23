@@ -4,11 +4,14 @@ import { InaccessibleRoadSection } from '@shared/models';
 
 import { Map, SourceSpecification } from 'maplibre-gl';
 
+const ACCESSIBILITY_LAYER_ID = 'accessibility';
+
 const MIN_ZOOM = 7;
 const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'FP', 'VP', 'VZ', 'OVB', 'CADO', 'RP', 'VV'];
-const INACCESSIBLE_ROAD_SECTION_COLOR = '#d95f02';
+const INACTIVE_MUNICIPALITY_COLOR = '#939393';
+const INACCESSIBLE_ROAD_SECTION_COLOR = '#FF2C2C';
 const INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR = '#7570b3';
-const ACCESSIBLE_ROAD_SECTION_COLOR = '#1b9e77';
+const ACCESSIBLE_ROAD_SECTION_COLOR = '#006C18';
 const LINE_OPACITY = 0.5;
 
 const ONE_WAY_ARROW_SIZE = 0.5;
@@ -32,7 +35,7 @@ export class AccessibilitySource implements MapSource {
       {
         id: 'color',
         specification: {
-          id: 'accessibility',
+          id: ACCESSIBILITY_LAYER_ID,
           source: this.sourceId,
           'source-layer': this.sourceLayer,
           type: 'line',
@@ -42,14 +45,16 @@ export class AccessibilitySource implements MapSource {
             'line-join': 'bevel',
           },
           paint: {
-            'line-width': ['interpolate', ['linear'], ['zoom'], 12, 3, 15, 8],
-            'line-color': [
-              'case',
-              ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]],
-              INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
-              ACCESSIBLE_ROAD_SECTION_COLOR,
+            'line-gap-width': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              12,
+              ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 2, 0],
+              15,
+              ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 4, 0],
             ],
-            'line-opacity': LINE_OPACITY,
+            'line-opacity': 0,
           },
         },
         show: true,
@@ -89,16 +94,47 @@ export class AccessibilitySource implements MapSource {
     };
   }
 
-  updateLayerStyles(map: Map, inaccessibleRoadSections: InaccessibleRoadSection[]) {
-    const inaccessibleRoadSectionIds = inaccessibleRoadSections.map((section) => section.roadSectionId);
-    if (map.getLayer('accessibility')) {
-      map.setPaintProperty('accessibility', 'line-color', [
+  updateLayerStyles(map: Map, inaccessibleRoadSections: InaccessibleRoadSection[], municipality: string) {
+    const inaccessibleRoadSectionIds = inaccessibleRoadSections
+      .filter((section) => section.backwardAccessible === false && section.forwardAccessible === false)
+      .map((section) => section.roadSectionId);
+    const municipalityId = Number(municipality.replace(/^GM/, '').replace(/^0+/, ''));
+
+    if (map.getLayer(ACCESSIBILITY_LAYER_ID)) {
+      map.setPaintProperty(ACCESSIBILITY_LAYER_ID, 'line-opacity', [
         'case',
-        ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
-        INACCESSIBLE_ROAD_SECTION_COLOR,
+        ['!=', ['get', 'municipalityId'], municipalityId],
+        0,
+        LINE_OPACITY,
+      ]);
+      map.setPaintProperty(ACCESSIBILITY_LAYER_ID, 'line-color', [
+        'case',
         ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]],
         INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
+        ['!=', ['get', 'municipalityId'], municipalityId],
+        INACTIVE_MUNICIPALITY_COLOR,
+        ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
+        INACCESSIBLE_ROAD_SECTION_COLOR,
         ACCESSIBLE_ROAD_SECTION_COLOR,
+      ]);
+      map.setPaintProperty(ACCESSIBILITY_LAYER_ID, 'line-width', [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        12,
+        [
+          'case',
+          ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
+          4,
+          ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 1, 1],
+        ],
+        16,
+        [
+          'case',
+          ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
+          6,
+          ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 1, 6],
+        ],
       ]);
     }
   }
