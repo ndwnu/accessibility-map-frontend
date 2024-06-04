@@ -13,7 +13,7 @@ Follow these steps to get started with Bereikbaarheidskaart:
 1. **Clone the Repository:**
 
 ```bash
-git clone https://github.com/ndw/accessibility-map-frontend.git
+git clone https://github.com/ndwnu/accessibility-map-frontend.git
 ```
 
 2. **Install Dependencies:**
@@ -31,7 +31,7 @@ ng serve
 
 4. **Open in Browser:**
 
-Navigate to **http://localhost:4200/** in your browser to view the application.
+Navigate to **http://localhost:4203/** in your browser to view the application.
 
 ## Contributions
 
@@ -43,4 +43,4 @@ Bereikbaarheidskaart is licensed under the MIT License. See the [LICENSE](LICENS
 
 ## Contact
 
-For any inquiries or questions regarding Bereikbaarheidskaart, you can reach out to us at [info@ndw.nl](mailto:info@ndw.nl).
+For any inquiries or questions regarding Bereikbaarheidskaart, you can reach out to us at [info@ndw.nu](mailto:info@ndw.nu).
