@@ -203,7 +203,7 @@ export class MapComponent implements OnInit {
       const [longitude, latitude] = municipalityPoint.coordinates;
       this.mapComponent()?.map?.flyTo({ center: [longitude, latitude] as [number, number], zoom: 12 });
     } else {
-      console.log('No municipality point found');
+      console.error('No municipality bounds found');
     }
   }
 

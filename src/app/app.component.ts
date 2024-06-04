@@ -5,6 +5,7 @@ import { Component, inject, OnInit, signal, TemplateRef, viewChild, ViewContaine
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
+import { mapToNlsVehicleType } from '@modules/map/models';
 import { IconService, MainNavigationComponent, MenuItem, NdwBrand } from '@ndwnu/design-system';
 import icons from '@ndwnu/design-system/assets/icons/icons.json';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -192,7 +193,7 @@ export class AppComponent implements OnInit {
     const { stepOne, stepTwo, stepThree } = this.form.getRawValue();
     return {
       municipalityId: stepTwo.municipalityId!,
-      vehicleType: stepOne.vehicleType!,
+      vehicleType: mapToNlsVehicleType(stepOne.vehicleType!),
       vehicleLength: stepThree.vehicleLength!,
       vehicleWidth: stepThree.vehicleWidth!,
       vehicleHeight: stepOne.height!,

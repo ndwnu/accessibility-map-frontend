@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { combineLatest, map, Observable } from 'rxjs';
 import { VehicleInfo } from '@shared/models/vehicle-info.model';
-import { VehicleType } from '@modules/map/models';
+import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
 import { RdwAxleResponse, RdwRegisteredVehiclesResponse } from '@shared/models';
 
 @Injectable({
@@ -44,21 +44,9 @@ export class RdwService {
     return axleResponse.reduce((max, axle) => Math.max(parseFloat(axle.wettelijk_toegestane_maximum_aslast), max), 0);
   }
 
-  private mapVehicleType(vehicleType: string): VehicleType | undefined {
-    switch (vehicleType) {
-      case 'Personenauto':
-        return 'car';
-      case 'Bedrijfsauto (bestelbus)':
-        return 'commercial_vehicle_van';
-      case 'Bedrijfsauto (vrachtwagen)':
-        return 'commercial_vehicle_truck';
-      case 'Bus':
-        return 'bus';
-      case 'Motor':
-        return 'motorcycle';
-      default:
-        return undefined;
-    }
+  private mapVehicleType(rdwVehicleType: string): VehicleType | undefined {
+    const vehicleType = Object.keys(VEHICLE_TYPES).find((key) => VEHICLE_TYPES[key as VehicleType] === rdwVehicleType);
+    return (vehicleType as VehicleType) || undefined;
   }
 
   private getRegisteredVehicles(licensePlate: string): Observable<RdwRegisteredVehiclesResponse[]> {

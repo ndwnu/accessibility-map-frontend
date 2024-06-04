@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { VEHICLE_TYPES } from '@modules/map/models';
 import { CardComponent, FormFieldComponent, InputDirective } from '@ndwnu/design-system';
-import { StepOneFormGroup, VehicleInfo } from '@shared/models';
+import { StepOneFormGroup, VehicleInfo, exampleVehicleInfoList } from '@shared/models';
 import { RdwService } from '@shared/services';
 
 import { ActionsComponent } from '../actions';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { map, startWith } from 'rxjs';
+import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
 
 @UntilDestroy()
 @Component({
@@ -26,8 +25,21 @@ export class StepOneComponent implements OnInit {
   vehicleInfo = output<VehicleInfo>();
 
   licensePlateUnknown = false;
-  licensePlateError = false;
-  vehicleTypes = Object.entries(VEHICLE_TYPES).map(([key, value]) => ({ key, value }));
+  licensePlateNotFound = signal(false);
+  licensePlateTractor = signal(false);
+  licensePlateError = computed<string | undefined>(() => {
+    if (this.licensePlateNotFound()) {
+      return 'Kenteken niet gevonden';
+    }
+    if (this.licensePlateTractor()) {
+      return 'Kenteken van een landbouwvoertuig, je kunt helaas geen voertuigen van dit type invoeren in de Bereikbaarheidskaart.';
+    }
+    return undefined;
+  });
+
+  vehicleTypes = Object.entries(VEHICLE_TYPES)
+    .filter(([key]) => (key as VehicleType) !== 'tractor')
+    .map(([key, value]) => ({ key, value }));
 
   vehicleHeight = computed(() => this.form().controls.height.value || 0);
   private rdwService = inject(RdwService);
@@ -41,7 +53,7 @@ export class StepOneComponent implements OnInit {
       this.vehicleInfo.emit(vehicleInfo);
     }
 
-    this.licensePlateError = !vehicleInfo;
+    this.licensePlateNotFound.set(!vehicleInfo);
     return !!vehicleInfo;
   }
 
@@ -61,6 +73,10 @@ export class StepOneComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((vehicleInfo) => {
         if (!this.isValidLicensePlate(vehicleInfo)) {
+          return;
+        }
+        if (vehicleInfo?.type === 'tractor') {
+          this.licensePlateTractor.set(true);
           return;
         }
 

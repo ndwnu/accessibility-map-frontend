@@ -4,7 +4,7 @@
     <div class="content">
       <p>Na het invoeren van uw gegevens ziet u op de kaart of uw bestemming bereikbaar is.</p>
       <form [formGroup]="form()">
-        <ndw-form-field label="Kenteken" [error]="licensePlateError ? 'Kenteken niet gevonden' : undefined">
+        <ndw-form-field label="Kenteken" [error]="licensePlateError()">
           <div class="license-plate">
             <div class="license-plate_prefix">
               <img src="assets/images/kenteken-prefix.svg" alt="Onderscheidingsteken met de NL landcode." />
