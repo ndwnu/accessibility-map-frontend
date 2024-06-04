@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { VehicleType, VEHICLE_TYPES } from '@modules/map/models';
-import { CardComponent, FormFieldComponent, InputDirective } from '@ndwnu/design-system';
+import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CardComponent, CheckboxComponent, FormFieldComponent } from '@ndwnu/design-system';
 import { StepOneFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 
 import { ActionsComponent } from '../actions';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
   selector: 'ber-step-one',
   standalone: true,
-  imports: [ActionsComponent, CardComponent, CommonModule, FormFieldComponent, InputDirective, ReactiveFormsModule],
+  imports: [ActionsComponent, CardComponent, CheckboxComponent, CommonModule, FormFieldComponent, ReactiveFormsModule],
   templateUrl: './step-one.component.html',
   styleUrls: ['./step-one.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

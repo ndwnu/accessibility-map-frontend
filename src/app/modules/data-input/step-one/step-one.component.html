@@ -18,17 +18,15 @@
             />
           </div>
         </ndw-form-field>
-        <div class="checkbox">
-          <input
-            ndwInput
-            type="checkbox"
+        <ndw-form-field>
+          <ndw-checkbox
             formControlName="unknownLicensePlate"
-            id="no-license-plate"
             [checked]="licensePlateUnknown"
-            (change)="toggleLicensePlateUnknown()"
-          />
-          <label for="no-license-plate">Ik heb geen kenteken</label>
-        </div>
+            (checkedChange)="toggleLicensePlateUnknown()"
+          >
+            Ik heb geen kenteken
+          </ndw-checkbox>
+        </ndw-form-field>
         @if (licensePlateUnknown) {
         <ndw-form-field label="Voertuigtype">
           <select ndwInput formControlName="vehicleType">
@@ -50,10 +48,9 @@
             [value]="vehicleHeight()"
           />
         </ndw-form-field>
-        <div class="checkbox">
-          <input ndwInput type="checkbox" formControlName="trailer" id="trailer" />
-          <label for="trailer">Ik heb een aanhanger en/of oplegger</label>
-        </div>
+        <ndw-form-field>
+          <ndw-checkbox formControlName="trailer"> Ik heb een aanhanger en/of oplegger </ndw-checkbox>
+        </ndw-form-field>
       </form>
     </div>
   </ng-container>
