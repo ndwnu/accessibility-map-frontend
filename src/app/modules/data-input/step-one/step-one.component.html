@@ -31,7 +31,7 @@
         </div>
         @if (licensePlateUnknown) {
         <ndw-form-field label="Voertuigtype">
-          <select ndwInput formControlName="vehicleType" required>
+          <select ndwInput formControlName="vehicleType">
             <option selected disabled>Selecteer voertuigtype</option>
             @for (vehicleType of vehicleTypes; track $index) {
             <option [value]="vehicleType.key">{{ vehicleType.value }}</option>
@@ -47,8 +47,7 @@
             min="0"
             placeholder="0.00"
             step="0.01"
-            [value]="vehicleHeight"
-            required
+            [value]="vehicleHeight()"
           />
         </ndw-form-field>
         <div class="checkbox">

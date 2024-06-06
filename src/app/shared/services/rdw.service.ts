@@ -23,14 +23,20 @@ export class RdwService {
     return combineLatest([registeredVehicles, axleInformation]).pipe(
       map(([vehicleInformation, axles]) => {
         if (vehicleInformation && vehicleInformation.length > 0) {
+          const length = this.parseFloatPrivate(vehicleInformation[0].lengte);
+          const width = this.parseFloatPrivate(vehicleInformation[0].breedte);
+          const emptyWeight = this.parseFloatPrivate(vehicleInformation[0].massa_ledig_voertuig);
+          const weight = this.parseFloatPrivate(vehicleInformation[0].massa_rijklaar);
+          const maxWeight = this.parseFloatPrivate(vehicleInformation[0].toegestane_maximum_massa_voertuig);
+
           return {
             type: this.mapVehicleType(vehicleInformation[0].voertuigsoort),
-            length: parseFloat(vehicleInformation[0].lengte) / 100.0,
-            width: parseFloat(vehicleInformation[0].breedte) / 100.0,
+            length: length ? length / 100.0 : undefined,
+            width: width ? width / 100.0 : undefined,
             height: 0.0,
-            emptyWeight: parseFloat(vehicleInformation[0].massa_ledig_voertuig),
-            weight: parseFloat(vehicleInformation[0].massa_rijklaar),
-            maxWeight: parseFloat(vehicleInformation[0].toegestane_maximum_massa_voertuig),
+            emptyWeight,
+            weight,
+            maxWeight,
             maxAxleWeight: this.getMaxAxleWeight(axles),
           } as VehicleInfo;
         } else {
@@ -59,5 +65,10 @@ export class RdwService {
 
   private toRdwLicensePlate(licensePlate: string): string {
     return licensePlate.trim().replaceAll('-', '').toLocaleUpperCase();
+  }
+
+  private parseFloatPrivate(value: string): number | undefined {
+    const number = parseFloat(value);
+    return isNaN(number) ? undefined : number;
   }
 }

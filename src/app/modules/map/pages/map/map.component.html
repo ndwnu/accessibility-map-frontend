@@ -12,22 +12,14 @@
   }
 </div>
 
+<ber-user-vehicle-form />
+
 <ng-template #content let-offcanvas>
   <div class="offcanvas-header">
     <h2 class="offcanvas-title" id="offcanvas-basic-title">Bereikbaarheid</h2>
     <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
   </div>
   <div class="offcanvas-body">
-    <ber-map-form
-      [form]="form"
-      [municipalities]="municipalities()"
-      [vehicleWeightRequired]="vehicleLoadRequired() || false"
-      [maxVehicleLoad]="maxVehicleLoad()"
-      [maxVehicleAxleWeight]="maxVehicleAxleWeight()"
-      [loading]="loading()"
-      (formSubmit)="formSubmitted()"
-      (formClear)="formClear()"
-      (fetchInfoClicked)="fetchVehicleInfo()"
-    ></ber-map-form>
+    <ber-user-vehicle-summary (close)="offcanvas.dismiss('Cross click')"></ber-user-vehicle-summary>
   </div>
 </ng-template>

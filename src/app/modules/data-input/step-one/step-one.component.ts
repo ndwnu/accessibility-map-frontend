@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { VehicleType, VEHICLE_TYPES } from '@modules/map/models';
 import { CardComponent, FormFieldComponent, InputDirective } from '@ndwnu/design-system';
-import { StepOneFormGroup, VehicleInfo, exampleVehicleInfoList } from '@shared/models';
+import { StepOneFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 
 import { ActionsComponent } from '../actions';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
 
 @UntilDestroy()
 @Component({
@@ -43,6 +43,10 @@ export class StepOneComponent implements OnInit {
 
   vehicleHeight = computed(() => this.form().controls.height.value || 0);
   private rdwService = inject(RdwService);
+
+  get vehicleTypeControl(): FormControl {
+    return this.form().get('vehicleType') as FormControl;
+  }
 
   ngOnInit() {
     this.licensePlateUnknown = this.form().controls.unknownLicensePlate.value || false;
@@ -86,6 +90,15 @@ export class StepOneComponent implements OnInit {
 
   toggleLicensePlateUnknown() {
     this.licensePlateUnknown = !this.licensePlateUnknown;
-    this.form().get('vehicleType')?.reset();
+    this.vehicleTypeControl.reset();
+
+    if (this.licensePlateUnknown) {
+      this.vehicleTypeControl.setValidators(Validators.required);
+    } else {
+      this.vehicleTypeControl.clearValidators();
+    }
+
+    this.vehicleTypeControl.reset();
+    this.vehicleTypeControl.updateValueAndValidity();
   }
 }

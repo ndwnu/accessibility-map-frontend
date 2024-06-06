@@ -1,0 +1,46 @@
+.steps {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 5rem;
+
+  &__header {
+    grid-column: 1 / span 2;
+
+    hr {
+      margin: 0 0 0.25rem 0;
+    }
+  }
+
+  .is-math-breakdown {
+    position: relative;
+    max-width: 4.5rem;
+
+    span {
+      float: right;
+    }
+
+    hr {
+      margin: 0;
+      opacity: 1;
+    }
+
+    ndw-icon {
+      position: absolute;
+      top: -0.75rem;
+      left: 4.75rem;
+    }
+  }
+}
+
+button.link-button {
+  background: none;
+  border: none;
+  color: #89b5b3;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

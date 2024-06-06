@@ -1,0 +1,99 @@
+<div class="steps">
+  <!-- Step 1 -->
+  <div class="steps__header">
+    <div class="d-flex justify-content-between">
+      <span>Stap 1, Voertuig</span>
+      <button (click)="onEditStep(1)" class="link-button" aria-label="Wijzig de invoer van stap 1, uw voertuig">
+        wijzig
+      </button>
+    </div>
+    <hr />
+  </div>
+  @if (licensePlate) {
+  <div>Kenteken</div>
+  <div>
+    <strong>{{ licensePlate }}</strong>
+  </div>
+  } @if (vehicleType) {
+  <div>Voertuigtype</div>
+  <div>
+    <strong>{{ vehicleType }}</strong>
+  </div>
+  }
+  <div>Hoogte</div>
+  <div>
+    <strong>{{ height | number: '1.0-2' }} meter</strong>
+  </div>
+  @if(trailer) {
+  <div>Aanhanger</div>
+  <div><strong>Ja</strong></div>
+  }
+
+  <!-- Step 2 -->
+  <div class="steps__header mt-4">
+    <div class="d-flex justify-content-between">
+      <span>Stap 2, Gemeente</span>
+      <button
+        (click)="onEditStep(2)"
+        class="link-button"
+        aria-label="Wijzig de invoer van stap 2, uw gemeente selectie"
+      >
+        wijzig
+      </button>
+    </div>
+    <hr />
+  </div>
+  <div>Bestemming</div>
+  <div>
+    <strong>{{ municipalityName }}</strong>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="steps__header mt-4">
+    <div class="d-flex justify-content-between">
+      <span>Stap 3, Voertuigdetails</span>
+      <button (click)="onEditStep(3)" class="link-button" aria-label="Wijzig de invoer van stap 3, uw voertuigdetails">
+        wijzig
+      </button>
+    </div>
+    <hr />
+  </div>
+  <div>Rijklaar gewicht</div>
+  <div class="is-math-breakdown">
+    <span>{{ vehicleCurbWeight | number: '1.0-0' }} kg</span>
+  </div>
+  <div>Lading</div>
+  <div class="is-math-breakdown">
+    <span>{{ vehicleLoad | number: '1.0-0' }} kg</span>
+  </div>
+  <div></div>
+  <div class="is-math-breakdown">
+    <hr />
+    <ndw-icon name="plus" />
+  </div>
+  <div><strong>Totaal gewicht</strong></div>
+  <div class="is-math-breakdown">
+    <span
+      ><strong>{{ vehicleTotalWeight | number: '1.0-0' }} kg</strong></span
+    >
+  </div>
+  <div class="mt-2">Aslast</div>
+  <div class="mt-2">{{ vehicleAxleLoad | number: '1.0-0' }} kilogram</div>
+  <div>Lengte</div>
+  <div>{{ vehicleLength | number: '1.0-2' }} meter</div>
+  <div>Breedte</div>
+  <div>{{ vehicleWidth | number: '1.0-2' }} meter</div>
+</div>
+
+@if(municipalityExemptionUrl){
+  <h5 class="mt-5">Ontheffing aanvragen?</h5>
+  <p>
+    Rvv ontheffingen voor de gemeente {{ municipalityName }} kunt aanvragen via deze
+    <a ndwLink [href]="municipalityExemptionUrl" target="_blank">link</a>.
+  </p>
+}
+
+<div class="d-flex justify-content-end gap-3 mt-5">
+  <button ndwButton [attr.outline]="true" (click)="startWithNewInput()">Begin opnieuw</button>
+  <button ndwButton (click)="onClose()">Bekijk kaart</button>
+</div>

@@ -27,7 +27,7 @@ export class MunicipalityService {
     );
   }
 
-  getSyncMunicipality(municipalityId: string) {
+  getSyncMunicipality(municipalityId: string): MuncipalityFeature | undefined {
     return this.cachedMunicipalities?.find((f) => f.id === municipalityId);
   }
 }
