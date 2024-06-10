@@ -1,24 +1,24 @@
 import { environment } from '@env/environment';
+import {
+  MIN_ZOOM,
+  INACCESSIBLE_CARRIAGEWAY_TYPES,
+  ONE_WAY_ARROW_SPACING_MAX,
+  ONE_WAY_ARROW_SPACING_MIN,
+  ONE_WAY_ARROW_SIZE,
+  ONE_WAY_ARROW_OPACITY,
+  ONE_WAY_DRIVING_DIRECTION,
+  LINE_OPACITY,
+  INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
+  INACTIVE_MUNICIPALITY_COLOR,
+  INACCESSIBLE_ROAD_SECTION_COLOR,
+  ACCESSIBLE_ROAD_SECTION_COLOR,
+} from '@modules/map/elements/constants';
 import { clickEvent, MapLayer, MapSource } from '@modules/map/elements/models';
 import { InaccessibleRoadSection } from '@shared/models';
 
 import { Map, SourceSpecification } from 'maplibre-gl';
 
 const ACCESSIBILITY_LAYER_ID = 'accessibility';
-
-const MIN_ZOOM = 7;
-const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'FP', 'VP', 'VZ', 'OVB', 'CADO', 'RP', 'VV'];
-const INACTIVE_MUNICIPALITY_COLOR = '#939393';
-const INACCESSIBLE_ROAD_SECTION_COLOR = '#FF2C2C';
-const INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR = '#7570b3';
-const ACCESSIBLE_ROAD_SECTION_COLOR = '#006C18';
-const LINE_OPACITY = 0.5;
-
-const ONE_WAY_ARROW_SIZE = 0.5;
-const ONE_WAY_ARROW_OPACITY = 0.4;
-const ONE_WAY_ARROW_SPACING_MAX = 200;
-const ONE_WAY_ARROW_SPACING_MIN = 70;
-const ONE_WAY_DRIVING_DIRECTION = 'H';
 
 export class AccessibilitySource implements MapSource {
   elementId: string;

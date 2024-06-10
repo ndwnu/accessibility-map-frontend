@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { BaseMapComponent } from '@modules/map/components/base-map/base-map.component';
 import { MapElement } from '@modules/map/elements/models';
 import { AccessibilityElement } from '@modules/map/elements/accessibility-element';
+import { LegendComponent } from '@modules/map/components/legend/legend.component';
 
 @Component({
   selector: 'ber-main-map',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LegendComponent],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
 })
