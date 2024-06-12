@@ -1,6 +1,6 @@
 import { AccessibilityDataService, TrafficSignService } from '@shared/services';
 import { Map, SourceSpecification } from 'maplibre-gl';
-import { filter } from 'rxjs';
+import { filter, switchMap } from 'rxjs';
 import { MapSource } from '../base/map-source';
 import { TrafficSignClusterLabelLayer } from './traffic-sign-cluster-label-layer';
 import { TrafficSignClusterLayer } from './traffic-sign-cluster-layer';
@@ -10,14 +10,16 @@ export class TrafficSignSource extends MapSource {
   constructor(map: Map, trafficSignService: TrafficSignService, accessibilityDataService: AccessibilityDataService) {
     super('traffic-signs', map);
 
-    // Todo: add unsubscribe logic
-    accessibilityDataService.selectedMunicipalityId$
-      .pipe(filter((municipalityId) => !!municipalityId))
-      .subscribe((municipalityId) => {
-        this.featureCollection$ = trafficSignService.getTrafficSigns(municipalityId!, this.rvvCodes);
-      });
+    this.featureCollection$ = accessibilityDataService.selectedMunicipalityId$.pipe(
+      filter((municipalityId) => !!municipalityId),
+      switchMap((municipalityId) => trafficSignService.getTrafficSigns(municipalityId!, this.rvvCodes)),
+    );
 
-    this.layers = [new TrafficSignLayer(map), new TrafficSignClusterLayer(map), new TrafficSignClusterLabelLayer(map)];
+    this.layers = [
+      new TrafficSignLayer(map, this.id),
+      new TrafficSignClusterLayer(map, this.id),
+      new TrafficSignClusterLabelLayer(map, this.id),
+    ];
   }
 
   get rvvCodes(): string[] {

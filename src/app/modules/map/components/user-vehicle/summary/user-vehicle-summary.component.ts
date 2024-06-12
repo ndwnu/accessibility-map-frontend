@@ -3,9 +3,8 @@ import { Component, inject, output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActionsComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
-import { VEHICLE_TYPES } from '@modules/map/models';
 import { IconComponent } from '@ndwnu/design-system';
-import { DataInputFormGroup, StepOneFormGroup, StepTwoFormGroup, StepThreeFormGroup } from '@shared/models';
+import { DataInputFormGroup } from '@shared/models';
 import { MunicipalityService } from '@shared/services';
 
 @Component({
@@ -25,69 +24,68 @@ export class UserVehicleSummaryComponent {
     return this.dataInputService.form;
   }
 
-  get stepOneForm(): FormGroup<StepOneFormGroup> {
-    return this.form.get('stepOne') as FormGroup<StepOneFormGroup>;
-  }
-
-  get stepTwoForm(): FormGroup<StepTwoFormGroup> {
-    return this.form.get('stepTwo') as FormGroup<StepTwoFormGroup>;
-  }
-
-  get stepThreeForm(): FormGroup<StepThreeFormGroup> {
-    return this.form.get('stepThree') as FormGroup<StepThreeFormGroup>;
-  }
+  // StepOneForm
 
   get licensePlate(): string {
-    return this.stepOneForm.get('licensePlate')?.value?.toLocaleUpperCase() ?? '';
+    return this.dataInputService.licensePlate;
   }
 
   get vehicleType(): string {
-    const vehicleTypeKey = this.stepOneForm.get('vehicleType')?.value;
-    return vehicleTypeKey ? VEHICLE_TYPES[vehicleTypeKey] : '';
+    return this.dataInputService.vehicleType;
   }
 
   get height(): number {
-    return this.stepOneForm.get('height')?.value ?? 0;
+    return this.dataInputService.height;
   }
 
   get trailer(): boolean {
-    return this.stepOneForm.get('trailer')?.value ?? false;
+    return this.dataInputService.trailer;
   }
 
-  get municipalityName(): string {
-    const municipalityId = this.stepTwoForm.get('municipalityId')?.value ?? '';
-    const municipality = this.municipalityService.getSyncMunicipality(municipalityId);
-    return municipality?.properties?.name ?? '';
+  // StepTwoForm
+
+  get municipalityId(): string {
+    return this.dataInputService.municipalityId;
+  }
+
+  get destination(): string {
+    return this.dataInputService.address;
   }
 
   get municipalityExemptionUrl(): string {
-    const municipalityId = this.stepTwoForm.get('municipalityId')?.value ?? '';
-    const municipality = this.municipalityService.getSyncMunicipality(municipalityId);
+    const municipalityId = this.municipalityId ?? '';
+    const municipality = this.municipalityService.getMunicipality(municipalityId);
     return municipality?.properties?.requestExemptionUrl ?? '';
   }
 
+  get municipalityName(): string {
+    return this.municipalityService.getMunicipality(this.municipalityId)?.properties.name ?? '';
+  }
+
+  // StepThreeForm
+
   get vehicleCurbWeight(): number {
-    return this.stepThreeForm.get('vehicleCurbWeight')?.value ?? 0;
+    return this.dataInputService.vehicleCurbWeight;
   }
 
   get vehicleLoad(): number {
-    return this.stepThreeForm.get('vehicleLoad')?.value ?? 0;
+    return this.dataInputService.vehicleLoad;
   }
 
   get vehicleTotalWeight(): number {
-    return this.stepThreeForm.get('vehicleTotalWeight')?.value ?? 0;
+    return this.dataInputService.vehicleTotalWeight;
   }
 
   get vehicleAxleLoad(): number {
-    return this.stepThreeForm.get('vehicleAxleLoad')?.value ?? 0;
+    return this.dataInputService.vehicleAxleLoad;
   }
 
   get vehicleLength(): number {
-    return this.stepThreeForm.get('vehicleLength')?.value ?? 0;
+    return this.dataInputService.vehicleLength;
   }
 
   get vehicleWidth(): number {
-    return this.stepThreeForm.get('vehicleWidth')?.value ?? 0;
+    return this.dataInputService.vehicleWidth;
   }
 
   onEditStep(step: number) {

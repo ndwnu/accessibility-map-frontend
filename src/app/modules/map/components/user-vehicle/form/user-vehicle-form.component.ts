@@ -2,22 +2,18 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, OnInit, signal, TemplateRef, viewChild, ViewContainerRef } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
 import { MainNavigationComponent } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  VehicleInfo,
-  StepOneFormGroup,
-  StepTwoFormGroup,
-  StepThreeFormGroup,
-  AccessibilityFilter,
-  exampleVehicleInfoList,
-} from '@shared/models';
+import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
+import { DestinationDataService } from '@shared/services/destination-data.service';
+import { LngLatLike } from 'maplibre-gl';
+import { extractPdokLonLatValue } from '@shared/utils/geo-utils';
 
 @UntilDestroy()
 @Component({
@@ -42,6 +38,7 @@ export class UserVehicleFormComponent implements OnInit {
   loading = signal(false);
 
   private readonly accessibilityDataService = inject(AccessibilityDataService);
+  private readonly destinationDataService = inject(DestinationDataService);
   private readonly map = inject(MapService);
   private readonly municipalityService = inject(MunicipalityService);
   private readonly overlay = inject(Overlay);
@@ -60,15 +57,15 @@ export class UserVehicleFormComponent implements OnInit {
   }
 
   protected get stepOneForm() {
-    return this.form.get('stepOne') as FormGroup<StepOneFormGroup>;
+    return this.dataInputService.stepOneForm;
   }
 
   protected get stepTwoForm() {
-    return this.form.get('stepTwo') as FormGroup<StepTwoFormGroup>;
+    return this.dataInputService.stepTwoForm;
   }
 
   protected get stepThreeForm() {
-    return this.form.get('stepThree') as FormGroup<StepThreeFormGroup>;
+    return this.dataInputService.stepThreeForm;
   }
 
   ngOnInit() {
@@ -91,9 +88,10 @@ export class UserVehicleFormComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (response) => {
+          this.destinationDataService.clearDestinationPoint();
           this.accessibilityDataService.setInaccessibleRoadSections(response.inaccessibleRoadSections);
-          this.accessibilityDataService.setSelectedMunicipalityId(this.form.value.stepTwo?.municipalityId!);
-          this.zoomToMunicipality();
+          this.accessibilityDataService.setSelectedMunicipalityId(this.dataInputService.municipalityId);
+          this.zoomToDestination();
         },
         error: (error) => {
           console.log(error);
@@ -111,8 +109,6 @@ export class UserVehicleFormComponent implements OnInit {
   }
 
   setVehicleInfo(vehicleInfo: VehicleInfo) {
-    // Todo: why is this done, this overrides height input by user
-    //this.stepOneForm?.get('height')?.setValue(vehicleInfo.height, { emitEvent: false });
     this.stepOneForm?.get('vehicleType')?.setValue(vehicleInfo.type, { emitEvent: false });
 
     const vehicleLoad =
@@ -176,10 +172,16 @@ export class UserVehicleFormComponent implements OnInit {
     };
   }
 
-  private zoomToMunicipality() {
-    const chosenMunicipality = this.municipalityService.getSyncMunicipality(this.form.value.stepTwo?.municipalityId!);
-    if (chosenMunicipality) {
-      this.map.fitBounds(chosenMunicipality.properties.bounds);
+  private zoomToDestination() {
+    if (this.dataInputService.pdokData?.type === 'gemeente') {
+      const chosenMunicipality = this.municipalityService.getMunicipality(this.dataInputService.municipalityId);
+      if (chosenMunicipality) {
+        this.map.fitBounds(chosenMunicipality.properties.bounds);
+      }
+    } else {
+      const centerPoint = extractPdokLonLatValue(this.dataInputService.pdokData!.centroide_ll);
+      this.destinationDataService.setDestinationPoint(centerPoint);
+      this.map.center(centerPoint as LngLatLike);
     }
   }
 }

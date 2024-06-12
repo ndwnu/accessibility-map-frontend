@@ -13,11 +13,12 @@ import {
 
 import { Feature } from 'geojson';
 
-import { FilterSpecification, LngLatLike, Map, StyleImageMetadata } from 'maplibre-gl';
+import { FilterSpecification, Map, StyleImageMetadata } from 'maplibre-gl';
 import { CommonModule } from '@angular/common';
 import { MapState } from '@shared/models';
 import { NgChanges } from '@shared/types/ng-changes.type';
 import { MapService } from '@shared/services/map.service';
+import { MapElement } from '@modules/map/elements/base';
 
 @Component({
   standalone: true,
@@ -32,20 +33,12 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
 
   @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
 
-  @Input() features: Feature[] = [];
-  @Input() zoomPosition?: LngLatLike;
-  @Input() mapState?: MapState;
-  @Input() enableFeatureInteraction = true;
-  @Input() enableMapIdle = true;
   @Input() expressions: FilterSpecification | undefined = undefined;
 
   map!: Map;
+  mapElements: MapElement[] = [];
 
   ngOnChanges(changes: NgChanges<BaseMapComponent>) {
-    if (changes?.zoomPosition?.currentValue) {
-      this.zoomToLocation(this.zoomPosition!);
-    }
-
     if (changes.expressions?.currentValue) {
       this.addExpressionsToLayer(this.expressions);
     }
@@ -91,13 +84,6 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   protected initiateMapLoading() {
     this.onLoadMap();
     this.resizeMap();
-  }
-
-  private zoomToLocation(lngLat: LngLatLike) {
-    this.map?.jumpTo({
-      center: lngLat,
-      zoom: 16,
-    });
   }
 
   private createMap() {

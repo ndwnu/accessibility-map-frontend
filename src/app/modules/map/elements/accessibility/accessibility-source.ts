@@ -7,9 +7,12 @@ import { AccessibilityLayer } from './accessibility-layer';
 
 export class AccessibilitySource extends MapSource {
   constructor(map: Map, accessibilityDataService: AccessibilityDataService) {
-    super('osm-vector', map);
+    super('accessibility', map);
 
-    this.layers = [new AccessibilityLayer(map, accessibilityDataService), new AccessibilityArrowLayer(map)];
+    this.layers = [
+      new AccessibilityLayer(map, this.id, accessibilityDataService),
+      new AccessibilityArrowLayer(map, this.id),
+    ];
   }
 
   protected getSpecification(): Partial<SourceSpecification> {

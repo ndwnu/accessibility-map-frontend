@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, output, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CardComponent, CheckboxComponent, FormFieldComponent } from '@ndwnu/design-system';
@@ -8,6 +8,7 @@ import { StepOneFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 
 import { ActionsComponent } from '../actions';
+import { DataInputService } from '@modules/data-input/services/data-input.service';
 
 @UntilDestroy()
 @Component({
@@ -42,10 +43,12 @@ export class StepOneComponent implements OnInit {
     .map(([key, value]) => ({ key, value }));
 
   vehicleHeight = computed(() => this.form().controls.height.value || 0);
+
+  private dataInputService = inject(DataInputService);
   private rdwService = inject(RdwService);
 
-  get vehicleTypeControl(): FormControl {
-    return this.form().get('vehicleType') as FormControl;
+  get vehicleTypeControl() {
+    return this.dataInputService.vehicleTypeControl;
   }
 
   ngOnInit() {

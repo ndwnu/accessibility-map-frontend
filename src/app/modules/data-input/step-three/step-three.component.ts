@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, OnInit, output } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CardComponent, FormFieldComponent, InputDirective } from '@ndwnu/design-system';
 import { StepThreeFormGroup, VehicleInfo } from '@shared/models';
 
 import { ActionsComponent } from '../actions';
+import { DataInputService } from '@modules/data-input/services/data-input.service';
 
 @Component({
   selector: 'ber-step-three',
@@ -22,9 +23,11 @@ export class StepThreeComponent implements OnInit {
 
   maxLoad = computed(() => (this.vehicleInfo()?.maxWeight ?? 0) - (this.vehicleInfo()?.weight ?? 0));
 
+  private dataInputService = inject(DataInputService);
+
   ngOnInit() {
-    this.vehicleLoadControl?.valueChanges.subscribe((value) => {
-      this.vehicleTotalWeightControl?.patchValue((value ?? 0) + (this.vehicleInfo()?.weight ?? 0));
+    this.vehicleLoadControl.valueChanges.subscribe((value) => {
+      this.vehicleTotalWeightControl.patchValue((value ?? 0) + (this.vehicleInfo()?.weight ?? 0));
     });
   }
 
@@ -37,12 +40,14 @@ export class StepThreeComponent implements OnInit {
   }
 
   get vehicleTotalWeightControl() {
-    return this.form().get('vehicleTotalWeight');
+    return this.dataInputService.vehicleTotalWeightControl;
   }
+
   get vehicleLoadControl() {
-    return this.form().get('vehicleLoad');
+    return this.dataInputService.vehicleLoadControl;
   }
+
   get vehicleAxleLoadControl() {
-    return this.form().get('vehicleAxleLoad');
+    return this.dataInputService.vehicleAxleLoadControl;
   }
 }

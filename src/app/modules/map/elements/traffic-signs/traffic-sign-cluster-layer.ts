@@ -2,12 +2,8 @@ import { LayerSpecification } from 'maplibre-gl';
 import { MapLayer } from '../base/map-layer';
 
 export class TrafficSignClusterLayer extends MapLayer {
-  get id(): string {
+  override get id(): string {
     return `${this.sourceId}-cluster-layer`;
-  }
-
-  protected get sourceId() {
-    return 'traffic-signs';
   }
 
   protected getSpecification(): Partial<LayerSpecification> {

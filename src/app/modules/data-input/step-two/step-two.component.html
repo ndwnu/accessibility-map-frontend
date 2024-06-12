@@ -1,17 +1,25 @@
 <ndw-card>
-  <ng-container title> Gemeente kiezen </ng-container>
+  <ng-container title> Gemeente of adres kiezen </ng-container>
   <ng-container body>
     <div class="content">
-      <p>Selecteer de gemeente van uw bestemming.</p>
+      <p>Selecteer de gemeente of het adres van uw bestemming.</p>
       <form [formGroup]="form()">
-        <ndw-form-field label="Gemeente van bestemming">
-          <select ndwInput formControlName="municipalityId" required>
-            <option selected disabled>Selecteer gemeente</option>
-            @for (municipality of municipalities; track municipality.id) {
-              <option [value]="municipality.id">{{ municipality.name }}</option>
-            }
-          </select>
+        <ndw-form-field>
+          <input ndwInput formControlName="address" type="search" placeholder="Voer gemeente of adres in" />
         </ndw-form-field>
+        @if (loading) {
+          <span>Loading...</span>
+        }
+        <ul class="list-group pdok-suggestion-list">
+          @for (suggestion of pdokSuggestions; track suggestion.id) {
+            <li class="list-group-item pdok-suggestion" (click)="selectPdokSuggestion(suggestion.id)">
+              {{ suggestion.weergavenaam }}
+            </li>
+          }
+        </ul>
+        @if (pdokSuggestions?.length === 0) {
+          <span>Er kan geen gemeente of adres worden gevonden met die naam</span>
+        }
       </form>
     </div>
   </ng-container>

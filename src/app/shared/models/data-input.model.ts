@@ -1,5 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { VehicleType } from '@modules/map/models';
+import { PdokLookup } from '@shared/models/pdok.model';
 
 export interface StepOneFormGroup {
   licensePlate: FormControl<string | null>;
@@ -11,6 +12,9 @@ export interface StepOneFormGroup {
 
 export interface StepTwoFormGroup {
   municipalityId: FormControl<string | null>;
+  address: FormControl<string | null>;
+  pdokId: FormControl<string | null>;
+  pdokData: FormControl<PdokLookup | null>;
 }
 
 export interface StepThreeFormGroup {

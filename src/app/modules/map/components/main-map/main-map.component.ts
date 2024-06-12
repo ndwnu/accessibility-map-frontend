@@ -2,10 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseMapComponent } from '@modules/map/components/base-map/base-map.component';
 import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
-import { MapElement } from '@modules/map/elements/base';
 import { AccessibilityDataService, TrafficSignService } from '@shared/services';
 import { LegendComponent } from '../legend/legend.component';
 import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
+import { DestinationElement } from '@modules/map/elements/destination/destination-element';
+import { DestinationDataService } from '@shared/services/destination-data.service';
+
 @Component({
   selector: 'ber-main-map',
   standalone: true,
@@ -14,10 +16,9 @@ import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-
   styleUrl: './main-map.component.scss',
 })
 export class MainMapComponent extends BaseMapComponent {
-  mapElements: MapElement[] = [];
-
   private readonly trafficSignService = inject(TrafficSignService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
+  private readonly destinationDataService = inject(DestinationDataService);
 
   protected async onLoadMap() {
     this.loadImages();
@@ -25,6 +26,7 @@ export class MainMapComponent extends BaseMapComponent {
     this.mapElements = [
       new AccessibilityElement(this.map, this.accessibilityDataService),
       new TrafficSignElement(this.map, this.trafficSignService, this.accessibilityDataService),
+      new DestinationElement(this.map, this.destinationDataService),
     ];
   }
 
@@ -41,5 +43,6 @@ export class MainMapComponent extends BaseMapComponent {
     this.loadImage('C7a', 'assets/images/traffic-signs/C7a.png', { pixelRatio: 2 });
     this.loadImage('C7b', 'assets/images/traffic-signs/C7b.png', { pixelRatio: 2 });
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
+    this.loadImage('marker', 'assets/images/marker-256.png');
   }
 }

@@ -1,19 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, inject, OnInit, TemplateRef, viewChild, ViewChild } from '@angular/core';
+import { Component, inject, TemplateRef } from '@angular/core';
 import { MainMapComponent } from '@modules/map/components/main-map/main-map.component';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { AccessibilityDataService } from '@shared/services/accessibility-data.service';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { FilterSpecification } from 'maplibre-gl';
-import { combineLatest, filter } from 'rxjs';
 import { CardComponent } from '@ndwnu/design-system';
-import { MapService } from '@shared/services';
 import { UserVehicleSummaryComponent } from '@modules/map/components/user-vehicle/summary/user-vehicle-summary.component';
-import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { UserVehicleFormComponent } from '@modules/map/components/user-vehicle/form/user-vehicle-form.component';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { DataInputFormGroup, InaccessibleRoadSection } from '@shared/models';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -28,10 +23,10 @@ import { DataInputFormGroup, InaccessibleRoadSection } from '@shared/models';
     UserVehicleSummaryComponent,
     ReactiveFormsModule,
   ],
-  templateUrl: './map.component.html',
-  styleUrl: './map.component.scss',
+  templateUrl: './map-overview.component.html',
+  styleUrl: './map-overview.component.scss',
 })
-export class MapComponent {
+export class MapOverviewComponent {
   private readonly offcanvasService = inject(NgbOffcanvas);
 
   expressions: FilterSpecification | undefined = undefined;

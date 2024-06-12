@@ -9,16 +9,14 @@ import {
   INACCESSIBLE_ROAD_SECTION_COLOR,
 } from '../constants';
 
-const ACCESSIBILITY_LAYER_ID = 'accessibility-layer';
-
 const MIN_ZOOM = 7;
 const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'FP', 'VP', 'VZ', 'OVB', 'CADO', 'RP', 'VV'];
 const INACTIVE_MUNICIPALITY_COLOR = '#939393';
 const LINE_OPACITY = 0.5;
 
 export class AccessibilityLayer extends MapLayer {
-  constructor(map: Map, accessibilityDataService: AccessibilityDataService) {
-    super(map);
+  constructor(map: Map, sourceId: string, accessibilityDataService: AccessibilityDataService) {
+    super(map, sourceId);
 
     // Todo: add unsubscribe logic
     combineLatest([
@@ -29,10 +27,6 @@ export class AccessibilityLayer extends MapLayer {
       .subscribe(([inaccessibleRoadSections, selectedMunicipalityId]) => {
         this.updateStyles(inaccessibleRoadSections, selectedMunicipalityId!);
       });
-  }
-
-  get id(): string {
-    return ACCESSIBILITY_LAYER_ID;
   }
 
   override onClick(event: clickEvent): void {

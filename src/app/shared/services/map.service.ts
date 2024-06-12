@@ -3,7 +3,10 @@ import { environment } from '@env/environment';
 import { MAP_MIN_ZOOM } from '@modules/map/elements/constants';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BOUNDS_NL } from '@shared/constants/map.constants';
-import { LngLatBoundsLike, Map } from 'maplibre-gl';
+import { LngLatBoundsLike, LngLatLike, Map } from 'maplibre-gl';
+import { Position } from 'geojson';
+
+export const MAP_DEFAULT_ZOOM = 15;
 
 @UntilDestroy()
 @Injectable({
@@ -27,6 +30,13 @@ export class MapService {
     this.map?.fitBounds(bounds, {
       padding: 0,
       duration: 400,
+    });
+  }
+
+  center(mapCenter: LngLatLike, mapZoom?: number) {
+    this.map?.jumpTo({
+      center: mapCenter,
+      zoom: mapZoom ?? MAP_DEFAULT_ZOOM,
     });
   }
 }

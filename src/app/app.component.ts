@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { IconService, MainNavigationComponent, MenuItem, NdwBrand } from '@ndwnu/design-system';
 import icons from '@ndwnu/design-system/assets/icons/icons.json';
+import { MunicipalityService } from '@shared/services';
 
 @Component({
   selector: 'ber-root',
@@ -23,8 +24,10 @@ export class AppComponent implements OnInit {
   ];
 
   private readonly iconService = inject(IconService);
+  private readonly municipalityService = inject(MunicipalityService);
 
   ngOnInit() {
     this.iconService.setIcons(icons);
+    this.municipalityService.loadMunicipalities();
   }
 }

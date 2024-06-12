@@ -4,14 +4,6 @@ import { MapLayer } from '../base/map-layer';
 const RVV_CODE_UNKNOWN = 'onbekend';
 
 export class TrafficSignLayer extends MapLayer {
-  get id(): string {
-    return `${this.sourceId}-layer`;
-  }
-
-  protected get sourceId() {
-    return 'traffic-signs';
-  }
-
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,

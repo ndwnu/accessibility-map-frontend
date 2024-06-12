@@ -7,13 +7,18 @@ export abstract class MapLayer {
 
   private static cursorPointerCount = 0;
 
-  constructor(protected readonly map: Map) {
+  constructor(
+    protected readonly map: Map,
+    protected readonly sourceId: string,
+  ) {
     this.map.addLayer(this.getSpecification() as LayerSpecification);
 
     this.setupClickHandlers();
   }
 
-  abstract get id(): string;
+  get id(): string {
+    return `${this.sourceId}-layer`;
+  }
 
   get styleLayer(): StyleLayer | undefined {
     return this.map.getLayer(this.id);

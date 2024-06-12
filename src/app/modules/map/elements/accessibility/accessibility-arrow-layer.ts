@@ -8,8 +8,8 @@ const ONE_WAY_ARROW_SPACING_MIN = 70;
 const ONE_WAY_DRIVING_DIRECTION = 'H';
 
 export class AccessibilityArrowLayer extends MapLayer {
-  get id(): string {
-    return 'accessibility-arrow-layer';
+  override get id(): string {
+    return `${this.sourceId}-arrow-layer`;
   }
 
   protected getSpecification(): Partial<LayerSpecification> {

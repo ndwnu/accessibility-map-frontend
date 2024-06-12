@@ -10,7 +10,7 @@
         <ndw-form-field
           [label]="'Lading in kg (max: ' + maxLoad() + ')'"
           [error]="
-            vehicleLoadControl?.errors
+            vehicleLoadControl.errors
               ? 'De lading moet ingevuld zijn en mag niet meer zijn dan ' + maxLoad()
               : undefined
           "
@@ -25,7 +25,7 @@
         <ndw-form-field
           [label]="'Aslast in kg (max: ' + vehicleInfo()?.maxAxleWeight + ')'"
           [error]="
-            vehicleAxleLoadControl?.errors
+            vehicleAxleLoadControl.errors
               ? 'De aslast moet gevuld zijn en mag niet meer zijn dan ' + vehicleInfo()?.maxAxleWeight
               : undefined
           "

@@ -13,3 +13,16 @@ ndw-card {
     min-height: 24rem;
   }
 }
+
+.pdok-suggestion-list {
+  max-height: 280px;
+  overflow-y: scroll;
+
+  .pdok-suggestion {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--ndw-color-grey-200);
+    }
+  }
+}
