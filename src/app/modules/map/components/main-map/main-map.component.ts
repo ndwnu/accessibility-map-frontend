@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseMapComponent } from '@modules/map/components/base-map/base-map.component';
-import { MapElement } from '@modules/map/elements/models';
-import { AccessibilityElement } from '@modules/map/elements/accessibility-element';
-import { LegendComponent } from '@modules/map/components/legend/legend.component';
-
+import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
+import { MapElement } from '@modules/map/elements/base';
+import { AccessibilityDataService } from '@shared/services';
+import { LegendComponent } from '../legend/legend.component';
 @Component({
   selector: 'ber-main-map',
   standalone: true,
@@ -15,16 +15,12 @@ import { LegendComponent } from '@modules/map/components/legend/legend.component
 export class MainMapComponent extends BaseMapComponent {
   mapElements: MapElement[] = [];
 
+  private readonly accessibilityDataService = inject(AccessibilityDataService);
+
   protected async onLoadMap() {
     this.loadArrowImage();
 
-    this.mapElements = [new AccessibilityElement('ACCESSIBILITY', this.map)];
-
-    this.mapElements.forEach((element) => {
-      element.createSources();
-      element.createLayers();
-      element.setupClickHandlers();
-    });
+    this.mapElements = [new AccessibilityElement(this.map, this.accessibilityDataService)];
   }
 
   private loadArrowImage() {

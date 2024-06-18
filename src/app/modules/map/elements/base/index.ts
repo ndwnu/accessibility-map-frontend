@@ -1,1 +1,1 @@
-export * from './base-element';
+export * from './map-element';
