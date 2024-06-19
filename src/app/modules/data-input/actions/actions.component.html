@@ -1,12 +1,11 @@
 <div class="next">
   Stap {{ currentStep() }} van {{ steps() }}
   @if (currentStep() !== steps()) {
-  <button ndwButton large [disabled]="disableNext()" (click)="onNext()">Volgende</button>
+    <button ndwButton large [disabled]="disableNext()" (click)="onNext()">Volgende</button>
   } @else {
-  <button ndwButton large [disabled]="disableComplete()" (click)="onComplete()">Bekijk kaart</button>
-
+    <button ndwButton large [disabled]="disableComplete()" (click)="onComplete()">Bekijk kaart</button>
   }
 </div>
 @if (currentStep() > 1) {
-<button ndwButton large outline (click)="onPrevious()">Vorige</button>
+  <button ndwButton large outline (click)="onPrevious()">Vorige</button>
 }

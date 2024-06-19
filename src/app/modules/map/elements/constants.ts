@@ -1,13 +1,4 @@
-export const MIN_ZOOM = 7;
-export const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'FP', 'VP', 'VZ', 'OVB', 'CADO', 'RP', 'VV'];
-export const INACTIVE_MUNICIPALITY_COLOR = '#939393';
+export const MAP_MIN_ZOOM = 7;
 export const INACCESSIBLE_ROAD_SECTION_COLOR = '#FF2C2C';
 export const INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR = '#7570b3';
 export const ACCESSIBLE_ROAD_SECTION_COLOR = '#006C18';
-export const LINE_OPACITY = 0.5;
-
-export const ONE_WAY_ARROW_SIZE = 0.5;
-export const ONE_WAY_ARROW_OPACITY = 0.4;
-export const ONE_WAY_ARROW_SPACING_MAX = 200;
-export const ONE_WAY_ARROW_SPACING_MIN = 70;
-export const ONE_WAY_DRIVING_DIRECTION = 'H';

@@ -26,7 +26,7 @@ export class AccessibilityArrowLayer extends MapLayer {
           ['zoom'],
           15,
           ONE_WAY_ARROW_SPACING_MAX,
-          18,
+          20,
           ONE_WAY_ARROW_SPACING_MIN,
         ],
         'icon-image': 'arrow-icon',

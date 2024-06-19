@@ -7,4 +7,8 @@ export abstract class MapElement {
   constructor(protected readonly map: Map) {
     this.map = map;
   }
+
+  setVisible(visible: boolean) {
+    this.sources.forEach((source) => source.setVisible(visible));
+  }
 }

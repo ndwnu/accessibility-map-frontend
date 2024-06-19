@@ -19,6 +19,10 @@ export abstract class MapLayer {
     return this.map.getLayer(this.id);
   }
 
+  setVisible(visible: boolean) {
+    this.map.setLayoutProperty(this.id, 'visibility', visible ? 'visible' : 'none');
+  }
+
   onClick?(event: clickEvent): void;
 
   protected abstract getSpecification(): Partial<LayerSpecification>;

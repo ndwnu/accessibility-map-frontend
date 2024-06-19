@@ -13,7 +13,7 @@ import {
 
 import { Feature } from 'geojson';
 
-import { FilterSpecification, LngLatLike, Map } from 'maplibre-gl';
+import { FilterSpecification, LngLatLike, Map, StyleImageMetadata } from 'maplibre-gl';
 import { CommonModule } from '@angular/common';
 import { MapState } from '@shared/models';
 import { NgChanges } from '@shared/types/ng-changes.type';
@@ -71,6 +71,17 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
     if (this.map && existingLayer) {
       this.map.setFilter(layerId, expressions);
     }
+  }
+
+  protected loadImage(name: string, path: string, options?: Partial<StyleImageMetadata>) {
+    this.map.loadImage(path, (error, image) => {
+      if (!image || error) {
+        console.error(`Failed to load ${name} image:`, error);
+        return;
+      }
+
+      this.map.addImage(name, image, options);
+    });
   }
 
   private onRenderMap() {}

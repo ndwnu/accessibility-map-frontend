@@ -2,4 +2,4 @@
   <ng-content />
 </div>
 <div class="map-wrapper__map" #map></div>
-<ber-legend />
+<ber-legend (onTrafficSignVisible)="handleTrafficSignVisible($event)" />

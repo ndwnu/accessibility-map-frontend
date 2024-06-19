@@ -7,12 +7,15 @@ import { Environment } from './environment.interface';
 export const environment: Environment = {
   production: false,
   apiBaseUrl: '/api',
-  baseUrl: 'http://localhost:4200',
+  baseUrl: 'http://localhost:4203',
   mapStyles: {
     default: 'https://maps.staging.ndw.nu/styles/osm-front-office-light-with-nwb-roads.json',
   },
   vectorTiles: {
     NWB: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/',
+  },
+  geoJson: {
+    trafficSignUrl: '/api/rest/static-road-data/traffic-signs/v3/current-state',
   },
   nls: {
     accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',

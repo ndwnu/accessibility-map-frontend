@@ -10,23 +10,24 @@
     <hr />
   </div>
   @if (licensePlate) {
-  <div>Kenteken</div>
-  <div>
-    <strong>{{ licensePlate }}</strong>
-  </div>
-  } @if (vehicleType) {
-  <div>Voertuigtype</div>
-  <div>
-    <strong>{{ vehicleType }}</strong>
-  </div>
+    <div>Kenteken</div>
+    <div>
+      <strong>{{ licensePlate }}</strong>
+    </div>
+  }
+  @if (vehicleType) {
+    <div>Voertuigtype</div>
+    <div>
+      <strong>{{ vehicleType }}</strong>
+    </div>
   }
   <div>Hoogte</div>
   <div>
     <strong>{{ height | number: '1.0-2' }} meter</strong>
   </div>
-  @if(trailer) {
-  <div>Aanhanger</div>
-  <div><strong>Ja</strong></div>
+  @if (trailer) {
+    <div>Aanhanger</div>
+    <div><strong>Ja</strong></div>
   }
 
   <!-- Step 2 -->
@@ -85,12 +86,12 @@
   <div>{{ vehicleWidth | number: '1.0-2' }} meter</div>
 </div>
 
-@if(municipalityExemptionUrl){
-<h5 class="mt-5">Ontheffing aanvragen?</h5>
-<p>
-  Rvv ontheffingen voor de gemeente {{ municipalityName }} kunt aanvragen via deze
-  <a ndwLink [href]="municipalityExemptionUrl" target="_blank">link</a>.
-</p>
+@if (municipalityExemptionUrl) {
+  <h5 class="mt-5">Ontheffing aanvragen?</h5>
+  <p>
+    Rvv ontheffingen voor de gemeente {{ municipalityName }} kunt aanvragen via deze
+    <a ndwLink [href]="municipalityExemptionUrl" target="_blank">link</a>.
+  </p>
 }
 
 <div class="d-flex justify-content-end gap-3 mt-5">

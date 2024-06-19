@@ -8,7 +8,7 @@
           <select ndwInput formControlName="municipalityId" required>
             <option selected disabled>Selecteer gemeente</option>
             @for (municipality of municipalities; track municipality.id) {
-            <option [value]="municipality.id">{{ municipality.name }}</option>
+              <option [value]="municipality.id">{{ municipality.name }}</option>
             }
           </select>
         </ndw-form-field>

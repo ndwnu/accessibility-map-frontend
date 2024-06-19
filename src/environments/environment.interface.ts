@@ -10,6 +10,9 @@ export interface Environment {
   vectorTiles: {
     [K in VectorSource]: string;
   };
+  geoJson: {
+    trafficSignUrl: string;
+  };
   nls: {
     accessibilityUrl: string;
   };

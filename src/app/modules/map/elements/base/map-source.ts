@@ -1,5 +1,5 @@
 import { FeatureCollection } from 'geojson';
-import { GeoJSONSource, Map, SourceSpecification } from 'maplibre-gl';
+import { Map, SourceSpecification, GeoJSONSource } from 'maplibre-gl';
 import { Observable } from 'rxjs';
 import { MapLayer } from './map-layer';
 
@@ -24,6 +24,10 @@ export abstract class MapSource {
     this.subscribeToFeatureCollection();
   }
 
+  setVisible(visible: boolean) {
+    this.layers.forEach((layer) => layer.setVisible(visible));
+  }
+
   protected abstract getSpecification(): Partial<SourceSpecification>;
 
   private subscribeToFeatureCollection() {
@@ -31,6 +35,7 @@ export abstract class MapSource {
       this.featureCollection$.subscribe({
         next: (featureCollection) => {
           const source = this.map.getSource(this.id);
+
           if (source && source.type === 'geojson') {
             (source as GeoJSONSource).setData(featureCollection);
           } else {

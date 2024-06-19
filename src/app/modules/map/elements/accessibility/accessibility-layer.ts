@@ -3,15 +3,17 @@ import { AccessibilityDataService } from '@shared/services';
 import { Map, LayerSpecification } from 'maplibre-gl';
 import { combineLatest, filter } from 'rxjs';
 import { clickEvent, MapLayer } from '../base/map-layer';
+import {
+  ACCESSIBLE_ROAD_SECTION_COLOR,
+  INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
+  INACCESSIBLE_ROAD_SECTION_COLOR,
+} from '../constants';
 
 const ACCESSIBILITY_LAYER_ID = 'accessibility-layer';
 
 const MIN_ZOOM = 7;
 const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'FP', 'VP', 'VZ', 'OVB', 'CADO', 'RP', 'VV'];
 const INACTIVE_MUNICIPALITY_COLOR = '#939393';
-const INACCESSIBLE_ROAD_SECTION_COLOR = '#FF2C2C';
-const INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR = '#7570b3';
-const ACCESSIBLE_ROAD_SECTION_COLOR = '#006C18';
 const LINE_OPACITY = 0.5;
 
 export class AccessibilityLayer extends MapLayer {

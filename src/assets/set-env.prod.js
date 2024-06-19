@@ -9,6 +9,9 @@ window.environment = {
   vectorTiles: {
     NWB: '${NWB_ROAD_SECTIONS_VECTOR_URL}',
   },
+  geoJson: {
+    trafficSignUrl: '${NWB_TRAFFIC_SIGN_CURRENT_STATE_URL}',
+  },
   nls: {
     accessibilityUrl: '${NLS_ACCESSIBILITY_URL}',
   },
