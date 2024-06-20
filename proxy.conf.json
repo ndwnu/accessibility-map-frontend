@@ -1,7 +1,0 @@
-{
-  "/api/rest/static-road-data": {
-    "target": "https://data.ndw.nu",
-    "changeOrigin": true,
-    "logLevel": "debug"
-  }
-}

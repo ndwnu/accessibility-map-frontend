@@ -15,7 +15,7 @@ export const environment: Environment = {
     NWB: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/',
   },
   geoJson: {
-    trafficSignUrl: '/api/rest/static-road-data/traffic-signs/v3/current-state',
+    trafficSignUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/traffic-signs/v3/current-state',
   },
   nls: {
     accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
