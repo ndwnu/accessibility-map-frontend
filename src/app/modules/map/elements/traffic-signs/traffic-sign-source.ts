@@ -41,7 +41,7 @@ export class TrafficSignSource extends MapSource {
       },
       cluster: true,
       clusterMaxZoom: 14,
-      clusterRadius: 50,
+      clusterRadius: 1,
     };
   }
 }
