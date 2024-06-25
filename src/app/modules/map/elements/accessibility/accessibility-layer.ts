@@ -61,7 +61,12 @@ export class AccessibilityLayer extends MapLayer {
 
   protected updateStyles(inaccessibleRoadSections: InaccessibleRoadSection[], municipality: string) {
     const inaccessibleRoadSectionIds = inaccessibleRoadSections
-      .filter((section) => section.backwardAccessible === false && section.forwardAccessible === false)
+      .filter((section) => {
+        const bothDirectionsInaccessible = section.forwardAccessible === false && section.backwardAccessible === false;
+        const forwardInaccessible = section.forwardAccessible === false && section.backwardAccessible === undefined;
+        const backwardInaccessible = section.forwardAccessible === undefined && section.backwardAccessible === false;
+        return bothDirectionsInaccessible || forwardInaccessible || backwardInaccessible;
+      })
       .map((section) => section.roadSectionId);
 
     const municipalityId = Number(municipality.replace(/^GM/, '').replace(/^0+/, ''));
