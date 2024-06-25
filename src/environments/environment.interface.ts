@@ -4,6 +4,7 @@ export interface Environment {
   production: boolean;
   apiBaseUrl: string;
   baseUrl: string;
+  georgeUrl: string;
   mapStyles: {
     [key: string]: string;
   };

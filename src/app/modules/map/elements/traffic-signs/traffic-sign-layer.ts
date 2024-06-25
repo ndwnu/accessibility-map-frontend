@@ -1,9 +1,32 @@
-import { LayerSpecification } from 'maplibre-gl';
-import { MapLayer } from '../base/map-layer';
+import { TrafficSign } from '@shared/models/traffic-sign.model';
+import { TrafficSignService } from '@shared/services';
+import { LayerSpecification, Map } from 'maplibre-gl';
+import { clickEvent, MapLayer } from '../base/map-layer';
 
 const RVV_CODE_UNKNOWN = 'onbekend';
 
 export class TrafficSignLayer extends MapLayer {
+  constructor(
+    map: Map,
+    sourceId: string,
+    private readonly trafficSignService: TrafficSignService,
+  ) {
+    super(map, sourceId);
+  }
+
+  protected override onClick(event: clickEvent): void {
+    const trafficSigns = event.features?.map(
+      (feature) =>
+        ({
+          ...feature.properties,
+          textSigns: JSON.parse(feature.properties.textSigns || '{}'),
+          lnglat: event.lngLat,
+        }) as TrafficSign,
+    );
+
+    this.trafficSignService.setSelectedTrafficSigns(trafficSigns);
+  }
+
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,

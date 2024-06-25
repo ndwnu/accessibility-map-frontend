@@ -2,16 +2,17 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseMapComponent } from '@modules/map/components/base-map/base-map.component';
 import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
-import { AccessibilityDataService, TrafficSignService } from '@shared/services';
-import { LegendComponent } from '../legend/legend.component';
-import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
 import { DestinationElement } from '@modules/map/elements/destination/destination-element';
+import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
+import { TrafficSignService, AccessibilityDataService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
+import { LegendComponent } from '../legend/legend.component';
+import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs/selected-traffic-signs.component';
 
 @Component({
   selector: 'ber-main-map',
   standalone: true,
-  imports: [CommonModule, LegendComponent],
+  imports: [CommonModule, LegendComponent, SelectedTrafficSignsComponent],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
 })

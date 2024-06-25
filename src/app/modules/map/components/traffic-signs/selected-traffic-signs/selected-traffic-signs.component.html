@@ -1,0 +1,60 @@
+@if (trafficSign(); as trafficSign) {
+  <div class="selected-traffic-signs">
+    <div class="selected-traffic-signs__item">
+      @if(trafficSign.image) {
+        <img [src]="trafficSign.image" alt="{{ trafficSign.rvvCode }} verkeersbord" />
+      }
+      @else {
+        <img src="assets/images/traffic-signs/not-available.png" alt="Afbeelding van verkeerdbord niet beschikbaar" />
+      }
+      
+      <div class="selected-traffic-signs__content">
+        <h1 class="ndw-paragraph-bold-lg">{{ trafficSign.roadName }}</h1>
+        <p>
+          {{ trafficSign.side | trafficSignOrientation }}
+          @if (trafficSign.bearing > 0) {
+            ({{ trafficSign.bearing }}°)
+          }
+        </p>
+
+        @if (trafficSign.lnglat) {
+          <div>
+            <a ndwLink [href]="streetviewUrl()" target="_blank">Streetview <ndw-icon name="link-external" /></a>
+          </div>
+        }
+        <div>
+          <a ndwLink [href]="georgeTrafficSignUrl()" target="_blank"
+            >Bord in George <ndw-icon name="link-external"
+          /></a>
+        </div>
+        @if (trafficSign.wvkId) {
+          <div>
+            <a ndwLink [href]="georgeRoadSectionUrl()" target="_blank"
+              >Wegvak in George <ndw-icon name="link-external"
+            /></a>
+          </div>
+        }
+      </div>
+
+      <div class="selected-traffic-signs__actions">
+        <button ndwButton large (click)="navigateToRvvExemption()">RVV ontheffing</button>
+      </div>
+    </div>
+
+    @if ((selectedTrafficSigns()?.length ?? 0) > 1) {
+      <div class="selected-traffic-signs__pagination">
+        <button ndwButton title="Vorige bord" [attr.secondary]="true" (click)="previous()">
+          <ndw-icon name="chevron-left" />
+        </button>
+        {{ selectIndex() + 1 }} van {{ selectedTrafficSigns()?.length }}
+        <button ndwButton title="Volgende bord" [attr.secondary]="true" (click)="next()">
+          <ndw-icon name="chevron-right" />
+        </button>
+      </div>
+    }
+
+    <button class="selected-traffic-signs__close-button" ndwButton outline>
+      <ndw-icon name="x" (click)="close()" />
+    </button>
+  </div>
+}

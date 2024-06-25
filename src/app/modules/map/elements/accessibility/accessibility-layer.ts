@@ -2,7 +2,7 @@ import { InaccessibleRoadSection } from '@shared/models';
 import { AccessibilityDataService } from '@shared/services';
 import { ExpressionSpecification, LayerSpecification, Map } from 'maplibre-gl';
 import { combineLatest, filter } from 'rxjs';
-import { clickEvent, MapLayer } from '../base/map-layer';
+import { MapLayer } from '../base/map-layer';
 import {
   ACCESSIBLE_ROAD_SECTION_COLOR,
   INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
@@ -27,10 +27,6 @@ export class AccessibilityLayer extends MapLayer {
       .subscribe(([inaccessibleRoadSections, selectedMunicipalityId]) => {
         this.updateStyles(inaccessibleRoadSections, selectedMunicipalityId!);
       });
-  }
-
-  override onClick(event: clickEvent): void {
-    console.log('Accessibility road clicked', event.features);
   }
 
   protected getSpecification(): Partial<LayerSpecification> {

@@ -16,7 +16,7 @@ export class TrafficSignSource extends MapSource {
     );
 
     this.layers = [
-      new TrafficSignLayer(map, this.id),
+      new TrafficSignLayer(map, this.id, trafficSignService),
       new TrafficSignClusterLayer(map, this.id),
       new TrafficSignClusterLabelLayer(map, this.id),
     ];

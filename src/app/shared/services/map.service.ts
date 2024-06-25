@@ -4,7 +4,6 @@ import { MAP_MIN_ZOOM } from '@modules/map/elements/constants';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BOUNDS_NL } from '@shared/constants/map.constants';
 import { LngLatBoundsLike, LngLatLike, Map } from 'maplibre-gl';
-import { Position } from 'geojson';
 
 export const MAP_DEFAULT_ZOOM = 15;
 

@@ -10,15 +10,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-
 import { Feature } from 'geojson';
-
-import { FilterSpecification, Map, StyleImageMetadata } from 'maplibre-gl';
 import { CommonModule } from '@angular/common';
 import { MapState } from '@shared/models';
 import { NgChanges } from '@shared/types/ng-changes.type';
 import { MapService } from '@shared/services/map.service';
 import { MapElement } from '@modules/map/elements/base';
+import { FilterSpecification, StyleImageMetadata, Map } from 'maplibre-gl';
 
 @Component({
   standalone: true,

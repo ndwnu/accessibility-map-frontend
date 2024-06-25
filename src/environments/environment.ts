@@ -8,6 +8,7 @@ export const environment: Environment = {
   production: false,
   apiBaseUrl: '/api',
   baseUrl: 'http://localhost:4203',
+  georgeUrl: 'https://wegkenmerken.staging.ndw.nu',
   mapStyles: {
     default: 'https://maps.staging.ndw.nu/styles/osm-front-office-light-with-nwb-roads.json',
   },

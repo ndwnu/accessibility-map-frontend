@@ -28,17 +28,16 @@ export abstract class MapLayer {
     this.map.setLayoutProperty(this.id, 'visibility', visible ? 'visible' : 'none');
   }
 
-  onClick?(event: clickEvent): void;
+  protected onClick?(event: clickEvent): void;
 
   protected abstract getSpecification(): Partial<LayerSpecification>;
 
   private setupClickHandlers() {
-    const onClickHandler = this.onClick;
-    if (!onClickHandler) return;
+    if (!this.onClick) return;
 
     // Attach click event
     this.map.on('click', this.id, (event) => {
-      onClickHandler(event);
+      this.onClick?.(event);
     });
 
     // Use mousemove to determine cursor style

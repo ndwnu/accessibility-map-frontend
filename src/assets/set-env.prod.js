@@ -6,6 +6,7 @@ window.environment = {
   mapStyles: {
     default: '${MAP_STYLES_DEFAULT_URL}',
   },
+  georgeUrl: '${GEORGE_URL}',
   vectorTiles: {
     NWB: '${NWB_ROAD_SECTIONS_VECTOR_URL}',
   },
