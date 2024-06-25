@@ -50,9 +50,12 @@ export class RdwService {
     return axleResponse.reduce((max, axle) => Math.max(parseFloat(axle.wettelijk_toegestane_maximum_aslast), max), 0);
   }
 
-  private mapVehicleType(rdwVehicleType: string): VehicleType | undefined {
+  private mapVehicleType(rdwVehicleType: string): VehicleType {
+    if (rdwVehicleType === 'Bedrijfsauto') {
+      return 'commercial_vehicle_truck' as VehicleType;
+    }
     const vehicleType = Object.keys(VEHICLE_TYPES).find((key) => VEHICLE_TYPES[key as VehicleType] === rdwVehicleType);
-    return (vehicleType as VehicleType) || undefined;
+    return vehicleType as VehicleType;
   }
 
   private getRegisteredVehicles(licensePlate: string): Observable<RdwRegisteredVehiclesResponse[]> {
