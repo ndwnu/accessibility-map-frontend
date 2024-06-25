@@ -16,6 +16,9 @@ export interface Environment {
   nls: {
     accessibilityUrl: string;
   };
+  pdok: {
+    roadDataUrl: string;
+  };
   rdw: {
     registeredVehicleUrl: string;
     axleUrl: string;

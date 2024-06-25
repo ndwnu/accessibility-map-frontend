@@ -20,6 +20,9 @@ export const environment: Environment = {
   nls: {
     accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
   },
+  pdok: {
+    roadDataUrl: 'https://api.pdok.nl/bzk/locatieserver/search/v3_1',
+  },
   rdw: {
     registeredVehicleUrl: 'https://opendata.rdw.nl/resource/m9d7-ebf2.json',
     axleUrl: 'https://opendata.rdw.nl/resource/3huj-srit.json',

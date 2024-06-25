@@ -15,6 +15,9 @@ window.environment = {
   nls: {
     accessibilityUrl: '${NLS_ACCESSIBILITY_URL}',
   },
+  pdok: {
+    roadDataUrl: '${PDOK_ROAD_DATA_URL}',
+  },
   rdw: {
     registeredVehicleUrl: '${RDW_REGISTERED_VEHICLE_URL}',
     axleUrl: '${RDW_AXLE_URL}',
