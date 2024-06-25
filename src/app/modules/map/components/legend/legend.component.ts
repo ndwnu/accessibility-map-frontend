@@ -35,7 +35,7 @@ export class LegendComponent {
     {
       name: 'Niet toegankelijk',
       subTitle: 'Wegvak niet toegankelijk voor gemotoriseerd verkeer',
-      outlineColor: INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
+      color: INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
     },
     { name: 'Verkeersborden', img: 'assets/images/traffic-signs/C7a.png', toggleable: true },
   ];

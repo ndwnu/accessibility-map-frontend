@@ -1,6 +1,6 @@
 import { InaccessibleRoadSection } from '@shared/models';
 import { AccessibilityDataService } from '@shared/services';
-import { Map, LayerSpecification } from 'maplibre-gl';
+import { ExpressionSpecification, LayerSpecification, Map } from 'maplibre-gl';
 import { combineLatest, filter } from 'rxjs';
 import { clickEvent, MapLayer } from '../base/map-layer';
 import {
@@ -45,18 +45,38 @@ export class AccessibilityLayer extends MapLayer {
         'line-join': 'bevel',
       },
       paint: {
-        'line-gap-width': [
+        'line-width': [
           'interpolate',
           ['linear'],
           ['zoom'],
-          12,
-          ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 2, 0],
-          15,
-          ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 4, 0],
+          8,
+          this.lineWidthCondition(3, 1.5, 1),
+          16,
+          this.lineWidthCondition(6, 3, 2),
         ],
         'line-opacity': 0,
       },
     };
+  }
+
+  private lineWidthCondition(thick: number, normal: number, thin: number): ExpressionSpecification {
+    return [
+      'case',
+      [
+        'all',
+        ['!', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]]],
+        ['<=', ['to-number', ['get', 'functionalRoadClass']], 3],
+      ],
+      thick,
+      [
+        'all',
+        ['!', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]]],
+        ['>=', ['to-number', ['get', 'functionalRoadClass']], 4],
+      ],
+      normal,
+      // default
+      thin,
+    ];
   }
 
   protected updateStyles(inaccessibleRoadSections: InaccessibleRoadSection[], municipality: string) {
@@ -86,26 +106,8 @@ export class AccessibilityLayer extends MapLayer {
         INACTIVE_MUNICIPALITY_COLOR,
         ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
         INACCESSIBLE_ROAD_SECTION_COLOR,
+        // default
         ACCESSIBLE_ROAD_SECTION_COLOR,
-      ]);
-      this.map.setPaintProperty(this.id, 'line-width', [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        12,
-        [
-          'case',
-          ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
-          4,
-          ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 1, 1],
-        ],
-        16,
-        [
-          'case',
-          ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
-          6,
-          ['case', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]], 1, 6],
-        ],
       ]);
     }
   }
