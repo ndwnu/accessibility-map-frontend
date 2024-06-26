@@ -25,8 +25,9 @@ export const environment: Environment = {
     roadDataUrl: 'https://api.pdok.nl/bzk/locatieserver/search/v3_1',
   },
   rdw: {
-    registeredVehicleUrl: 'https://opendata.rdw.nl/resource/m9d7-ebf2.json',
     axleUrl: 'https://opendata.rdw.nl/resource/3huj-srit.json',
+    plateCheckUrl: 'https://ovi.rdw.nl/default.aspx?kenteken={plateNumber}',
+    registeredVehicleUrl: 'https://opendata.rdw.nl/resource/m9d7-ebf2.json',
   },
   ...window.environment,
 };

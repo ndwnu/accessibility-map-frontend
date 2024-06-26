@@ -12,8 +12,9 @@ import { RdwAxleResponse, RdwRegisteredVehiclesResponse } from '@shared/models';
 export class RdwService {
   private readonly _http = inject(HttpClient);
 
-  registeredVehiclesUrl = environment.rdw.registeredVehicleUrl;
   axleUrl = environment.rdw.axleUrl;
+  plateCheckUrl = environment.rdw.plateCheckUrl;
+  registeredVehiclesUrl = environment.rdw.registeredVehicleUrl;
 
   getVehicleInfo(rawLicensePlate: string): Observable<VehicleInfo | null> {
     const licensePlate = this.toRdwLicensePlate(rawLicensePlate);
@@ -73,5 +74,9 @@ export class RdwService {
   private parseFloatPrivate(value: string): number | undefined {
     const number = parseFloat(value);
     return isNaN(number) ? undefined : number;
+  }
+
+  getPlateCheckUrl(plate: string) {
+    return this.plateCheckUrl.replace('{plateNumber}', plate);
   }
 }

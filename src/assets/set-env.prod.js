@@ -20,7 +20,8 @@ window.environment = {
     roadDataUrl: '${PDOK_ROAD_DATA_URL}',
   },
   rdw: {
-    registeredVehicleUrl: '${RDW_REGISTERED_VEHICLE_URL}',
     axleUrl: '${RDW_AXLE_URL}',
+    plateCheckUrl: '${RDW_PLATE_CHECK_URL}',
+    registeredVehicleUrl: '${RDW_REGISTERED_VEHICLE_URL}',
   },
 };

@@ -21,7 +21,8 @@ export interface Environment {
     roadDataUrl: string;
   };
   rdw: {
-    registeredVehicleUrl: string;
     axleUrl: string;
+    plateCheckUrl: string;
+    registeredVehicleUrl: string;
   };
 }

@@ -2,7 +2,16 @@
   <ng-container title> Voertuiggegevens </ng-container>
   <ng-container body>
     <div class="content">
-      <p>Uw voertuiggegevens. Pas de gegevens aan als deze anders zijn tijdens uw rit.</p>
+      <p>
+        @if (licensePlate) {
+          Uw voertuiggegevens volgens
+          <a ndwLink [href]="rdwLink()" target="_blank">RDW <ndw-icon name="link-external" /></a>.
+        } @else {
+          Uw voertuiggegevens.
+        }
+        Pas de gegevens aan als deze anders zijn tijdens uw rit.
+      </p>
+
       <form [formGroup]="form()">
         <ndw-form-field label="Rijklaar gewicht in kg" [disabled]="true">
           <input ndwInput type="number" formControlName="vehicleCurbWeight" min="0" placeholder="0" step="1" />
