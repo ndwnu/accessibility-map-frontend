@@ -4,6 +4,10 @@
   position: absolute;
   bottom: 2rem;
   left: 2rem;
+  max-width: 90%;
+  @media only screen and (max-width: 600px) {
+    bottom: 4rem;
+  }
 
   border-radius: 3px;
   background-color: #fff;
