@@ -9,26 +9,32 @@
     </div>
     <hr />
   </div>
-  @if (licensePlate) {
-    <div>Kenteken</div>
-    <div>
-      <strong>{{ licensePlate }}</strong>
-    </div>
-  }
-  @if (vehicleType) {
-    <div>Voertuigtype</div>
-    <div>
-      <strong>{{ vehicleType }}</strong>
-    </div>
-  }
-  <div>Hoogte</div>
-  <div>
-    <strong>{{ height | number: '1.0-2' }} meter</strong>
-  </div>
-  @if (trailer) {
-    <div>Aanhanger</div>
-    <div><strong>Ja</strong></div>
-  }
+  <table>
+    <tbody>
+      @if (licensePlate) {
+        <tr>
+          <td>Kenteken</td>
+          <td>{{ licensePlate }}</td>
+        </tr>
+      }
+      @if (vehicleType) {
+        <tr>
+          <td>Voertuigtype</td>
+          <td>{{ vehicleType }}</td>
+        </tr>
+      }
+      <tr>
+        <td>Hoogte</td>
+        <td>{{ height | number: '1.2' }} m</td>
+      </tr>
+      @if (trailer) {
+        <tr>
+          <td>Aanhanger</td>
+          <td>Ja</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 
   <!-- Step 2 -->
   <div class="steps__header mt-4">
@@ -44,10 +50,14 @@
     </div>
     <hr />
   </div>
-  <div>Bestemming</div>
-  <div>
-    <strong>{{ destination }}</strong>
-  </div>
+  <table>
+    <tbody>
+      <tr>
+        <td>Bestemming</td>
+        <td>{{ destination }}</td>
+      </tr>
+    </tbody>
+  </table>
 
   <!-- Step 3 -->
   <div class="steps__header mt-4">
@@ -59,31 +69,46 @@
     </div>
     <hr />
   </div>
-  <div>Rijklaar gewicht</div>
-  <div class="is-math-breakdown">
-    <span>{{ vehicleCurbWeight | number: '1.0-0' }} kg</span>
-  </div>
-  <div>Lading</div>
-  <div class="is-math-breakdown">
-    <span>{{ vehicleLoad | number: '1.0-0' }} kg</span>
-  </div>
-  <div></div>
-  <div class="is-math-breakdown">
-    <hr />
-    <ndw-icon name="plus" />
-  </div>
-  <div><strong>Totaal gewicht</strong></div>
-  <div class="is-math-breakdown">
-    <span
-      ><strong>{{ vehicleTotalWeight | number: '1.0-0' }} kg</strong></span
-    >
-  </div>
-  <div class="mt-2">Aslast</div>
-  <div class="mt-2">{{ vehicleAxleLoad | number: '1.0-0' }} kilogram</div>
-  <div>Lengte</div>
-  <div>{{ vehicleLength | number: '1.0-2' }} meter</div>
-  <div>Breedte</div>
-  <div>{{ vehicleWidth | number: '1.0-2' }} meter</div>
+  <table>
+    <tbody>
+      <tr>
+        <td>Rijklaar gewicht</td>
+        <td class="number">{{ vehicleCurbWeight | number: '1.0' }}</td>
+        <td>kg</td>
+      </tr>
+      <tr>
+        <td>Lading</td>
+        <td class="number">{{ vehicleLoad | number: '1.0' }}</td>
+        <td>kg</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Totaal gewicht</td>
+        <td class="number">{{ vehicleTotalWeight | number: '1.0' }}</td>
+        <td>kg</td>
+      </tr>
+    </tfoot>
+  </table>
+  <table>
+    <tbody>
+      <tr>
+        <td>Aslast</td>
+        <td class="number">{{ vehicleAxleLoad | number: '1.0' }}</td>
+        <td>kg</td>
+      </tr>
+      <tr>
+        <td>Lengte</td>
+        <td class="number">{{ vehicleLength | number: '1.2' }}</td>
+        <td>m</td>
+      </tr>
+      <tr>
+        <td>Breedte</td>
+        <td class="number">{{ vehicleWidth | number: '1.2' }}</td>
+        <td>m</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 @if (municipalityExemptionUrl) {

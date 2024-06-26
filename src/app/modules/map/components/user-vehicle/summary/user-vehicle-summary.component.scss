@@ -11,23 +11,55 @@
     }
   }
 
-  .is-math-breakdown {
-    position: relative;
-    max-width: 4.5rem;
+  table {
+    border-collapse: collapse;
+    grid-column: 1 / -1;
+    margin-top: var(--ndw-spacing-md);
 
-    span {
-      float: right;
+    tbody,
+    tfoot {
+      tr {
+        display: flex;
+
+        td {
+          padding: var(--ndw-spacing-2xs);
+
+          &:first-of-type {
+            width: 80%;
+          }
+
+          &:nth-child(2) {
+            font-weight: var(--ndw-font-weight-bold);
+            width: 100%;
+          }
+
+          &:nth-child(3) {
+            width: 10%;
+          }
+
+          &.number {
+            text-align: right;
+          }
+        }
+      }
     }
 
-    hr {
-      margin: 0;
-      opacity: 1;
+    tbody {
+      tr {
+        td {
+          &.number {
+            font-weight: initial;
+          }
+        }
+      }
     }
 
-    ndw-icon {
-      position: absolute;
-      top: -0.75rem;
-      left: 4.75rem;
+    tfoot {
+      border-top: var(--ndw-border-size-sm) solid var(--ndw-color-grey-200);
+
+      tr {
+        font-weight: var(--ndw-font-weight-bold);
+      }
     }
   }
 }
