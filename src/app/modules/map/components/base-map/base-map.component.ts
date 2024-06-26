@@ -44,6 +44,7 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
 
   ngAfterViewInit() {
     this.createMap();
+    this.addButtons();
     this.map.once('render', () => this.onRenderMap());
     this.map.once('load', () => this.initiateMapLoading());
   }
@@ -81,6 +82,7 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
 
   private onRenderMap() {}
 
+  protected abstract addButtons(): void;
   protected abstract onLoadMap(): void;
 
   protected initiateMapLoading() {

@@ -8,6 +8,7 @@ import { TrafficSignService, AccessibilityDataService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
 import { LegendComponent } from '../legend/legend.component';
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs/selected-traffic-signs.component';
+import { NavigationControl } from 'maplibre-gl';
 
 @Component({
   selector: 'ber-main-map',
@@ -20,6 +21,10 @@ export class MainMapComponent extends BaseMapComponent {
   private readonly trafficSignService = inject(TrafficSignService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly destinationDataService = inject(DestinationDataService);
+
+  protected override addButtons() {
+    this.map.addControl(new NavigationControl(), 'bottom-right');
+  }
 
   protected async onLoadMap() {
     this.loadImages();
