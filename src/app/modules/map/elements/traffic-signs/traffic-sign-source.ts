@@ -2,9 +2,12 @@ import { AccessibilityDataService, TrafficSignService } from '@shared/services';
 import { Map, SourceSpecification } from 'maplibre-gl';
 import { filter, switchMap } from 'rxjs';
 import { MapSource } from '../base/map-source';
+import { TrafficSignBlackCodeLayer } from './traffic-sign-black-code-layer';
+import { TrafficSignBlackCodeSuffixLayer } from './traffic-sign-black-code-suffix-layer';
 import { TrafficSignClusterLabelLayer } from './traffic-sign-cluster-label-layer';
 import { TrafficSignClusterLayer } from './traffic-sign-cluster-layer';
 import { TrafficSignLayer } from './traffic-sign-layer';
+import { TrafficSignTextSignLayer } from './traffic-sign-text-sign-layer';
 
 export class TrafficSignSource extends MapSource {
   constructor(map: Map, trafficSignService: TrafficSignService, accessibilityDataService: AccessibilityDataService) {
@@ -19,6 +22,9 @@ export class TrafficSignSource extends MapSource {
       new TrafficSignLayer(map, this.id, trafficSignService),
       new TrafficSignClusterLayer(map, this.id),
       new TrafficSignClusterLabelLayer(map, this.id),
+      new TrafficSignTextSignLayer(map, this.id),
+      new TrafficSignBlackCodeSuffixLayer(map, this.id),
+      new TrafficSignBlackCodeLayer(map, this.id),
     ];
   }
 

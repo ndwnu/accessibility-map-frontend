@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { environment } from '@env/environment';
 import { CardComponent, IconComponent } from '@ndwnu/design-system';
 import { TrafficSignOrientationPipe } from '@shared/pipes';
@@ -16,6 +16,7 @@ import { MunicipalityService, TrafficSignService } from '@shared/services';
 export class SelectedTrafficSignsComponent {
   private readonly trafficSignService = inject(TrafficSignService);
   private readonly municipalityService = inject(MunicipalityService);
+  private readonly destroyRef = inject(DestroyRef);
 
   selectedTrafficSigns = toSignal(this.trafficSignService.selectedTrafficSigns$);
   selectIndex = signal(0);
@@ -34,6 +35,12 @@ export class SelectedTrafficSignsComponent {
     const municipality = this.municipalityService.getMunicipality(this.trafficSign()?.countyCode ?? '');
     return municipality?.properties?.requestExemptionUrl ?? '';
   });
+
+  constructor() {
+    this.trafficSignService.selectedTrafficSigns$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.selectIndex.set(0);
+    });
+  }
 
   previous() {
     if (this.selectIndex() > 0) {

@@ -65,6 +65,10 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   protected loadImage(name: string, path: string, options?: Partial<StyleImageMetadata>) {
+    if (this.map.hasImage(name)) {
+      this.map.removeImage(name);
+    }
+
     this.map.loadImage(path, (error, image) => {
       if (!image || error) {
         console.error(`Failed to load ${name} image:`, error);

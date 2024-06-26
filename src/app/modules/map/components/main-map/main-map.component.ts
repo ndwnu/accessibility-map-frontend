@@ -43,7 +43,13 @@ export class MainMapComponent extends BaseMapComponent {
     this.loadImage('arrow-icon', 'assets/images/arrow.png');
     this.loadImage('C7a', 'assets/images/traffic-signs/C7a.png', { pixelRatio: 2 });
     this.loadImage('C7b', 'assets/images/traffic-signs/C7b.png', { pixelRatio: 2 });
+    this.loadImage('C17', 'assets/images/traffic-signs/C17.png', { pixelRatio: 2 });
+    this.loadImage('C18', 'assets/images/traffic-signs/C18.png', { pixelRatio: 2 });
+    this.loadImage('C19', 'assets/images/traffic-signs/C19.png', { pixelRatio: 2 });
+    this.loadImage('C20', 'assets/images/traffic-signs/C20.png', { pixelRatio: 2 });
+    this.loadImage('C21', 'assets/images/traffic-signs/C21.png', { pixelRatio: 2 });
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
+    this.loadImage('text-sign', 'assets/images/text-sign.png', { pixelRatio: 2 });
     this.loadImage('marker', 'assets/images/marker-256.png');
   }
 }
