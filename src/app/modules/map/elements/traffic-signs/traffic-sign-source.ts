@@ -29,7 +29,7 @@ export class TrafficSignSource extends MapSource {
   }
 
   get rvvCodes(): string[] {
-    return ['C6', 'C7', 'C7a', 'C7b', 'C8', 'C9', 'C10', 'C11', 'C12', 'C22c', 'C17', 'C18', 'C19', 'C20', 'C21'];
+    return ['C6', 'C7', 'C7a', 'C7b', 'C10', 'C11', 'C12', 'C22c', 'C17', 'C18', 'C19', 'C20', 'C21'];
   }
 
   protected getSpecification(): Partial<SourceSpecification> {

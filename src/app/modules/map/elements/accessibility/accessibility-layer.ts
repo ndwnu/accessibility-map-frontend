@@ -48,7 +48,7 @@ export class AccessibilityLayer extends MapLayer {
           8,
           this.lineWidthCondition(3, 1.5, 1),
           16,
-          this.lineWidthCondition(6, 3, 2),
+          this.lineWidthCondition(9, 4.5, 3),
         ],
         'line-opacity': 0,
       },
