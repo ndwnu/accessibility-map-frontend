@@ -37,7 +37,7 @@
             </select>
           </ndw-form-field>
         }
-        <ndw-form-field label="Hoogte van uw voertuig">
+        <ndw-form-field label="Hoogte van uw voertuig" [error]="vehicleHeightError()">
           <input
             ndwInput
             type="number"

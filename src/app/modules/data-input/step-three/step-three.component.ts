@@ -65,6 +65,14 @@ export class StepThreeComponent implements OnInit {
     return this.dataInputService.vehicleAxleLoadControl;
   }
 
+  get vehicleLengthControl() {
+    return this.dataInputService.vehicleLengthControl;
+  }
+
+  get vehicleWidthControl() {
+    return this.dataInputService.vehicleWidthControl;
+  }
+
   rdwLink() {
     return this.rdwService.getPlateCheckUrl(this.licensePlate);
   }

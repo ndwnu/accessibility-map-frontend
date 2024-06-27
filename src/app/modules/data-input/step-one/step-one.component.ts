@@ -43,6 +43,7 @@ export class StepOneComponent implements OnInit {
     .map(([key, value]) => ({ key, value }));
 
   vehicleHeight = computed(() => this.form().controls.height.value || 0);
+  vehicleHeightError = signal<string | undefined>(undefined);
 
   private dataInputService = inject(DataInputService);
   private rdwService = inject(RdwService);
@@ -53,6 +54,9 @@ export class StepOneComponent implements OnInit {
 
   ngOnInit() {
     this.licensePlateUnknown = this.form().controls.unknownLicensePlate.value || false;
+    this.form().controls.height.valueChanges.subscribe(() => {
+      this.updateVehicleHeightError();
+    });
   }
 
   isValidLicensePlate(vehicleInfo: VehicleInfo | null): boolean {
@@ -103,5 +107,14 @@ export class StepOneComponent implements OnInit {
 
     this.vehicleTypeControl.reset();
     this.vehicleTypeControl.updateValueAndValidity();
+  }
+
+  private updateVehicleHeightError() {
+    const errors = this.form().controls.height.errors;
+    if (errors?.min || errors?.max) {
+      this.vehicleHeightError.set('De hoogte mag niet meer zijn dan 4 meter');
+    } else {
+      this.vehicleHeightError.set(undefined);
+    }
   }
 }

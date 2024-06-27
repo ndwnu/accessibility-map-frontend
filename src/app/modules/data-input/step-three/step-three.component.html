@@ -41,10 +41,16 @@
         >
           <input ndwInput type="number" formControlName="vehicleAxleLoad" min="0" placeholder="0" step="1" required />
         </ndw-form-field>
-        <ndw-form-field label="Lengte in meter">
+        <ndw-form-field
+          label="Lengte in meter"
+          [error]="vehicleLengthControl.errors ? 'De lengte mag niet meer zijn dan 22 meter' : undefined"
+        >
           <input ndwInput type="number" formControlName="vehicleLength" min="0" placeholder="0" step="1" required />
         </ndw-form-field>
-        <ndw-form-field label="Breedte in meter">
+        <ndw-form-field
+          label="Breedte in meter"
+          [error]="vehicleWidthControl.errors ? 'De breedte mag niet meer zijn dan 3 meter' : undefined"
+        >
           <input ndwInput type="number" formControlName="vehicleWidth" min="0" placeholder="0" step="1" required />
         </ndw-form-field>
       </form>

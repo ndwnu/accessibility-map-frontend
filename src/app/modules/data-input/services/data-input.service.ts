@@ -159,7 +159,7 @@ export class DataInputService {
           licensePlate: new FormControl(null),
           unknownLicensePlate: new FormControl(false),
           vehicleType: new FormControl(null),
-          height: new FormControl(null, [Validators.required, Validators.min(0)]),
+          height: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(4)]),
           trailer: new FormControl(false),
         },
         [this.eitherVehicleTypeOrLicensePlate()],
@@ -176,8 +176,8 @@ export class DataInputService {
         vehicleLoad: new FormControl(null, [Validators.required, Validators.min(0)]),
         vehicleTotalWeight: new FormControl(0),
         vehicleAxleLoad: new FormControl(null, [Validators.required, Validators.min(0)]),
-        vehicleLength: new FormControl(null, [Validators.required, Validators.min(0)]),
-        vehicleWidth: new FormControl(null, [Validators.required, Validators.min(0)]),
+        vehicleLength: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(22)]),
+        vehicleWidth: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(3)]),
       }),
     });
   }
