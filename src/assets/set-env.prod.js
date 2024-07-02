@@ -7,9 +7,6 @@ window.environment = {
     default: '${MAP_STYLES_DEFAULT_URL}',
   },
   georgeUrl: '${GEORGE_URL}',
-  vectorTiles: {
-    NWB: '${NWB_ROAD_SECTIONS_VECTOR_URL}',
-  },
   geoJson: {
     trafficSignUrl: '${NWB_TRAFFIC_SIGN_CURRENT_STATE_URL}',
   },

@@ -12,9 +12,6 @@ export const environment: Environment = {
   mapStyles: {
     default: 'https://maps.staging.ndw.nu/styles/osm-front-office-light-with-nwb-roads.json',
   },
-  vectorTiles: {
-    NWB: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/',
-  },
   geoJson: {
     trafficSignUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/traffic-signs/v3/current-state',
   },

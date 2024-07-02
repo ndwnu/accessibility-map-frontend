@@ -8,9 +8,6 @@ export interface Environment {
   mapStyles: {
     [key: string]: string;
   };
-  vectorTiles: {
-    [K in VectorSource]: string;
-  };
   geoJson: {
     trafficSignUrl: string;
   };
