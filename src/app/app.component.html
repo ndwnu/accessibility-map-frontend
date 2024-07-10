@@ -3,6 +3,8 @@
   [brand]="brandEnum.NWB"
   [isCollapsible]="true"
   [isExpanded]="false"
-  [topMenuItems]="menuItems"
+  [topMenuItems]="topMenuItems"
+  [bottomMenuItems]="bottomMenuItems"
+  (selected)="onMenuItemSelected($event)"
 />
 <router-outlet />

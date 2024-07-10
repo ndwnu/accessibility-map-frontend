@@ -3,7 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { IconService, MainNavigationComponent, MenuItem, NdwBrand } from '@ndwnu/design-system';
 import icons from '@ndwnu/design-system/assets/icons/icons.json';
-import { MunicipalityService } from '@shared/services';
+import { AccessibilityDataService, MunicipalityService } from '@shared/services';
 
 @Component({
   selector: 'ber-root',
@@ -13,13 +13,23 @@ import { MunicipalityService } from '@shared/services';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  private readonly accessibilityDataService = inject(AccessibilityDataService);
+
   brandEnum = NdwBrand;
 
-  menuItems: MenuItem[] = [
+  topMenuItems: MenuItem[] = [
     {
       icon: 'map',
       id: 0,
       label: 'Kaart',
+    },
+  ];
+
+  bottomMenuItems: MenuItem[] = [
+    {
+      icon: 'error',
+      id: 1,
+      label: 'Disclaimer',
     },
   ];
 
@@ -29,5 +39,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.iconService.setIcons(icons);
     this.municipalityService.loadMunicipalities();
+  }
+
+  onMenuItemSelected(id: number) {
+    if (id === 1) {
+      this.accessibilityDataService.showDisclaimer$.next();
+    }
   }
 }

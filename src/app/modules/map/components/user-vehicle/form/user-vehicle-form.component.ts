@@ -1,13 +1,23 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit, signal, TemplateRef, viewChild, ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  OnInit,
+  output,
+  signal,
+  TemplateRef,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
-import { MainNavigationComponent } from '@ndwnu/design-system';
+import { CardComponent, MainNavigationComponent } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
@@ -20,6 +30,7 @@ import { extractPdokLonLatValue } from '@shared/utils/geo-utils';
   selector: 'ber-user-vehicle-form',
   standalone: true,
   imports: [
+    CardComponent,
     CommonModule,
     MainNavigationComponent,
     RouterOutlet,
@@ -27,12 +38,14 @@ import { extractPdokLonLatValue } from '@shared/utils/geo-utils';
     StepThreeComponent,
     StepTwoComponent,
   ],
+  styleUrl: './user-vehicle-form.component.scss',
   templateUrl: './user-vehicle-form.component.html',
 })
 export class UserVehicleFormComponent implements OnInit {
   stepOneRef = viewChild.required<TemplateRef<StepOneComponent>>('stepOne');
   stepTwoRef = viewChild.required<TemplateRef<StepTwoComponent>>('stepTwo');
   stepThreeRef = viewChild.required<TemplateRef<StepThreeComponent>>('stepThree');
+  disclaimerRef = viewChild.required<TemplateRef<CardComponent>>('disclaimer');
 
   vehicleInfo = signal<VehicleInfo | undefined>(undefined);
   loading = signal(false);
@@ -46,6 +59,10 @@ export class UserVehicleFormComponent implements OnInit {
   private readonly dataInputService = inject(DataInputService);
 
   private overlayRef!: OverlayRef;
+
+  private currentStep = -1;
+
+  private disclaimerAccepted = false;
 
   protected form = this.dataInputService.form;
 
@@ -79,6 +96,21 @@ export class UserVehicleFormComponent implements OnInit {
 
     this.goToStep(1);
     this.listenToVehicleTypeChanges();
+
+    this.accessibilityDataService.showDisclaimer$.subscribe(() => {
+      this.showDisclaimer();
+    });
+  }
+
+  closeModal(isDisclaimer?: boolean) {
+    this.overlayRef?.detach();
+    if (this.currentStep === 3 && !this.disclaimerAccepted) {
+      this.showDisclaimer();
+      return;
+    }
+    if (isDisclaimer) {
+      this.disclaimerAccepted = true;
+    }
   }
 
   goToMap() {
@@ -128,11 +160,8 @@ export class UserVehicleFormComponent implements OnInit {
     this.vehicleInfo.set(vehicleInfo);
   }
 
-  private closeModal() {
-    this.overlayRef?.detach();
-  }
-
   private openModal(step: number) {
+    this.currentStep = step;
     if (step === 0) return;
 
     let contentRef: TemplateRef<unknown> = this.stepOneRef();
@@ -170,6 +199,11 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleAxleWeight: stepThree.vehicleAxleLoad! / 1000,
       vehicleHasTrailer: stepOne.trailer!,
     };
+  }
+
+  private showDisclaimer() {
+    const templatePortal = new TemplatePortal(this.disclaimerRef(), this.viewContainerRef);
+    this.overlayRef.attach(templatePortal);
   }
 
   private zoomToDestination() {

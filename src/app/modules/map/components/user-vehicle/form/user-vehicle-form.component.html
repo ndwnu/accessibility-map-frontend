@@ -14,3 +14,16 @@
     (previous)="goToStep(2)"
   />
 </ng-template>
+
+<ng-template #disclaimer>
+  <ndw-card class="disclaimer">
+    <ng-container title> Disclaimer </ng-container>
+    <ng-container body>
+      Aan deze kaart kunnen geen rechten worden ontleend. De situatie en bebording op straat kan dus afwijken van de
+      kaartgegevens en prevaleert altijd.
+    </ng-container>
+    <ng-container footer>
+      <button ndwButton (click)="closeModal(true)">Ik begrijp het</button>
+    </ng-container>
+  </ndw-card>
+</ng-template>
