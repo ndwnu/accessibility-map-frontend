@@ -1,8 +1,9 @@
-import { VehicleType } from '@modules/map/models';
+import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
+import { NlsVehicleType } from '@modules/map/models/nlsMappings';
 
 export const exampleVehicleInfoList: VehicleInfo[] = [
   {
-    type: 'bus',
+    type: NlsVehicleType.Bus,
     length: 12,
     width: 2.5,
     height: 3.5,
@@ -12,7 +13,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxAxleWeight: 9000,
   },
   {
-    type: 'car',
+    type: NlsVehicleType.Car,
     length: 4.5,
     width: 1.8,
     height: 1.8,
@@ -22,17 +23,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxAxleWeight: 1500,
   },
   {
-    type: 'commercial_vehicle_truck',
-    length: 10,
-    width: 2.5,
-    height: 3.5,
-    weight: 15000,
-    emptyWeight: 10000,
-    maxWeight: 20000,
-    maxAxleWeight: 10000,
-  },
-  {
-    type: 'commercial_vehicle_van',
+    type: NlsVehicleType.LightCommercialVehicle,
     length: 5,
     width: 2,
     height: 2.8,
@@ -42,7 +33,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxAxleWeight: 2500,
   },
   {
-    type: 'motorcycle',
+    type: NlsVehicleType.Motorcycle,
     length: 2.5,
     width: 1,
     height: 1.5,
@@ -51,10 +42,30 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxWeight: 300,
     maxAxleWeight: 150,
   },
+  {
+    type: NlsVehicleType.Tractor,
+    length: 0,
+    width: 0,
+    height: 0,
+    weight: 0,
+    emptyWeight: 0,
+    maxWeight: 0,
+    maxAxleWeight: 0,
+  },
+  {
+    type: NlsVehicleType.Truck,
+    length: 10,
+    width: 2.5,
+    height: 3.5,
+    weight: 15000,
+    emptyWeight: 10000,
+    maxWeight: 20000,
+    maxAxleWeight: 10000,
+  },
 ];
 
 export interface VehicleInfo {
-  type: VehicleType;
+  type: NlsVehicleType;
   length: number;
   width: number;
   height: number;

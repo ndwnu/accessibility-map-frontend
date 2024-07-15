@@ -3,10 +3,10 @@ import { NlsVehicleType, nlsVehicleMapping } from '@modules/map/models/nlsMappin
 export const VEHICLE_TYPES = {
   bus: 'Bus',
   car: 'Personenauto',
-  commercial_vehicle_truck: 'Bedrijfsauto (vrachtwagen)',
-  commercial_vehicle_van: 'Bedrijfsauto (bestelbus)',
+  light_commercial_vehicle: 'Bedrijfsauto (bestelbus)',
   motorcycle: 'Motor',
   tractor: 'Land- of bosbouwtrekker',
+  truck: 'Bedrijfsauto (vrachtwagen)',
 } as const;
 
 export type VehicleType = keyof typeof VEHICLE_TYPES;

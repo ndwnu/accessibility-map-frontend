@@ -53,7 +53,7 @@ export class RdwService {
 
   private mapVehicleType(rdwVehicleType: string): VehicleType {
     if (rdwVehicleType === 'Bedrijfsauto') {
-      return 'commercial_vehicle_truck' as VehicleType;
+      return 'truck' as VehicleType;
     }
     const vehicleType = Object.keys(VEHICLE_TYPES).find((key) => VEHICLE_TYPES[key as VehicleType] === rdwVehicleType);
     return vehicleType as VehicleType;

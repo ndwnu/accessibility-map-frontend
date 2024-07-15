@@ -9,6 +9,7 @@ import { RdwService } from '@shared/services';
 
 import { ActionsComponent } from '../actions';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
+import { NlsVehicleType } from '@modules/map/models/nlsMappings';
 
 @UntilDestroy()
 @Component({
@@ -39,7 +40,7 @@ export class StepOneComponent implements OnInit {
   });
 
   vehicleTypes = Object.entries(VEHICLE_TYPES)
-    .filter(([key]) => (key as VehicleType) !== 'tractor')
+    .filter(([key]) => (key as VehicleType) !== NlsVehicleType.Tractor)
     .map(([key, value]) => ({ key, value }));
 
   vehicleHeight = computed(() => this.form().controls.height.value || 0);
@@ -86,7 +87,7 @@ export class StepOneComponent implements OnInit {
         if (!this.isValidLicensePlate(vehicleInfo)) {
           return;
         }
-        if (vehicleInfo?.type === 'tractor') {
+        if (vehicleInfo?.type === NlsVehicleType.Tractor) {
           this.licensePlateTractor.set(true);
           return;
         }

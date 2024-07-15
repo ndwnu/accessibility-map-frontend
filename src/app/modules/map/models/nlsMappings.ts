@@ -3,14 +3,16 @@ import { VehicleType } from '@modules/map/models';
 export enum NlsVehicleType {
   Bus = 'bus',
   Car = 'car',
-  CommercialVehicle = 'commercial_vehicle',
+  LightCommercialVehicle = 'light_commercial_vehicle',
   Motorcycle = 'motorcycle',
+  Tractor = 'tractor',
+  Truck = 'truck',
 }
 
 export const nlsVehicleMapping: Partial<{ [key in VehicleType]: NlsVehicleType }> = {
   bus: NlsVehicleType.Bus,
   car: NlsVehicleType.Car,
-  commercial_vehicle_truck: NlsVehicleType.CommercialVehicle,
-  commercial_vehicle_van: NlsVehicleType.CommercialVehicle,
+  light_commercial_vehicle: NlsVehicleType.LightCommercialVehicle,
   motorcycle: NlsVehicleType.Motorcycle,
+  truck: NlsVehicleType.Truck,
 };
