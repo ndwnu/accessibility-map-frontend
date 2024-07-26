@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   brandEnum = NdwBrand;
 
-  footerTexts = ['Versie 0.0.3'];
+  footerTexts = ['Versie 0.0.3-beta'];
 
   topMenuItems: MenuItem[] = [
     {
