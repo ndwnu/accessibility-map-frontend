@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CardComponent, FormFieldComponent, IconComponent, InputDirective } from '@ndwnu/design-system';
+import {
+  CardComponent,
+  CardContentComponent,
+  CardFooterComponent,
+  CardHeaderComponent,
+  FormFieldComponent,
+  IconComponent,
+  InputDirective,
+} from '@ndwnu/design-system';
 import { StepThreeFormGroup, VehicleInfo } from '@shared/models';
 
 import { ActionsComponent } from '../actions';
@@ -14,6 +22,9 @@ import { RdwService } from '@shared/services';
   imports: [
     ActionsComponent,
     CardComponent,
+    CardHeaderComponent,
+    CardContentComponent,
+    CardFooterComponent,
     CommonModule,
     ReactiveFormsModule,
     FormFieldComponent,
@@ -26,6 +37,7 @@ import { RdwService } from '@shared/services';
 export class StepThreeComponent implements OnInit {
   form = input.required<FormGroup<StepThreeFormGroup>>();
   vehicleInfo = input<VehicleInfo>();
+  loading = input(false);
 
   complete = output<void>();
   previous = output<void>();

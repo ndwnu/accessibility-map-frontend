@@ -3,9 +3,14 @@
   @if (currentStep() !== steps()) {
     <button ndwButton large [disabled]="disableNext()" (click)="onNext()">Volgende</button>
   } @else {
-    <button ndwButton large [disabled]="disableComplete()" (click)="onComplete()">Bekijk kaart</button>
+    @if (isLoading()) {
+      <div class="spinning">
+        <ndw-icon>progress_activity</ndw-icon>
+      </div>
+    }
+    <button ndwButton large [disabled]="disableComplete() || isLoading()" (click)="onComplete()">Bekijk kaart</button>
   }
 </div>
 @if (currentStep() > 1) {
-  <button ndwButton large outline (click)="onPrevious()">Vorige</button>
+  <button ndwButton large outline [disabled]="isLoading()" (click)="onPrevious()">Vorige</button>
 }

@@ -1,11 +1,12 @@
 <ndw-card>
-  <ng-container title> Voertuiggegevens </ng-container>
-  <ng-container body>
+  <ndw-card-header> Voertuiggegevens </ndw-card-header>
+  <ndw-card-content>
     <div class="content">
       <p>
         @if (licensePlate) {
           Uw voertuiggegevens volgens
-          <a ndwLink [href]="rdwLink()" target="_blank">RDW <ndw-icon name="link-external" /></a>.
+          <a ndwLink [href]="rdwLink()" target="_blank">RDW <ndw-icon>link-external</ndw-icon></a
+          >.
         } @else {
           Uw voertuiggegevens.
         }
@@ -55,14 +56,15 @@
         </ndw-form-field>
       </form>
     </div>
-  </ng-container>
-  <ng-container footer>
+  </ndw-card-content>
+  <ndw-card-footer>
     <ber-actions
       [currentStep]="3"
       [disableComplete]="form().invalid"
+      [isLoading]="loading()"
       [steps]="3"
       (complete)="onComplete()"
       (previous)="onPrevious()"
     />
-  </ng-container>
+  </ndw-card-footer>
 </ndw-card>

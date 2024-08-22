@@ -10,6 +10,7 @@
   <ber-step-three
     [form]="stepThreeForm"
     [vehicleInfo]="vehicleInfo()"
+    [loading]="loading()"
     (complete)="goToMap()"
     (previous)="goToStep(2)"
   />

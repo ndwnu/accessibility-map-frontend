@@ -1,10 +1,9 @@
 <ndw-card>
-  <ng-container title> Gemeente of adres kiezen </ng-container>
-  <ng-container body>
+  <ndw-card-header> Gemeente of adres kiezen </ndw-card-header>
+  <ndw-card-content>
     <div class="content">
-      <p>Selecteer de gemeente of het adres van uw bestemming.</p>
       <form [formGroup]="form()">
-        <ndw-form-field>
+        <ndw-form-field label="Selecteer de gemeente of het adres van uw bestemming">
           <input ndwInput formControlName="address" type="search" placeholder="Voer gemeente of adres in" />
         </ndw-form-field>
         @if (loading) {
@@ -22,8 +21,8 @@
         }
       </form>
     </div>
-  </ng-container>
-  <ng-container footer>
+  </ndw-card-content>
+  <ndw-card-footer>
     <ber-actions
       [currentStep]="2"
       [disableNext]="form().invalid"
@@ -31,5 +30,5 @@
       (next)="onNext()"
       (previous)="onPrevious()"
     />
-  </ng-container>
+  </ndw-card-footer>
 </ndw-card>

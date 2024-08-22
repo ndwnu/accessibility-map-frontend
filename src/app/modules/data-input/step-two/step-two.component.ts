@@ -1,6 +1,14 @@
 import { ChangeDetectorRef, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CardComponent, CheckboxComponent, FormFieldComponent, InputDirective } from '@ndwnu/design-system';
+import {
+  CardComponent,
+  CardContentComponent,
+  CardFooterComponent,
+  CardHeaderComponent,
+  CheckboxComponent,
+  FormFieldComponent,
+  InputDirective,
+} from '@ndwnu/design-system';
 import { StepTwoFormGroup } from '@shared/models';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 
@@ -17,6 +25,9 @@ import { DataInputService } from '@modules/data-input/services/data-input.servic
   imports: [
     ActionsComponent,
     CardComponent,
+    CardHeaderComponent,
+    CardContentComponent,
+    CardFooterComponent,
     FormFieldComponent,
     InputDirective,
     ReactiveFormsModule,
@@ -60,7 +71,7 @@ export class StepTwoComponent implements OnInit {
     this.form().markAsPristine();
     this.address.valueChanges
       .pipe(
-        tap((term) => this.emptyStepTwo()),
+        tap((_term) => this.emptyStepTwo()),
         filter((term) => !!term && term.length > 2),
         debounceTime(300),
         distinctUntilChanged(),

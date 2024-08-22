@@ -28,7 +28,7 @@
               [attr.aria-pressed]="isTrafficSignVisible()"
               (click)="toggleTrafficSign()"
             >
-              <ndw-icon [name]="isTrafficSignVisible() ? 'show' : 'hide'" />
+              <ndw-icon>{{ isTrafficSignVisible() ? 'show' : 'hide' }}</ndw-icon>
             </button>
           </div>
         }

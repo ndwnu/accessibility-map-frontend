@@ -1,6 +1,6 @@
 <ndw-card>
-  <ng-container title> Bereikbaarheid </ng-container>
-  <ng-container body>
+  <ndw-card-header>Bereikbaarheid</ndw-card-header>
+  <ndw-card-content>
     <div class="content">
       <p>Na het invoeren van uw gegevens ziet u op de kaart of uw bestemming bereikbaar is.</p>
       <form [formGroup]="form()">
@@ -53,8 +53,8 @@
         </ndw-form-field>
       </form>
     </div>
-  </ng-container>
-  <ng-container footer>
+  </ndw-card-content>
+  <ndw-card-footer>
     <ber-actions [currentStep]="1" [steps]="3" [disableNext]="form().invalid" (next)="onNext()" />
-  </ng-container>
+  </ndw-card-footer>
 </ndw-card>

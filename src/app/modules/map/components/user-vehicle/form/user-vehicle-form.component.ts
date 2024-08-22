@@ -126,7 +126,7 @@ export class UserVehicleFormComponent implements OnInit {
           this.zoomToDestination();
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
         },
         complete: () => {
           this.loading.set(false);
@@ -172,6 +172,7 @@ export class UserVehicleFormComponent implements OnInit {
       contentRef = this.stepThreeRef();
     }
 
+    this.overlayRef.detach();
     const templatePortal = new TemplatePortal(contentRef, this.viewContainerRef);
     this.overlayRef.attach(templatePortal);
   }

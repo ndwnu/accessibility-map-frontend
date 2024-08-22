@@ -1,9 +1,10 @@
 import { Component, input, output } from '@angular/core';
+import { IconComponent } from '@ndwnu/design-system';
 
 @Component({
   selector: 'ber-actions',
   standalone: true,
-  imports: [],
+  imports: [IconComponent],
   templateUrl: './actions.component.html',
   styleUrl: './actions.component.scss',
 })
@@ -12,6 +13,7 @@ export class ActionsComponent {
   steps = input.required<number>();
   disableComplete = input(false);
   disableNext = input(false);
+  isLoading = input(false);
 
   complete = output<void>();
   next = output<void>();
