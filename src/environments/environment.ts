@@ -10,13 +10,13 @@ export const environment: Environment = {
   baseUrl: 'http://localhost:4203',
   georgeUrl: 'https://wegkenmerken.staging.ndw.nu',
   mapStyles: {
-    default: 'https://maps.staging.ndw.nu/styles/osm-front-office-light-with-nwb-roads.json',
+    default: 'https://maps.ndw.nu/styles/osm-front-office-light-with-nwb-roads.json',
   },
   geoJson: {
     trafficSignUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/traffic-signs/v3/current-state',
   },
   nls: {
-    accessibilityUrl: 'https://nls.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
+    accessibilityUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
   },
   pdok: {
     roadDataUrl: 'https://api.pdok.nl/bzk/locatieserver/search/v3_1',
