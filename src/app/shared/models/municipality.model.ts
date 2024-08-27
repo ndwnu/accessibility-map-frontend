@@ -10,6 +10,7 @@ export interface MuncipalityProperties {
   searchDistance: number;
   bounds: LngLatBoundsLike;
   requestExemptionUrl: string;
+  dateLastCheck?: string;
 }
 
 export interface MunicipalityIdAndName {

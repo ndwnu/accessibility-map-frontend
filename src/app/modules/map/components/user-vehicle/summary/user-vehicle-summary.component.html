@@ -1,3 +1,14 @@
+<p>
+  @if (!municipalityDateLastCheck) {
+    De Gemeente {{ municipalityName }} heeft de resultaten van de kaart nog niet gecontroleerd.
+  } @else if (isDateLessThanSixMonths(municipalityDateLastCheck)) {
+    De gemeente {{ municipalityName }} heeft de kaart voor het laatst gecontroleerd op
+    {{ municipalityDateLastCheck | date: 'dd-MM-yyyy' }}.
+  } @else {
+    Let op, het is meer dan 12 maanden geleden dat de gemeente {{ municipalityName }} de resultaten van de kaart voor
+    het laatst heeft gecontroleerd
+  }
+</p>
 <div class="steps">
   <!-- Step 1 -->
   <div class="steps__header">

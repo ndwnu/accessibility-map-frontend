@@ -24,6 +24,11 @@ export class UserVehicleSummaryComponent {
     return this.dataInputService.form;
   }
 
+  get municipalityDateLastCheck(): Date | undefined {
+    const dateLastCheck = this.municipalityService.getMunicipality(this.municipalityId)?.properties.dateLastCheck;
+    return dateLastCheck ? new Date(dateLastCheck) : undefined;
+  }
+
   // StepOneForm
 
   get licensePlate(): string {
@@ -101,5 +106,16 @@ export class UserVehicleSummaryComponent {
     this.dataInputService.resetForm();
     this.dataInputService.setActiveStep(1);
     this.onClose();
+  }
+
+  isDateLessThanSixMonths(date?: Date): boolean {
+    if (!date) {
+      return false;
+    }
+
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    return date > sixMonthsAgo;
   }
 }
