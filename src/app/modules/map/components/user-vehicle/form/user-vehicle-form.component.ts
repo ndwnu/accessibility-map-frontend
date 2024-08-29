@@ -1,23 +1,19 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  effect,
-  inject,
-  OnInit,
-  output,
-  signal,
-  TemplateRef,
-  viewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, effect, inject, OnInit, signal, TemplateRef, viewChild, ViewContainerRef } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
-import { CardComponent, MainNavigationComponent } from '@ndwnu/design-system';
+import {
+  CardComponent,
+  CardContentComponent,
+  CardFooterComponent,
+  CardHeaderComponent,
+  MainNavigationComponent,
+} from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
@@ -31,6 +27,9 @@ import { extractPdokLonLatValue } from '@shared/utils/geo-utils';
   standalone: true,
   imports: [
     CardComponent,
+    CardContentComponent,
+    CardFooterComponent,
+    CardHeaderComponent,
     CommonModule,
     MainNavigationComponent,
     RouterOutlet,
@@ -68,7 +67,6 @@ export class UserVehicleFormComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      this.closeModal();
       this.openModal(this.dataInputService.activeStep());
     });
   }

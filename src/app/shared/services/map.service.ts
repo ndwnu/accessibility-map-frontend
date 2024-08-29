@@ -16,12 +16,13 @@ export class MapService {
 
   createMap(container: HTMLElement): Map {
     return (this.map = new Map({
-      container,
-      style: environment.mapStyles['default'],
-      interactive: true,
       bounds: BOUNDS_NL,
+      container,
+      dragRotate: false,
+      interactive: true,
       maxZoom: 18,
       minZoom: MAP_MIN_ZOOM,
+      style: environment.mapStyles['default'],
     }));
   }
 
