@@ -5,8 +5,7 @@
       <p>
         @if (licensePlate) {
           Uw voertuiggegevens volgens
-          <a ndwLink [href]="rdwLink()" target="_blank">RDW <ndw-icon>link-external</ndw-icon></a
-          >.
+          <a ndwLink [href]="rdwLink()" target="_blank">RDW <ndw-icon [interactive]="false">open_in_new</ndw-icon> </a>.
         } @else {
           Uw voertuiggegevens.
         }
