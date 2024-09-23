@@ -1,7 +1,8 @@
 ndw-card {
   align-content: flex-start;
   margin-inline: var(--ndw-spacing-sm);
-  max-width: 30rem;
+  max-width: 100%;
+  width: 30rem;
 
   .content,
   .footer {
@@ -9,7 +10,7 @@ ndw-card {
   }
 
   .content {
-    min-height: 24rem;
+    min-height: 36rem;
 
     .radio-button-group {
       display: grid;

@@ -29,6 +29,8 @@ export class RdwService {
           const emptyWeight = this.parseFloatPrivate(vehicleInformation[0].massa_ledig_voertuig);
           const weight = this.parseFloatPrivate(vehicleInformation[0].massa_rijklaar);
           const maxWeight = this.parseFloatPrivate(vehicleInformation[0].toegestane_maximum_massa_voertuig);
+          const combinedMaxWeight = this.parseFloatPrivate(vehicleInformation[0].maximum_massa_samenstelling);
+          const trailerWeight = this.parseFloatPrivate(vehicleInformation[0].maximum_trekken_massa_geremd);
 
           return {
             type: this.mapVehicleType(vehicleInformation[0].voertuigsoort),
@@ -39,6 +41,8 @@ export class RdwService {
             weight,
             maxWeight,
             maxAxleWeight: this.getMaxAxleWeight(axles),
+            combinedMaxWeight,
+            trailerWeight,
           } as VehicleInfo;
         } else {
           return null;

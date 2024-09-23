@@ -1,4 +1,3 @@
-import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
 import { NlsVehicleType } from '@modules/map/models/nlsMappings';
 
 export const exampleVehicleInfoList: VehicleInfo[] = [
@@ -73,4 +72,6 @@ export interface VehicleInfo {
   emptyWeight: number;
   maxWeight: number;
   maxAxleWeight: number;
+  combinedMaxWeight?: number;
+  trailerWeight?: number;
 }

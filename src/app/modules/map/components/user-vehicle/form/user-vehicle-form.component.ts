@@ -75,6 +75,10 @@ export class UserVehicleFormComponent implements OnInit {
     return this.dataInputService.stepThreeForm;
   }
 
+  protected get trailerControl() {
+    return this.dataInputService.trailerControl;
+  }
+
   ngOnInit() {
     const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically();
     this.overlayRef = this.overlay.create({
@@ -132,13 +136,18 @@ export class UserVehicleFormComponent implements OnInit {
   setVehicleInfo(vehicleInfo: VehicleInfo) {
     this.stepOneForm?.get('vehicleType')?.setValue(vehicleInfo.type, { emitEvent: false });
 
-    const vehicleLoad =
+    let vehicleLoad =
       vehicleInfo.maxWeight && vehicleInfo.weight ? Math.round(vehicleInfo.maxWeight - vehicleInfo.weight) : 0;
+    if (this.trailerControl.value) {
+      vehicleLoad += vehicleInfo.trailerWeight ?? 0;
+    }
     const vehicleAxleLoad = vehicleInfo.maxAxleWeight ? vehicleInfo.maxAxleWeight : 0;
     this.stepThreeForm?.patchValue({
       vehicleCurbWeight: vehicleInfo.weight,
       vehicleLoad,
-      vehicleTotalWeight: vehicleInfo.maxWeight,
+      vehicleTotalWeight: this.trailerControl.value
+        ? vehicleInfo.combinedMaxWeight ?? vehicleInfo.maxWeight
+        : vehicleInfo.maxWeight,
       vehicleAxleLoad,
       vehicleLength: vehicleInfo.length,
       vehicleWidth: vehicleInfo.width,

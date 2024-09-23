@@ -42,7 +42,11 @@ export class StepThreeComponent implements OnInit {
   complete = output<void>();
   previous = output<void>();
 
-  maxLoad = computed(() => (this.vehicleInfo()?.maxWeight ?? 0) - (this.vehicleInfo()?.weight ?? 0));
+  maxLoad = computed(() => {
+    const weight = (this.vehicleInfo()?.maxWeight ?? 0) - (this.vehicleInfo()?.weight ?? 0);
+    const trailerWeight = this.vehicleInfo()?.trailerWeight ?? 0;
+    return this.vehicleTrailerControl.value ? weight + trailerWeight : weight;
+  });
 
   private dataInputService = inject(DataInputService);
   private rdwService = inject(RdwService);
@@ -79,6 +83,10 @@ export class StepThreeComponent implements OnInit {
 
   get vehicleLengthControl() {
     return this.dataInputService.vehicleLengthControl;
+  }
+
+  get vehicleTrailerControl() {
+    return this.dataInputService.trailerControl;
   }
 
   get vehicleWidthControl() {
