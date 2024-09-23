@@ -17,6 +17,7 @@
           <input ndwInput type="number" formControlName="vehicleCurbWeight" min="0" placeholder="0" step="1" />
         </ndw-form-field>
         <ndw-form-field
+          info="Lading is inclusief ledig gewicht oplegger en/of aanhanger"
           [label]="'Lading in kg (max: ' + maxLoad() + ')'"
           [error]="
             vehicleLoadControl.errors

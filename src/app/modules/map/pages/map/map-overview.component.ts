@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { Component, inject, TemplateRef } from '@angular/core';
 import { MainMapComponent } from '@modules/map/components/main-map/main-map.component';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
@@ -17,7 +16,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CardComponent,
     CommonModule,
-    HttpClientModule,
     MainMapComponent,
     UserVehicleFormComponent,
     UserVehicleSummaryComponent,

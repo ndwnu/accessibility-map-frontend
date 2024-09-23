@@ -9,3 +9,7 @@
   (selected)="onMenuItemSelected($event)"
 />
 <router-outlet />
+
+<ng-template #disclaimer>
+  <ber-disclaimer-card (confirmed)="closeDisclaimerModal()" />
+</ng-template>

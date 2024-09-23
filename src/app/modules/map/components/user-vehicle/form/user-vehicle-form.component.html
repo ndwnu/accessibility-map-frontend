@@ -17,23 +17,5 @@
 </ng-template>
 
 <ng-template #disclaimer>
-  <ndw-card class="disclaimer">
-    <ndw-card-header>Disclaimer BETA</ndw-card-header>
-    <ndw-card-content>
-      <p>
-        Dit product is nog in ontwikkeling en in de huidige fase <strong>alleen geschikt</strong> voor wegbeheerders
-        voor testdoeleinden en ter controle van de achterliggende data. De kaart is <strong>niet</strong> vrijgegeven
-        voor weggebruikers. Voor meer informatie over de bereikbaarheidskaart lees verder op de
-        <a href="https://www.ndw.nu/ndw/applicaties/bereikbaarheidskaart" target="_blank">NDW website</a>
-      </p>
-      <p>De check wanneer / of de kaartgegevens zijn gecontroleerd vind u in het "bekijk gegevens" scherm.</p>
-      <p>
-        De situatie en bebording op straat kan afwijken van de kaartgegevens en prevaleert altijd. Aan deze kaart kunnen
-        geen rechten worden ontleend.
-      </p>
-    </ndw-card-content>
-    <ndw-card-footer>
-      <button ndwButton (click)="closeModal(true)">Ik begrijp het</button>
-    </ndw-card-footer>
-  </ndw-card>
+  <ber-disclaimer-card (confirmed)="closeModal(true)" />
 </ng-template>

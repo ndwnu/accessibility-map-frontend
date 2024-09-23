@@ -7,44 +7,36 @@ import { RouterOutlet } from '@angular/router';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
-import {
-  CardComponent,
-  CardContentComponent,
-  CardFooterComponent,
-  CardHeaderComponent,
-  MainNavigationComponent,
-} from '@ndwnu/design-system';
+import { MainNavigationComponent } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
 import { LngLatLike } from 'maplibre-gl';
 import { extractPdokLonLatValue } from '@shared/utils/geo-utils';
+import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
+import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 
 @UntilDestroy()
 @Component({
   selector: 'ber-user-vehicle-form',
   standalone: true,
   imports: [
-    CardComponent,
-    CardContentComponent,
-    CardFooterComponent,
-    CardHeaderComponent,
     CommonModule,
+    DisclaimerCardComponent,
     MainNavigationComponent,
     RouterOutlet,
     StepOneComponent,
     StepThreeComponent,
     StepTwoComponent,
   ],
-  styleUrl: './user-vehicle-form.component.scss',
   templateUrl: './user-vehicle-form.component.html',
 })
 export class UserVehicleFormComponent implements OnInit {
   stepOneRef = viewChild.required<TemplateRef<StepOneComponent>>('stepOne');
   stepTwoRef = viewChild.required<TemplateRef<StepTwoComponent>>('stepTwo');
   stepThreeRef = viewChild.required<TemplateRef<StepThreeComponent>>('stepThree');
-  disclaimerRef = viewChild.required<TemplateRef<CardComponent>>('disclaimer');
+  disclaimerRef = viewChild.required<TemplateRef<DisclaimerCardComponent>>('disclaimer');
 
   vehicleInfo = signal<VehicleInfo | undefined>(undefined);
   loading = signal(false);
@@ -86,10 +78,9 @@ export class UserVehicleFormComponent implements OnInit {
   ngOnInit() {
     const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically();
     this.overlayRef = this.overlay.create({
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-dark-backdrop',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      ...OVERLAY_MODAL_BASE_CONFIG,
       positionStrategy,
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
     });
 
     this.goToStep(1);

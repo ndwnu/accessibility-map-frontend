@@ -1,2 +1,7 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+// ? Overrides _reboot.scss from bootstrap, needed until we fully remove bootstrap
+[ndwButton] {
+  line-height: normal;
+}
