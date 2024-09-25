@@ -18,15 +18,19 @@
 
         @if (trafficSign.lnglat) {
           <div>
-            <a ndwLink [href]="streetviewUrl()" target="_blank">Streetview <ndw-icon>launch</ndw-icon></a>
+            <a ndwLink [href]="streetviewUrl()" target="_blank"> Streetview <ndw-icon>open_in_new</ndw-icon> </a>
           </div>
         }
         <div>
-          <a ndwLink [href]="georgeTrafficSignUrl()" target="_blank">Bord in George <ndw-icon>launch</ndw-icon> </a>
+          <a ndwLink [href]="georgeTrafficSignUrl()" target="_blank">
+            Bord in George <ndw-icon>open_in_new</ndw-icon>
+          </a>
         </div>
         @if (trafficSign.wvkId) {
           <div>
-            <a ndwLink [href]="georgeRoadSectionUrl()" target="_blank">Wegvak in George <ndw-icon>launch</ndw-icon> </a>
+            <a ndwLink [href]="georgeRoadSectionUrl()" target="_blank">
+              Wegvak in George <ndw-icon>open_in_new</ndw-icon>
+            </a>
           </div>
         }
       </div>
