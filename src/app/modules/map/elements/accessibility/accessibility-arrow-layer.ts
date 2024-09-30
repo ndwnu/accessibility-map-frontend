@@ -1,10 +1,11 @@
 import { LayerSpecification } from 'maplibre-gl';
 import { MapLayer } from '../base/map-layer';
+import { INACCESSIBLE_CARRIAGEWAY_TYPES } from '@modules/map/elements/accessibility/accessibility-layer';
 
-const ONE_WAY_ARROW_SIZE = 0.5;
-const ONE_WAY_ARROW_OPACITY = 0.4;
-const ONE_WAY_ARROW_SPACING_MAX = 200;
-const ONE_WAY_ARROW_SPACING_MIN = 70;
+const ONE_WAY_ARROW_SIZE_MIN = 0.4;
+const ONE_WAY_ARROW_SIZE_MAX = 0.5;
+const ONE_WAY_ARROW_OPACITY_MIN = 0.6;
+const ONE_WAY_ARROW_OPACITY_MAX = 0.8;
 const ONE_WAY_DRIVING_DIRECTION = 'H';
 
 export class AccessibilityArrowLayer extends MapLayer {
@@ -19,23 +20,34 @@ export class AccessibilityArrowLayer extends MapLayer {
       'source-layer': 'roadSections',
       type: 'symbol',
       layout: {
-        'symbol-placement': 'line',
-        'symbol-spacing': [
+        'symbol-placement': 'line-center',
+        'icon-image': 'arrow-icon',
+        'icon-size': {
+          type: 'interval',
+          stops: [
+            [15, ONE_WAY_ARROW_SIZE_MAX],
+            [18, ONE_WAY_ARROW_SIZE_MIN],
+          ],
+        },
+      },
+      paint: {
+        'icon-opacity': [
           'interpolate',
           ['linear'],
           ['zoom'],
+          14.9,
+          0,
           15,
-          ONE_WAY_ARROW_SPACING_MAX,
-          20,
-          ONE_WAY_ARROW_SPACING_MIN,
+          ONE_WAY_ARROW_OPACITY_MIN,
+          18,
+          ONE_WAY_ARROW_OPACITY_MAX,
         ],
-        'icon-image': 'arrow-icon',
-        'icon-size': ONE_WAY_ARROW_SIZE,
       },
-      paint: {
-        'icon-opacity': ['interpolate', ['linear'], ['zoom'], 14.9, 0, 15, ONE_WAY_ARROW_OPACITY],
-      },
-      filter: ['==', ['get', 'drivingDirection'], ONE_WAY_DRIVING_DIRECTION],
+      filter: [
+        'all',
+        ['==', ['get', 'drivingDirection'], ONE_WAY_DRIVING_DIRECTION],
+        ['!', ['in', ['get', 'carriagewayTypeCode'], ['literal', INACCESSIBLE_CARRIAGEWAY_TYPES]]],
+      ],
     };
   }
 }

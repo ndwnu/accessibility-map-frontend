@@ -4,7 +4,7 @@ import { BaseMapComponent } from '@modules/map/components/base-map/base-map.comp
 import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
 import { DestinationElement } from '@modules/map/elements/destination/destination-element';
 import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
-import { TrafficSignService, AccessibilityDataService } from '@shared/services';
+import { AccessibilityDataService, TrafficSignService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
 import { LegendComponent } from '../legend/legend.component';
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs/selected-traffic-signs.component';
@@ -28,6 +28,7 @@ export class MainMapComponent extends BaseMapComponent {
 
   protected async onLoadMap() {
     this.loadImages();
+    this.hideNlsArrows();
 
     this.mapElements = [
       new AccessibilityElement(this.map, this.accessibilityDataService),
@@ -56,5 +57,9 @@ export class MainMapComponent extends BaseMapComponent {
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
     this.loadImage('text-sign', 'assets/images/text-sign.png', { pixelRatio: 2 });
     this.loadImage('marker', 'assets/images/marker-256.png');
+  }
+  private hideNlsArrows() {
+    this.map.setLayoutProperty('road-oneway', 'visibility', 'none');
+    this.map.setLayoutProperty('road-oneway-opposite', 'visibility', 'none');
   }
 }

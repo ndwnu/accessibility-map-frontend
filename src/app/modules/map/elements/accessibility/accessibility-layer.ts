@@ -10,7 +10,7 @@ import {
 } from '../constants';
 
 const MIN_ZOOM = 7;
-const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'CADO', 'FP', 'OVB', 'RP', 'VDF', 'VDV', 'VP', 'VV', 'VZ'];
+export const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'CADO', 'FP', 'OVB', 'RP', 'VDF', 'VDV', 'VP', 'VV', 'VZ'];
 const INACTIVE_MUNICIPALITY_COLOR = '#939393';
 const LINE_OPACITY = 0.5;
 
