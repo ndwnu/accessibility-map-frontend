@@ -1,18 +1,38 @@
 import { FeatureCollection } from 'geojson';
 import { Map, SourceSpecification, GeoJSONSource } from 'maplibre-gl';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { MapLayer } from './map-layer';
 
 export abstract class MapSource {
   layers: MapLayer[] = [];
 
+  protected unsubscribe = new Subject<void>();
+
+  private isInitialized = false;
   private _featureCollection$?: Observable<FeatureCollection>;
 
   constructor(
     public readonly id: string,
     protected readonly map: Map,
-  ) {
-    this.map.addSource(this.id, this.getSpecification() as SourceSpecification);
+  ) {}
+
+  onInit() {
+    if (!this.map.getSource(this.id)) {
+      this.map.addSource(this.id, this.getSpecification() as SourceSpecification);
+    }
+
+    this.layers.forEach((layer) => layer.onInit());
+
+    this.isInitialized = true;
+  }
+
+  onDestroy() {
+    this.isInitialized = false;
+
+    this.layers.forEach((layer) => layer.onDestroy());
+
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   get featureCollection$(): Observable<FeatureCollection> | undefined {

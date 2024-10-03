@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class MunicipalityService {
   private readonly _http = inject(HttpClient);
-  private readonly baseURL = environment.nls.accessibilityUrl;
+  private readonly baseURL = environment.ndw.accessibilityUrl;
   private cachedMunicipalities: MuncipalityFeature[] | undefined;
 
   loadMunicipalities() {

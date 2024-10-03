@@ -9,12 +9,12 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 export class AccessibilityDataService {
   private readonly _http = inject(HttpClient);
-  baseURL = environment.nls.accessibilityUrl;
+  baseURL = environment.ndw.accessibilityUrl;
 
-  private selectedMunicipalityId = new BehaviorSubject<string | undefined>(undefined);
+  private readonly selectedMunicipalityId = new BehaviorSubject<string | undefined>(undefined);
   selectedMunicipalityId$ = this.selectedMunicipalityId.asObservable();
 
-  private inaccessibleRoadSections = new BehaviorSubject<InaccessibleRoadSection[]>([]);
+  private readonly inaccessibleRoadSections = new BehaviorSubject<InaccessibleRoadSection[]>([]);
   inaccessibleRoadSections$ = this.inaccessibleRoadSections.asObservable();
 
   showDisclaimer$ = new Subject<void>();

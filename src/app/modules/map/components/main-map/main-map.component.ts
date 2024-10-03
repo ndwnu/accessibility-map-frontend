@@ -9,6 +9,7 @@ import { DestinationDataService } from '@shared/services/destination-data.servic
 import { LegendComponent } from '../legend/legend.component';
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs/selected-traffic-signs.component';
 import { NavigationControl } from 'maplibre-gl';
+import { BrtElement } from '@modules/map/elements/brt/brt-element';
 
 @Component({
   selector: 'ber-main-map',
@@ -27,14 +28,15 @@ export class MainMapComponent extends BaseMapComponent {
   }
 
   protected async onLoadMap() {
-    this.loadImages();
-    this.hideNlsArrows();
-
     this.mapElements = [
+      new BrtElement(this.map),
       new AccessibilityElement(this.map, this.accessibilityDataService),
       new TrafficSignElement(this.map, this.trafficSignService, this.accessibilityDataService),
       new DestinationElement(this.map, this.destinationDataService),
     ];
+
+    this.initializeMapElements();
+    this.loadImages();
   }
 
   get trafficSignElement(): TrafficSignElement | undefined {
@@ -43,6 +45,12 @@ export class MainMapComponent extends BaseMapComponent {
 
   handleTrafficSignVisible(visible: boolean) {
     this.trafficSignElement?.setVisible(visible);
+  }
+
+  private initializeMapElements() {
+    this.mapElements.forEach((element) => {
+      element.onInit();
+    });
   }
 
   private loadImages() {
@@ -57,9 +65,5 @@ export class MainMapComponent extends BaseMapComponent {
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
     this.loadImage('text-sign', 'assets/images/text-sign.png', { pixelRatio: 2 });
     this.loadImage('marker', 'assets/images/marker-256.png');
-  }
-  private hideNlsArrows() {
-    this.map.setLayoutProperty('road-oneway', 'visibility', 'none');
-    this.map.setLayoutProperty('road-oneway-opposite', 'visibility', 'none');
   }
 }

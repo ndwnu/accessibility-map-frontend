@@ -16,7 +16,7 @@ export class AccessibilityArrowLayer extends MapLayer {
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,
-      source: 'roadSections',
+      source: this.sourceId,
       'source-layer': 'roadSections',
       type: 'symbol',
       layout: {

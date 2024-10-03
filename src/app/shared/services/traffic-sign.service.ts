@@ -9,9 +9,9 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 })
 export class TrafficSignService {
   private readonly http = inject(HttpClient);
-  private readonly baseURL = environment.geoJson.trafficSignUrl;
+  private readonly baseURL = environment.ndw.trafficSignUrl;
 
-  private selectedTrafficSigns = new BehaviorSubject<TrafficSign[] | undefined>(undefined);
+  private readonly selectedTrafficSigns = new BehaviorSubject<TrafficSign[] | undefined>(undefined);
   selectedTrafficSigns$ = this.selectedTrafficSigns.asObservable();
 
   getTrafficSigns(municipalityId: string, rvvCode: string[]): Observable<TrafficSignFeatureCollection> {

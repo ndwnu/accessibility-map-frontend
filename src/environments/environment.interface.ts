@@ -1,21 +1,18 @@
-import { VectorSource } from '@shared/constants/map.constants';
-
 export interface Environment {
   production: boolean;
   apiBaseUrl: string;
   baseUrl: string;
   georgeUrl: string;
-  mapStyles: {
-    [key: string]: string;
-  };
-  geoJson: {
+  ndw: {
     trafficSignUrl: string;
-  };
-  nls: {
     accessibilityUrl: string;
+    roadSectionsUrl: string;
+    spriteUrl: string;
+    glyphsUrl: string;
   };
   pdok: {
     roadDataUrl: string;
+    brtTilesUrl: string;
   };
   rdw: {
     axleUrl: string;

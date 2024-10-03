@@ -18,7 +18,7 @@ export class AccessibilitySource extends MapSource {
   protected getSpecification(): Partial<SourceSpecification> {
     return {
       type: 'vector',
-      tiles: [environment.mapStyles['default']],
+      tiles: [environment.ndw.roadSectionsUrl],
     };
   }
 }

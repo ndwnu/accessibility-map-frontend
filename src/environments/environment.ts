@@ -9,17 +9,17 @@ export const environment: Environment = {
   apiBaseUrl: '/api',
   baseUrl: 'http://localhost:4203',
   georgeUrl: 'https://wegkenmerken.staging.ndw.nu',
-  mapStyles: {
-    default: 'https://maps.ndw.nu/styles/osm-front-office-light-with-nwb-roads.json',
-  },
-  geoJson: {
+  ndw: {
     trafficSignUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/traffic-signs/v3/current-state',
-  },
-  nls: {
     accessibilityUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
+    roadSectionsUrl: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/tiles/{z}/{x}/{y}.pbf',
+    spriteUrl: 'https://maps.ndw.nu/styles/sprites/osm-default/osm-default',
+    glyphsUrl: 'https://maps.ndw.nu/styles/glyphs/{fontstack}/{range}.pbf',
   },
   pdok: {
     roadDataUrl: 'https://api.pdok.nl/bzk/locatieserver/search/v3_1',
+    brtTilesUrl:
+      'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?layer=grijs&style=default&tilematrixset=EPSG%3A3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
   },
   rdw: {
     axleUrl: 'https://opendata.rdw.nl/resource/3huj-srit.json',

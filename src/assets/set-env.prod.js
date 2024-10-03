@@ -3,18 +3,17 @@ window.environment = {
   production: true,
   apiBaseUrl: '/api',
   baseUrl: '${BASE_URL}',
-  mapStyles: {
-    default: '${MAP_STYLES_DEFAULT_URL}',
-  },
   georgeUrl: '${GEORGE_URL}',
-  geoJson: {
-    trafficSignUrl: '${NWB_TRAFFIC_SIGN_CURRENT_STATE_URL}',
-  },
-  nls: {
-    accessibilityUrl: '${NLS_ACCESSIBILITY_URL}',
+  ndw: {
+    trafficSignUrl: '${NDW_TRAFFIC_SIGN_CURRENT_STATE_URL}',
+    accessibilityUrl: '${NDW_ACCESSIBILITY_URL}',
+    roadSectionsUrl: '${NDW_ROAD_SECTIONS_URL}',
+    spriteUrl: '${NDW_SPRITE_URL}',
+    glyphsUrl: '${NDW_GLYPHS_URL}',
   },
   pdok: {
     roadDataUrl: '${PDOK_ROAD_DATA_URL}',
+    brtTilesUrl: '${PDOK_BRT_TILES_URL}',
   },
   rdw: {
     axleUrl: '${RDW_AXLE_URL}',

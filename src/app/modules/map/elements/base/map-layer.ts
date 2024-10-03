@@ -1,27 +1,34 @@
-import { LayerSpecification, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
-import { Map } from 'maplibre-gl';
-import StyleLayer from 'maplibre-gl';
+import { LayerSpecification, Map, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
+import { Subject } from 'rxjs';
 
 export abstract class MapLayer {
   show: boolean = true;
+
+  protected unsubscribe = new Subject<void>();
 
   private static cursorPointerCount = 0;
 
   constructor(
     protected readonly map: Map,
     protected readonly sourceId: string,
-  ) {
-    this.map.addLayer(this.getSpecification() as LayerSpecification);
-
-    this.setupClickHandlers();
-  }
+  ) {}
 
   get id(): string {
     return `${this.sourceId}-layer`;
   }
 
-  get styleLayer(): StyleLayer | undefined {
+  get styleLayer() {
     return this.map.getLayer(this.id);
+  }
+
+  onInit() {
+    this.map.addLayer(this.getSpecification() as LayerSpecification);
+    this.setupClickHandlers();
+  }
+
+  onDestroy() {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   setVisible(visible: boolean) {

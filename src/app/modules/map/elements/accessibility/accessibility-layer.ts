@@ -1,7 +1,7 @@
 import { InaccessibleRoadSection } from '@shared/models';
 import { AccessibilityDataService } from '@shared/services';
 import { ExpressionSpecification, LayerSpecification, Map } from 'maplibre-gl';
-import { combineLatest, filter } from 'rxjs';
+import { combineLatest, filter, takeUntil } from 'rxjs';
 import { MapLayer } from '../base/map-layer';
 import {
   ACCESSIBLE_ROAD_SECTION_COLOR,
@@ -18,12 +18,14 @@ export class AccessibilityLayer extends MapLayer {
   constructor(map: Map, sourceId: string, accessibilityDataService: AccessibilityDataService) {
     super(map, sourceId);
 
-    // Todo: add unsubscribe logic
     combineLatest([
       accessibilityDataService.inaccessibleRoadSections$,
       accessibilityDataService.selectedMunicipalityId$,
     ])
-      .pipe(filter(([, municipalityId]) => !!municipalityId))
+      .pipe(
+        filter(([, municipalityId]) => !!municipalityId),
+        takeUntil(this.unsubscribe),
+      )
       .subscribe(([inaccessibleRoadSections, selectedMunicipalityId]) => {
         this.updateStyles(inaccessibleRoadSections, selectedMunicipalityId!);
       });
@@ -32,7 +34,7 @@ export class AccessibilityLayer extends MapLayer {
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,
-      source: 'roadSections',
+      source: this.sourceId,
       'source-layer': 'roadSections',
       type: 'line',
       minzoom: MIN_ZOOM,
