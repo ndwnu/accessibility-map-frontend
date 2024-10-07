@@ -5,7 +5,7 @@ import { INACCESSIBLE_CARRIAGEWAY_TYPES } from '@modules/map/elements/accessibil
 const ONE_WAY_ARROW_SIZE_MIN = 0.4;
 const ONE_WAY_ARROW_SIZE_MAX = 0.5;
 const ONE_WAY_ARROW_OPACITY_MIN = 0.6;
-const ONE_WAY_ARROW_OPACITY_MAX = 0.8;
+const ONE_WAY_ARROW_OPACITY_MAX = 1;
 const ONE_WAY_DRIVING_DIRECTION = 'H';
 
 export class AccessibilityArrowLayer extends MapLayer {
