@@ -13,6 +13,7 @@ window.environment = {
   },
   pdok: {
     roadDataUrl: '${PDOK_ROAD_DATA_URL}',
+    aerialTilesUrl: '${PDOK_AERIAL_TILES_URL}',
     brtTilesUrl: '${PDOK_BRT_TILES_URL}',
   },
   rdw: {

@@ -1,54 +1,23 @@
 <div class="legend">
-  <div class="legend__content" [ngClass]="{ open: isLegendOpen() }">
-    <h3 class="legend__title">Legenda</h3>
-    @for (item of legendItems; track item.name) {
-      <div class="row align-items-center border-bottom border-1 mb-1 pb-1">
-        <div class="col-2">
-          @if (item.img) {
-            <img [src]="item.img" [alt]="item.name" />
-          } @else {
-            <div
-              class="legend__line"
-              [style.background-color]="item.color"
-              [style.border-color]="item.outlineColor"
-            ></div>
-          }
-        </div>
-        <div class="col-9 d-flex flex-column">
-          <span>{{ item.name }}</span>
-          @if (item.subTitle) {
-            <small class="text-muted">{{ item.subTitle }}</small>
-          }
-        </div>
-        @if (item.toggleable) {
-          <div class="col-1 d-flex align-items-center justify-content-center">
-            <button
-              class="icon-button"
-              [attr.aria-label]="isTrafficSignVisible() ? 'Verberg verkeersborden' : 'Toon verkeersborden'"
-              [attr.aria-pressed]="isTrafficSignVisible()"
-              (click)="toggleTrafficSign()"
-            >
-              <ndw-icon>{{ isTrafficSignVisible() ? 'visibility' : 'visibility_off' }}</ndw-icon>
-            </button>
-          </div>
+  @for (item of legendItems; track item.name) {
+    <div class="row mb-1 pb-1">
+      <div class="col-2">
+        @if (item.img) {
+          <img [ngSrc]="item.img" width="24" height="24" [alt]="item.name" class="legend__image" />
+        } @else {
+          <div
+            class="legend__line"
+            [style.background-color]="item.color"
+            [style.border-color]="item.outlineColor"
+          ></div>
         }
       </div>
-    }
-  </div>
-  <button class="legend__toggle" (click)="toggleLegend()">
-    <span class="d-none d-sm-block">
-      {{ isLegendOpen() ? 'Legenda sluiten' : 'Legenda bekijken' }}
-    </span>
-    <span class="d-sm-none">
-      <em class="bx bx-spreadsheet"></em>
-    </span>
-    <span
-      class="bx"
-      [ngClass]="{
-        'bx-chevron-up': !isLegendOpen(),
-        'bx-chevron-down': isLegendOpen()
-      }"
-      aria-hidden="true"
-    ></span>
-  </button>
+      <div class="col-10 d-flex flex-column">
+        <span>{{ item.name }}</span>
+        @if (item.subTitle) {
+          <small class="text-muted">{{ item.subTitle }}</small>
+        }
+      </div>
+    </div>
+  }
 </div>

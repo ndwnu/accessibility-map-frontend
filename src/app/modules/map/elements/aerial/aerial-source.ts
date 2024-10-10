@@ -1,20 +1,20 @@
 import { environment } from '@env/environment';
+import { AerialLayer } from '@modules/map/elements/aerial/aerial-layer';
 import { MapSource } from '@modules/map/elements/base/map-source';
-import { BrtLayer } from '@modules/map/elements/brt/brt-layer';
 
 import { Map, SourceSpecification } from 'maplibre-gl';
 
-export class BrtSource extends MapSource {
+export class AerialSource extends MapSource {
   constructor(map: Map) {
-    super('brt', map);
+    super('aerial', map);
 
-    this.layers = [new BrtLayer(map, this.id)];
+    this.layers = [new AerialLayer(map, this.id)];
   }
 
   protected getSpecification(): Partial<SourceSpecification> {
     return {
       type: 'raster',
-      tiles: [environment.pdok.brtTilesUrl],
+      tiles: [environment.pdok.aerialTilesUrl],
       tileSize: 256,
     };
   }

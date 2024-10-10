@@ -1,74 +1,13 @@
-@import 'abstracts';
-
 .legend {
-  position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-  max-width: 90%;
-  @media only screen and (max-width: 600px) {
-    bottom: 4rem;
-  }
-
-  border-radius: 3px;
-  background-color: #fff;
-  box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2);
-
-  opacity: 0.6;
-  transition: opacity 100ms ease-out;
-  font-size: 0.875rem;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &__toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border: 0;
-
-    color: var(--bs-gray-600);
-    background-color: transparent;
-    transition: color 150ms ease-out;
-
-    &:hover {
-      color: var(--bs-gray-700);
-    }
-  }
-
-  &__content {
-    max-height: 0;
-    overflow: hidden;
-    font-size: 13px;
-    transition: 500ms ease-in-out;
-    padding: 0 1rem;
-
-    &.open {
-      max-height: 50vh;
-    }
-  }
-
-  &__title {
-    font-size: 1rem;
-    font-weight: 500;
-    margin: 0.75rem 0;
-  }
-
   &__line {
-    width: 24px;
-    height: 8px;
-    opacity: 0.7;
-    border: 1px solid #fff;
+    width: var(--ndw-spacing-lg);
+    height: var(--ndw-spacing-sm);
+    margin-top: var(--ndw-spacing-2xs);
+    border: 1px solid var(--ndw-white);
   }
 
-  .icon-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: $gray-900;
+  &__image {
+    width: var(--ndw-spacing-lg);
+    height: var(--ndw-spacing-lg);
   }
 }

@@ -1,7 +1,17 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, OnInit, signal, TemplateRef, viewChild, ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  OnInit,
+  output,
+  signal,
+  TemplateRef,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
@@ -40,6 +50,7 @@ export class UserVehicleFormComponent implements OnInit {
 
   vehicleInfo = signal<VehicleInfo | undefined>(undefined);
   loading = signal(false);
+  modalClosed = output();
 
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly destinationDataService = inject(DestinationDataService);
@@ -125,6 +136,7 @@ export class UserVehicleFormComponent implements OnInit {
           this.loading.set(false);
           this.dataInputService.setActiveStep(0);
           this.closeModal();
+          this.modalClosed.emit();
         },
       });
   }

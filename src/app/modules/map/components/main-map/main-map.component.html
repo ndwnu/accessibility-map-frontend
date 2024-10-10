@@ -1,6 +1,11 @@
-<div class="content">
-  <ng-content />
-</div>
 <div class="map-wrapper__map" #map></div>
-<ber-legend (onTrafficSignVisible)="handleTrafficSignVisible($event)" />
+
+@if (showControlPanel()) {
+  <ber-control-panel
+    (openModal)="openPanel.emit()"
+    (changeBackgroundLayer)="setBackgroundLayer($event)"
+    (showTrafficSignsLayer)="handleTrafficSignVisible($event)"
+  />
+}
+
 <ber-selected-traffic-signs />

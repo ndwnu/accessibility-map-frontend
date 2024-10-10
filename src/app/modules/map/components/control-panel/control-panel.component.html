@@ -1,0 +1,45 @@
+<div class="control-panel">
+  <section>
+    <h2>Uw voertuig</h2>
+    <button ndwButton (click)="openModal.emit()">Bekijk gegevens</button>
+  </section>
+
+  <section>
+    <h2>Kaartlagen</h2>
+    <ndw-form-field>
+      <div class="background-layers">
+        <ndw-radio-group>
+          @for (background of backgroundLayers(); track background.key) {
+            <label>
+              <input
+                ndwInput
+                type="radio"
+                name="background"
+                [value]="background.key"
+                [checked]="background.active"
+                (change)="selectBackgroundLayer(background)"
+              />
+              <img
+                ngSrc="./assets/images/background-layer-icon/{{ background.key }}.jpg"
+                width="30"
+                height="30"
+                role="presentation"
+                [alt]="background.name"
+              />
+            </label>
+          }
+        </ndw-radio-group>
+      </div>
+    </ndw-form-field>
+    <ndw-form-field>
+      <ndw-checkbox [checked]="showTrafficSigns()" (checkedChange)="toggleTrafficSigns()"
+        >Toon verkeersborden</ndw-checkbox
+      >
+    </ndw-form-field>
+  </section>
+
+  <section>
+    <h2>Legenda</h2>
+    <ber-legend />
+  </section>
+</div>

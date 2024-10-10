@@ -12,6 +12,7 @@ export interface Environment {
   };
   pdok: {
     roadDataUrl: string;
+    aerialTilesUrl: string;
     brtTilesUrl: string;
   };
   rdw: {
