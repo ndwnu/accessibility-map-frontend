@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:mock": "ng serve --configuration mock",
     "build": "ng build --output-hashing all",
     "build:prod": "ng build --configuration production && npm run postbuild",
     "postbuild": "node scripts/replace-set-env.js",

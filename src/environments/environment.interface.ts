@@ -1,5 +1,6 @@
 export interface Environment {
   production: boolean;
+  mock?: boolean;
   apiBaseUrl: string;
   baseUrl: string;
   georgeUrl: string;

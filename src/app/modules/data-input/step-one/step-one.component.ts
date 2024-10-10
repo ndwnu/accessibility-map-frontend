@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   CardComponent,
   CardContentComponent,
@@ -11,12 +10,14 @@ import {
   CheckboxComponent,
   FormFieldComponent,
 } from '@ndwnu/design-system';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { StepOneFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 
-import { ActionsComponent } from '../actions';
+import { environment } from '@env/environment';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { NlsVehicleType } from '@modules/map/models/nlsMappings';
+import { ActionsComponent } from '../actions';
 
 @UntilDestroy()
 @Component({
@@ -66,12 +67,34 @@ export class StepOneComponent implements OnInit {
   private dataInputService = inject(DataInputService);
   private rdwService = inject(RdwService);
 
+  get licensePlateControl() {
+    return this.dataInputService.licensePlateControl;
+  }
+
+  get unknownLicensePlateControl() {
+    return this.dataInputService.unknownLicensePlateControl;
+  }
+
   get vehicleTypeControl() {
     return this.dataInputService.vehicleTypeControl;
   }
 
+  get heightControl() {
+    return this.dataInputService.heightControl;
+  }
+
+  get trailerControl() {
+    return this.dataInputService.trailerControl;
+  }
+
   ngOnInit() {
-    this.licensePlateUnknown = this.form().controls.unknownLicensePlate.value || false;
+    if (environment.mock) {
+      const mockVehicle = NlsVehicleType.Car;
+      this.unknownLicensePlateControl.setValue(true);
+      this.vehicleTypeControl.setValue(mockVehicle);
+    }
+
+    this.licensePlateUnknown = this.unknownLicensePlateControl.value || false;
     this.form().controls.height.valueChanges.subscribe(() => {
       this.updateVehicleHeightError();
     });

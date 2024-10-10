@@ -69,6 +69,20 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "mock": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "aot": false,
+              "namedChunks": true,
+              "watch": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.mock.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -85,6 +99,9 @@
             },
             "development": {
               "buildTarget": "accessibility-map-frontend:build:development"
+            },
+            "mock": {
+              "buildTarget": "accessibility-map-frontend:build:mock"
             }
           },
           "defaultConfiguration": "development"
@@ -116,6 +133,7 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@angular-eslint/schematics"]
+    "schematicCollections": ["@angular-eslint/schematics"],
+    "analytics": false
   }
 }

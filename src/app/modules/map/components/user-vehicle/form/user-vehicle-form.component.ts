@@ -14,18 +14,19 @@ import {
 } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+import { environment } from '@env/environment';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
 import { MainNavigationComponent } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
+import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
-import { LngLatLike } from 'maplibre-gl';
 import { extractPdokLonLatValue } from '@shared/utils/geo-utils';
-import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
-import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
+import { LngLatLike } from 'maplibre-gl';
 
 @UntilDestroy()
 @Component({
@@ -52,18 +53,17 @@ export class UserVehicleFormComponent implements OnInit {
   loading = signal(false);
   modalClosed = output();
 
-  private readonly accessibilityDataService = inject(AccessibilityDataService);
-  private readonly destinationDataService = inject(DestinationDataService);
-  private readonly map = inject(MapService);
-  private readonly municipalityService = inject(MunicipalityService);
   private readonly overlay = inject(Overlay);
   private readonly viewContainerRef = inject(ViewContainerRef);
+
+  private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly dataInputService = inject(DataInputService);
+  private readonly destinationDataService = inject(DestinationDataService);
+  private readonly mapService = inject(MapService);
+  private readonly municipalityService = inject(MunicipalityService);
 
   private overlayRef!: OverlayRef;
-
   private currentStep = -1;
-
   private disclaimerAccepted = false;
 
   protected form = this.dataInputService.form;
@@ -91,6 +91,10 @@ export class UserVehicleFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (environment.mock) {
+      this.disclaimerAccepted = true;
+    }
+
     const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically();
     this.overlayRef = this.overlay.create({
       ...OVERLAY_MODAL_BASE_CONFIG,
@@ -221,12 +225,12 @@ export class UserVehicleFormComponent implements OnInit {
     if (this.dataInputService.pdokData?.type === 'gemeente') {
       const chosenMunicipality = this.municipalityService.getMunicipality(this.dataInputService.municipalityId);
       if (chosenMunicipality) {
-        this.map.fitBounds(chosenMunicipality.properties.bounds);
+        this.mapService.fitBounds(chosenMunicipality.properties.bounds);
       }
     } else {
       const centerPoint = extractPdokLonLatValue(this.dataInputService.pdokData!.centroide_ll);
       this.destinationDataService.setDestinationPoint(centerPoint);
-      this.map.center(centerPoint as LngLatLike);
+      this.mapService.center(centerPoint as LngLatLike);
     }
   }
 }

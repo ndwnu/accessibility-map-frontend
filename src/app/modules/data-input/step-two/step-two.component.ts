@@ -12,12 +12,13 @@ import {
 import { StepTwoFormGroup } from '@shared/models';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 
-import { ActionsComponent } from '../actions';
-import { PdokService } from '@shared/services/pdok.service';
-import { PdokLookup, PdokSuggestion } from '@shared/models/pdok.model';
 import { NgClass } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { environment } from '@env/environment';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
+import { PdokLookup, PdokSuggestion } from '@shared/models/pdok.model';
+import { PdokService } from '@shared/services/pdok.service';
+import { ActionsComponent } from '../actions';
 
 @Component({
   selector: 'ber-step-two',
@@ -47,8 +48,9 @@ export class StepTwoComponent implements OnInit {
   pdokSuggestions?: PdokSuggestion[];
 
   private cdr = inject(ChangeDetectorRef);
-  private dataInputService = inject(DataInputService);
   private destroyRef = inject(DestroyRef);
+
+  private dataInputService = inject(DataInputService);
   private pdokService = inject(PdokService);
 
   get municipalityId() {
@@ -68,6 +70,11 @@ export class StepTwoComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (environment.mock) {
+      const mockMunicipalityId = 'gem-0b2a8b92856b27f86fbd67ab35808ebf'; // Default: "Gemeente Amsterdam"
+      this.selectPdokSuggestion(mockMunicipalityId);
+    }
+
     this.form().markAsPristine();
     this.address.valueChanges
       .pipe(

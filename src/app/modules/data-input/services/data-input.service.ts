@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { DataInputFormGroup, StepOneFormGroup, StepThreeFormGroup, StepTwoFormGroup } from '@shared/models';
 import { VEHICLE_TYPES } from '@modules/map/models';
+import { DataInputFormGroup, StepOneFormGroup, StepThreeFormGroup, StepTwoFormGroup } from '@shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +34,14 @@ export class DataInputService {
 
   get licensePlate() {
     return this.licensePlateControl?.value?.toLocaleUpperCase() ?? '';
+  }
+
+  get unknownLicensePlateControl() {
+    return this.stepOneForm.get('unknownLicensePlate')!;
+  }
+
+  get unknownLicensePlate() {
+    return this.licensePlateControl?.value ?? false;
   }
 
   get vehicleTypeControl() {
