@@ -1,4 +1,4 @@
-import { LayerSpecification } from 'maplibre-gl';
+import { FilterSpecification, LayerSpecification } from 'maplibre-gl';
 import { MapLayer } from '../base/map-layer';
 
 export class TrafficSignClusterLabelLayer extends MapLayer {
@@ -6,12 +6,16 @@ export class TrafficSignClusterLabelLayer extends MapLayer {
     return `${this.sourceId}-cluster-label-layer`;
   }
 
+  override getFilterSpecification(): FilterSpecification {
+    return ['has', 'point_count'];
+  }
+
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,
       source: this.sourceId,
       type: 'symbol',
-      filter: ['has', 'point_count'],
+      filter: this.getFilterSpecification(),
       layout: {
         'text-field': '{point_count_abbreviated}',
         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],

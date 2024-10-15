@@ -1,4 +1,4 @@
-import { LayerSpecification } from 'maplibre-gl';
+import { FilterSpecification, LayerSpecification } from 'maplibre-gl';
 import { MapLayer } from '../base/map-layer';
 
 export class TrafficSignBlackCodeLayer extends MapLayer {
@@ -6,12 +6,16 @@ export class TrafficSignBlackCodeLayer extends MapLayer {
     return `${this.sourceId}-black-code-layer`;
   }
 
+  override getFilterSpecification(): FilterSpecification {
+    return ['!', ['has', 'point_count']];
+  }
+
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,
       source: this.sourceId,
       type: 'symbol',
-      filter: ['!', ['has', 'point_count']],
+      filter: this.getFilterSpecification(),
       layout: {
         'text-field': ['get', 'blackCode'],
         'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],

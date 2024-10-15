@@ -1,4 +1,4 @@
-import { LayerSpecification } from 'maplibre-gl';
+import { FilterSpecification, LayerSpecification } from 'maplibre-gl';
 import { MapLayer } from '../base/map-layer';
 
 export class TrafficSignTextSignLayer extends MapLayer {
@@ -6,12 +6,16 @@ export class TrafficSignTextSignLayer extends MapLayer {
     return `${this.sourceId}-text-sign-layer`;
   }
 
+  override getFilterSpecification(): FilterSpecification {
+    return ['!', ['has', 'point_count']];
+  }
+
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,
       source: this.sourceId,
       type: 'symbol',
-      filter: ['!', ['has', 'point_count']],
+      filter: this.getFilterSpecification(),
       layout: {
         'icon-allow-overlap': true,
         'icon-rotation-alignment': 'map',

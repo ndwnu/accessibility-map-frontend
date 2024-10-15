@@ -17,9 +17,18 @@ export class AccessibilityDataService {
   private readonly inaccessibleRoadSections = new BehaviorSubject<InaccessibleRoadSection[]>([]);
   inaccessibleRoadSections$ = this.inaccessibleRoadSections.asObservable();
 
+  private _filter = new BehaviorSubject<AccessibilityFilter | undefined>(undefined);
+  filter$ = this._filter.asObservable();
+
   showDisclaimer$ = new Subject<void>();
 
+  get filter(): AccessibilityFilter | undefined {
+    return this._filter.value;
+  }
+
   getInaccessibleRoadSections(filter: AccessibilityFilter): Observable<InaccessibleRoadSectionsResponse> {
+    this._filter.next(filter);
+
     const municipalityId = filter.municipalityId;
 
     let params = new HttpParams();

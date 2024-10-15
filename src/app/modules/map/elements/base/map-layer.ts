@@ -1,4 +1,4 @@
-import { LayerSpecification, Map, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
+import { FilterSpecification, LayerSpecification, Map, MapGeoJSONFeature, MapMouseEvent } from 'maplibre-gl';
 import { Subject } from 'rxjs';
 
 export abstract class MapLayer {
@@ -35,8 +35,9 @@ export abstract class MapLayer {
     this.map.setLayoutProperty(this.id, 'visibility', visible ? 'visible' : 'none');
   }
 
-  protected onClick?(event: clickEvent): void;
+  getFilterSpecification?(): FilterSpecification;
 
+  protected onClick?(event: clickEvent): void;
   protected abstract getSpecification(): Partial<LayerSpecification>;
 
   private setupClickHandlers() {
