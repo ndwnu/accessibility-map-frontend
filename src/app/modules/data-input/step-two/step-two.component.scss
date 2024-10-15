@@ -4,25 +4,23 @@ ndw-card {
   max-width: 100%;
   width: 30rem;
 
-  .content,
-  .footer {
-    width: 100%;
-  }
+  ndw-card-content {
+    .content {
+      width: 100%;
+      min-height: 36rem;
+    }
 
-  .content {
-    min-height: 36rem;
-  }
-}
+    .pdok-suggestion-list {
+      max-height: 280px;
+      overflow-y: scroll;
 
-.pdok-suggestion-list {
-  max-height: 280px;
-  overflow-y: scroll;
+      .pdok-suggestion {
+        cursor: pointer;
 
-  .pdok-suggestion {
-    cursor: pointer;
-
-    &:hover {
-      background: var(--ndw-color-grey-200);
+        &:hover {
+          background: var(--ndw-color-grey-200);
+        }
+      }
     }
   }
 }

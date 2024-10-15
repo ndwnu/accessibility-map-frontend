@@ -1,14 +1,19 @@
 <ndw-card>
-  <ndw-card-header> Gemeente of adres kiezen </ndw-card-header>
+  <ndw-card-header>
+    <ber-feedback-header title="Gemeente of adres kiezen" />
+  </ndw-card-header>
+
   <ndw-card-content>
     <div class="content">
       <form [formGroup]="form()">
         <ndw-form-field label="Selecteer de gemeente of het adres van uw bestemming">
           <input ndwInput formControlName="address" type="search" placeholder="Voer gemeente of adres in" />
         </ndw-form-field>
+
         @if (loading) {
           <span>Loading...</span>
         }
+
         <ul class="list-group pdok-suggestion-list">
           @for (suggestion of pdokSuggestions; track suggestion.id) {
             <li class="list-group-item pdok-suggestion" (click)="selectPdokSuggestion(suggestion.id)">
@@ -16,12 +21,14 @@
             </li>
           }
         </ul>
+
         @if (pdokSuggestions?.length === 0) {
           <span>Er kan geen gemeente of adres worden gevonden met die naam</span>
         }
       </form>
     </div>
   </ndw-card-content>
+
   <ndw-card-footer>
     <ber-actions
       [currentStep]="2"

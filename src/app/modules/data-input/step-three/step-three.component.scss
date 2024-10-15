@@ -4,12 +4,10 @@ ndw-card {
   max-width: 100%;
   width: 30rem;
 
-  .content,
-  .footer {
-    width: 100%;
-  }
-
-  .content {
-    min-height: 36rem;
+  ndw-card-content {
+    .content {
+      width: 100%;
+      min-height: 36rem;
+    }
   }
 }

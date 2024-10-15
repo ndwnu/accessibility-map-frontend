@@ -10,8 +10,12 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { environment } from '@env/environment';
+import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { VEHICLE_TYPES, VehicleType } from '@modules/map/models';
+import { NlsVehicleType } from '@modules/map/models/nlsMappings';
 import {
   CardComponent,
   CardContentComponent,
@@ -19,15 +23,12 @@ import {
   CardHeaderComponent,
   CheckboxComponent,
   FormFieldComponent,
+  IconComponent,
 } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepOneFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
-
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { environment } from '@env/environment';
-import { DataInputService } from '@modules/data-input/services/data-input.service';
-import { NlsVehicleType } from '@modules/map/models/nlsMappings';
 import { ActionsComponent } from '../actions';
 
 @UntilDestroy()
@@ -42,7 +43,9 @@ import { ActionsComponent } from '../actions';
     CardHeaderComponent,
     CheckboxComponent,
     CommonModule,
+    FeedbackHeaderComponent,
     FormFieldComponent,
+    IconComponent,
     ReactiveFormsModule,
   ],
   templateUrl: './step-one.component.html',
@@ -51,8 +54,6 @@ import { ActionsComponent } from '../actions';
 })
 export class StepOneComponent implements OnInit {
   form = input.required<FormGroup<StepOneFormGroup>>();
-
-  private readonly destroyRef = inject(DestroyRef);
 
   next = output<void>();
   vehicleInfo = output<VehicleInfo>();
@@ -75,6 +76,8 @@ export class StepOneComponent implements OnInit {
 
   vehicleHeight = computed(() => this.form().controls.height.value || 0);
   vehicleHeightError = signal<string | undefined>(undefined);
+
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly dataInputService = inject(DataInputService);
   private readonly rdwService = inject(RdwService);

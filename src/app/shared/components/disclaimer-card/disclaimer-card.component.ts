@@ -6,11 +6,19 @@ import {
   CardFooterComponent,
   CardHeaderComponent,
 } from '@ndwnu/design-system';
+import { FeedbackHeaderComponent } from '../feedback-header';
 
 @Component({
   selector: 'ber-disclaimer-card',
   standalone: true,
-  imports: [ButtonDirective, CardComponent, CardContentComponent, CardFooterComponent, CardHeaderComponent],
+  imports: [
+    ButtonDirective,
+    CardComponent,
+    CardContentComponent,
+    CardFooterComponent,
+    CardHeaderComponent,
+    FeedbackHeaderComponent,
+  ],
   styleUrl: './disclaimer-card.component.scss',
   templateUrl: './disclaimer-card.component.html',
 })

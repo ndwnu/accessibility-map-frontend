@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .feedback-link {
+    font-size: var(--ndw-font-size-sm);
+    font-weight: var(--ndw-font-weight-regular);
+
+    ndw-icon {
+      font-size: var(--ndw-icon-size-md); /* Set icon size to match the text size more closely */
+    }
+  }
+}

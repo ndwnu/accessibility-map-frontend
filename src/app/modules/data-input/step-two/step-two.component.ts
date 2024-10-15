@@ -1,5 +1,9 @@
+import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { environment } from '@env/environment';
+import { DataInputService } from '@modules/data-input/services/data-input.service';
 import {
   CardComponent,
   CardContentComponent,
@@ -7,17 +11,14 @@ import {
   CardHeaderComponent,
   CheckboxComponent,
   FormFieldComponent,
+  IconComponent,
   InputDirective,
 } from '@ndwnu/design-system';
+import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepTwoFormGroup } from '@shared/models';
-import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
-
-import { NgClass } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { environment } from '@env/environment';
-import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { PdokLookup, PdokSuggestion } from '@shared/models/pdok.model';
 import { PdokService } from '@shared/services/pdok.service';
+import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import { ActionsComponent } from '../actions';
 
 @Component({
@@ -26,14 +27,16 @@ import { ActionsComponent } from '../actions';
   imports: [
     ActionsComponent,
     CardComponent,
-    CardHeaderComponent,
     CardContentComponent,
     CardFooterComponent,
-    FormFieldComponent,
-    InputDirective,
-    ReactiveFormsModule,
+    CardHeaderComponent,
     CheckboxComponent,
+    FeedbackHeaderComponent,
+    FormFieldComponent,
+    IconComponent,
+    InputDirective,
     NgClass,
+    ReactiveFormsModule,
   ],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss',

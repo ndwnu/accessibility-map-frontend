@@ -40,9 +40,15 @@ export class AppComponent implements OnInit {
 
   bottomMenuItems: MenuItem[] = [
     {
+      callback: () => this.openFeedbackMail(),
+      icon: 'feedback',
+      id: 1,
+      label: 'Feedback',
+    },
+    {
       callback: () => this.openDisclaimerModal(),
       icon: 'error',
-      id: 1,
+      id: 2,
       label: 'Disclaimer',
     },
   ];
@@ -71,5 +77,15 @@ export class AppComponent implements OnInit {
   openDisclaimerModal() {
     const templatePortal = new TemplatePortal(this.disclaimerRef(), this.#viewContainerRef);
     this.overlayRef.attach(templatePortal);
+  }
+
+  openFeedbackMail() {
+    const email = 'mail@servicedeskndw.nu';
+    const subject = 'Feedback over de Bereikbaarheidskaart';
+    const body = 'Beste klantenservice van de Bereikbaarheidskaart,\n\n\n';
+
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    window.location.href = mailtoLink;
   }
 }

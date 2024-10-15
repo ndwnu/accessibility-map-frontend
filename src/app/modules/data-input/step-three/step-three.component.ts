@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DataInputService } from '@modules/data-input/services/data-input.service';
 import {
   CardComponent,
   CardContentComponent,
@@ -10,11 +11,10 @@ import {
   IconComponent,
   InputDirective,
 } from '@ndwnu/design-system';
+import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepThreeFormGroup, VehicleInfo } from '@shared/models';
-
-import { ActionsComponent } from '../actions';
-import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { RdwService } from '@shared/services';
+import { ActionsComponent } from '../actions';
 
 @Component({
   selector: 'ber-step-three',
@@ -22,14 +22,15 @@ import { RdwService } from '@shared/services';
   imports: [
     ActionsComponent,
     CardComponent,
-    CardHeaderComponent,
     CardContentComponent,
     CardFooterComponent,
+    CardHeaderComponent,
     CommonModule,
-    ReactiveFormsModule,
+    FeedbackHeaderComponent,
     FormFieldComponent,
-    InputDirective,
     IconComponent,
+    InputDirective,
+    ReactiveFormsModule,
   ],
   templateUrl: './step-three.component.html',
   styleUrl: './step-three.component.scss',
