@@ -57,6 +57,10 @@ export class UserVehicleSummaryComponent {
     return this.dataInputService.address;
   }
 
+  get pdokData() {
+    return this.dataInputService.pdokData;
+  }
+
   get municipalityExemptionUrl(): string {
     const municipalityId = this.municipalityId ?? '';
     const municipality = this.municipalityService.getMunicipality(municipalityId);

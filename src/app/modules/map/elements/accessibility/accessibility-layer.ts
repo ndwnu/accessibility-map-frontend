@@ -7,10 +7,11 @@ import {
   ACCESSIBLE_ROAD_SECTION_COLOR,
   INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
   INACCESSIBLE_ROAD_SECTION_COLOR,
+  MAP_MIN_ZOOM,
 } from '../constants';
 
-const MIN_ZOOM = 7;
 export const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'CADO', 'FP', 'OVB', 'RP', 'VDF', 'VDV', 'VP', 'VV', 'VZ'];
+
 const INACTIVE_MUNICIPALITY_COLOR = '#002633';
 const LINE_OPACITY = 1;
 
@@ -37,7 +38,7 @@ export class AccessibilityLayer extends MapLayer {
       source: this.sourceId, // Source ID for the layer data
       'source-layer': 'roadSections', // Specific layer within the source (usually for vector sources)
       type: 'line', // Type of layer; in this case, it’s a line layer
-      minzoom: MIN_ZOOM, // Minimum zoom level at which this layer is visible
+      minzoom: MAP_MIN_ZOOM, // Minimum zoom level at which this layer is visible
       layout: {
         // Layout properties for the layer
         'line-cap': 'butt', // Specifies how the endpoints of lines are rendered

@@ -25,7 +25,7 @@ import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
-import { extractPdokLonLatValue } from '@shared/utils/geo-utils';
+import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
 import { LngLatLike } from 'maplibre-gl';
 
 @UntilDestroy()
@@ -223,15 +223,21 @@ export class UserVehicleFormComponent implements OnInit {
   }
 
   private zoomToDestination() {
-    if (this.dataInputService.pdokData?.type === 'gemeente') {
-      const chosenMunicipality = this.municipalityService.getMunicipality(this.dataInputService.municipalityId);
-      if (chosenMunicipality) {
-        this.mapService.fitBounds(chosenMunicipality.properties.bounds);
-      }
-    } else {
-      const centerPoint = extractPdokLonLatValue(this.dataInputService.pdokData!.centroide_ll);
+    const chosenMunicipality = this.municipalityService.getMunicipality(this.dataInputService.municipalityId);
+    if (!chosenMunicipality) throw Error('Municipality is required');
+
+    // Always set max bounds, as every destination always has a municipality
+    this.mapService.setMaxBounds(chosenMunicipality.properties.bounds);
+
+    if (!this.dataInputService.pdokData) return;
+
+    const centerPoint = extractPdokLngLatValue(this.dataInputService.pdokData.centroide_ll);
+
+    if (this.dataInputService.pdokData.type !== 'gemeente') {
       this.destinationDataService.setDestinationPoint(centerPoint);
-      this.mapService.center(centerPoint as LngLatLike);
+      this.mapService.jumpTo(centerPoint as LngLatLike);
+    } else {
+      this.mapService.setCenter(centerPoint as LngLatLike);
     }
   }
 }
