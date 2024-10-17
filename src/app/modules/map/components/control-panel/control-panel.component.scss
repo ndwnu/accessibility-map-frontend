@@ -10,13 +10,68 @@
   padding: var(--ndw-spacing-md);
   border-radius: var(--ndw-border-radius-md);
   box-shadow: var(--ndw-elevation-popover);
-  max-width: 200px;
+
+  max-width: 13.5rem; // This max-width of ~215px is required to exactly fit the license plate
   display: grid;
   gap: var(--ndw-spacing-md);
 
   h2 {
     color: var(--ndw-color-grey-700);
     font-size: var(--ndw-font-size-sm);
+  }
+
+  .license-plate {
+    display: grid;
+    grid-template-columns: auto 1fr;
+
+    &_prefix {
+      background-color: #004699;
+      border-top-left-radius: var(--ndw-border-radius-sm);
+      border-bottom-left-radius: var(--ndw-border-radius-sm);
+      color: var(--ndw-color-white);
+      display: grid;
+      padding: var(--ndw-spacing-3xs);
+      place-content: center;
+      place-items: center;
+      height: var(--ndw-spacing-2xl);
+      width: var(--ndw-spacing-lg);
+      z-index: 10;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    &_value {
+      background-color: #ffe041;
+      border-color: #8b760d;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      font-family: 'Kenteken', sans-serif;
+      font-size: var(--ndw-font-size-xl);
+      margin-left: calc(var(--ndw-border-size-sm) * -1);
+      max-width: 10rem;
+      text-align: center;
+      text-transform: uppercase;
+
+      /* These 4 properties are added extra to make it look exactly like the license plate input field in the form in step one */
+      border-width: var(--ndw-border-size-sm);
+      border-style: solid;
+      border-top-right-radius: var(--ndw-border-radius-sm);
+      border-bottom-right-radius: var(--ndw-border-radius-sm);
+    }
+  }
+
+  .vehicle-type-container {
+    align-items: center;
+    display: grid;
+    font-family: var(--ndw-font-family-body);
+    font-size: var(--ndw-font-size-sm);
+
+    label {
+      font-weight: var(--ndw-font-weight-bold);
+      height: 1.5rem;
+    }
   }
 }
 

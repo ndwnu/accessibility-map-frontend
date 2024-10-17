@@ -139,6 +139,7 @@ export class UserVehicleFormComponent implements OnInit {
         complete: () => {
           this.loading.set(false);
           this.dataInputService.setActiveStep(0);
+          this.dataInputService.markFormAsPristine();
           this.closeModal();
           this.modalClosed.emit();
         },

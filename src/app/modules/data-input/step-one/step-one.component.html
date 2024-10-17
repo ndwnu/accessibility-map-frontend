@@ -14,20 +14,20 @@
               type="text"
               class="license-plate_input"
               formControlName="licensePlate"
-              [ngClass]="{ disabled: licensePlateUnknown }"
+              [ngClass]="{ disabled: unknownLicensePlate }"
             />
           </div>
         </ndw-form-field>
         <ndw-form-field>
           <ndw-checkbox
             formControlName="unknownLicensePlate"
-            [checked]="licensePlateUnknown"
+            [checked]="unknownLicensePlate"
             (checkedChange)="toggleLicensePlateUnknown()"
           >
             Ik heb geen kenteken
           </ndw-checkbox>
         </ndw-form-field>
-        @if (licensePlateUnknown) {
+        @if (unknownLicensePlate) {
           <ndw-form-field label="Voertuigtype">
             <select ndwInput formControlName="vehicleType">
               <option selected disabled>Selecteer voertuigtype</option>

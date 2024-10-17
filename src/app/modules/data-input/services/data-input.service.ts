@@ -41,7 +41,7 @@ export class DataInputService {
   }
 
   get unknownLicensePlate() {
-    return this.licensePlateControl?.value ?? false;
+    return this.unknownLicensePlateControl?.value ?? false;
   }
 
   get vehicleTypeControl() {
@@ -158,6 +158,10 @@ export class DataInputService {
 
   resetForm() {
     this.form.reset();
+  }
+
+  markFormAsPristine() {
+    this.form.markAsPristine();
   }
 
   private createForm() {

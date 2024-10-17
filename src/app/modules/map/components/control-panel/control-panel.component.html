@@ -1,6 +1,27 @@
 <div class="control-panel">
   <section>
     <h2>Uw voertuig</h2>
+
+    <div class="mb-1 pb-1">
+      @if (isLicensePlateValid) {
+        <div class="license-plate">
+          <div class="license-plate_prefix">
+            <img src="assets/images/kenteken-prefix.svg" alt="Onderscheidingsteken met de NL landcode." />
+          </div>
+          <span class="license-plate_value">
+            @if (!this.isLicensePlateControlDirty) {
+              {{ licensePlate }}
+            }
+          </span>
+        </div>
+      } @else if (isLicensePlateInvalid) {
+        <div class="vehicle-type-container">
+          <label> Voertuigtype </label>
+          <span>{{ vehicleType }}</span>
+        </div>
+      }
+    </div>
+
     <button ndwButton (click)="openModal.emit()">Bekijk gegevens</button>
   </section>
 
@@ -32,9 +53,9 @@
       </div>
     </ndw-form-field>
     <ndw-form-field>
-      <ndw-checkbox [checked]="showTrafficSigns()" (checkedChange)="toggleTrafficSigns()"
-        >Toon verkeersborden</ndw-checkbox
-      >
+      <ndw-checkbox [checked]="showTrafficSigns()" (checkedChange)="toggleTrafficSigns()">
+        Toon verkeersborden
+      </ndw-checkbox>
     </ndw-form-field>
   </section>
 

@@ -1,7 +1,8 @@
-import { Component, computed, output, signal } from '@angular/core';
-import { CheckboxComponent, FormFieldComponent, RadioGroupComponent } from '@ndwnu/design-system';
 import { NgOptimizedImage } from '@angular/common';
+import { Component, computed, inject, output, signal } from '@angular/core';
+import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { LegendComponent } from '@modules/map/components/legend/legend.component';
+import { CheckboxComponent, FormFieldComponent, RadioGroupComponent } from '@ndwnu/design-system';
 
 interface BackgroundLayer {
   name: string;
@@ -17,6 +18,8 @@ interface BackgroundLayer {
   styleUrl: './control-panel.component.scss',
 })
 export class ControlPanelComponent {
+  private readonly dataInputService = inject(DataInputService);
+
   openModal = output();
   changeBackgroundLayer = output<string>();
   showTrafficSignsLayer = output<boolean>();
@@ -30,6 +33,30 @@ export class ControlPanelComponent {
   );
 
   showTrafficSigns = signal(false);
+
+  get isLicensePlateControlDirty() {
+    return this.dataInputService.licensePlateControl.dirty;
+  }
+
+  get licensePlate() {
+    return this.dataInputService.licensePlate;
+  }
+
+  get unknownLicensePlate() {
+    return this.dataInputService.unknownLicensePlate;
+  }
+
+  get vehicleType() {
+    return this.dataInputService.vehicleType;
+  }
+
+  get isLicensePlateValid(): boolean {
+    return !!this.licensePlate && !this.unknownLicensePlate;
+  }
+
+  get isLicensePlateInvalid(): boolean {
+    return this.unknownLicensePlate && !!this.vehicleType;
+  }
 
   selectBackgroundLayer(layer: BackgroundLayer) {
     this.activeBackgroundLayer.set(layer.key);
