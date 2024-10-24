@@ -1,6 +1,6 @@
 import { AccessibilityFilter } from '@shared/models';
 import { FeatureCollection } from 'geojson';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { Map, SourceSpecification, GeoJSONSource, FilterSpecification } from 'maplibre-gl';
 import { MapLayer } from './map-layer';
 
@@ -12,6 +12,7 @@ export abstract class MapSource {
   private isInitialized = false;
   private _featureCollection$?: Observable<FeatureCollection>;
   private _filter$?: Observable<AccessibilityFilter | undefined>;
+  private filterSubscription?: Subscription;
 
   constructor(
     public readonly id: string,
@@ -84,10 +85,15 @@ export abstract class MapSource {
     }
   }
 
-  // TODO #81306 isn't this causing subscription leaks when setting filter more then once?
   private subscribeToFilters() {
-    if (this.isInitialized && this.filter$ && this.getFilterSpecification) {
-      this.filter$.pipe(takeUntil(this.unsubscribe)).subscribe({
+    if (!this.isInitialized) return;
+
+    if (this.filterSubscription) {
+      this.filterSubscription.unsubscribe();
+    }
+
+    if (this.filter$ && this.getFilterSpecification) {
+      this.filterSubscription = this.filter$.pipe(takeUntil(this.unsubscribe)).subscribe({
         next: (filter) => {
           this.layers.forEach((layer) => {
             let filterSpecification: FilterSpecification = this.getFilterSpecification!(filter);
@@ -114,11 +120,13 @@ export abstract class MapSource {
    * https://github.com/mapbox/mapbox-gl-js/issues/7887
    */
   private applyFilterToSourceSpecification(filter: AccessibilityFilter | undefined) {
+    if (!this.getFilterSpecification) return;
+
     const mapStyle = this.map.getStyle();
     const sourceSpecification = mapStyle.sources[this.id];
     if (sourceSpecification.type === 'geojson' && sourceSpecification.cluster === true) {
       // Clustering is enabled for this GeoJSON source, update filter
-      sourceSpecification.filter = this.getFilterSpecification!(filter);
+      sourceSpecification.filter = this.getFilterSpecification(filter);
       this.map.setStyle(mapStyle);
     }
   }
