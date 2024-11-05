@@ -66,13 +66,28 @@ export class MainMapComponent extends BaseMapComponent {
 
   private loadImages() {
     this.loadImage('arrow-icon', 'assets/images/arrow.png');
+    this.loadImage('C6-ZB', 'assets/images/traffic-signs/C6-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C6-ZE', 'assets/images/traffic-signs/C6-END.png', { pixelRatio: 2.5 });
+    this.loadImage('C7-ZB', 'assets/images/traffic-signs/C7-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C7-ZH', 'assets/images/traffic-signs/C7-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C7-ZE', 'assets/images/traffic-signs/C7-END.png', { pixelRatio: 2.5 });
     this.loadImage('C7a', 'assets/images/traffic-signs/C7a.png', { pixelRatio: 2 });
     this.loadImage('C7b', 'assets/images/traffic-signs/C7b.png', { pixelRatio: 2 });
     this.loadImage('C17', 'assets/images/traffic-signs/C17.png', { pixelRatio: 2 });
+    this.loadImage('C17-ZB', 'assets/images/traffic-signs/C17-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C17-ZE', 'assets/images/traffic-signs/C17-END.png', { pixelRatio: 2.5 });
     this.loadImage('C18', 'assets/images/traffic-signs/C18.png', { pixelRatio: 2 });
+    this.loadImage('C18-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C18-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
     this.loadImage('C19', 'assets/images/traffic-signs/C19.png', { pixelRatio: 2 });
+    this.loadImage('C19-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C19-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
     this.loadImage('C20', 'assets/images/traffic-signs/C20.png', { pixelRatio: 2 });
+    this.loadImage('C20-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C20-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
     this.loadImage('C21', 'assets/images/traffic-signs/C21.png', { pixelRatio: 2 });
+    this.loadImage('C21-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
+    this.loadImage('C21-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
     this.loadImage('text-sign', 'assets/images/text-sign.png', { pixelRatio: 2 });
     this.loadImage('marker', 'assets/images/marker-256.png');

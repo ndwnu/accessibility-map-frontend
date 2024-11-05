@@ -38,7 +38,17 @@ export class TrafficSignLayer extends MapLayer {
       type: 'symbol',
       filter: this.getFilterSpecification(),
       layout: {
-        'icon-image': ['coalesce', ['get', 'rvvCode'], ['image', RVV_CODE_UNKNOWN]],
+        'icon-image': [
+          'coalesce',
+          [
+            'case',
+            ['all', ['has', 'rvvCode'], ['has', 'zoneCode']],
+            ['image', ['concat', ['get', 'rvvCode'], '-', ['get', 'zoneCode']]],
+            ['image', ''],
+          ],
+          ['get', 'rvvCode'],
+          ['image', RVV_CODE_UNKNOWN],
+        ],
         'icon-allow-overlap': true,
         'icon-rotation-alignment': 'map',
         'icon-size': ['interpolate', ['linear'], ['zoom'], 10, 0.75, 15, 1.3],
