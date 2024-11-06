@@ -84,7 +84,7 @@ export class TrafficSignSource extends MapSource {
         features: [],
       },
       cluster: true,
-      clusterRadius: 1,
+      clusterRadius: 20,
     };
   }
 
