@@ -2,4 +2,8 @@
   display: grid;
   grid-template-columns: auto 0 1fr;
   height: 100dvh;
+
+  ndw-main-navigation {
+    z-index: 1025;
+  }
 }

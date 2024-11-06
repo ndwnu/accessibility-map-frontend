@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '@env/environment';
 import { TrafficSign, TrafficSignFeatureCollection } from '@shared/models/traffic-sign.model';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +11,7 @@ export class TrafficSignService {
   private readonly http = inject(HttpClient);
   private readonly baseURL = environment.ndw.trafficSignUrl;
 
-  private readonly selectedTrafficSigns = new BehaviorSubject<TrafficSign[] | undefined>(undefined);
-  selectedTrafficSigns$ = this.selectedTrafficSigns.asObservable();
+  selectedTrafficSigns = signal<TrafficSign[] | undefined>(undefined);
 
   getTrafficSigns(municipalityId: string, rvvCode: string[]): Observable<TrafficSignFeatureCollection> {
     const url = `${this.baseURL}`;
@@ -37,6 +36,6 @@ export class TrafficSignService {
   }
 
   setSelectedTrafficSigns(trafficSigns: TrafficSign[] | undefined) {
-    this.selectedTrafficSigns.next(trafficSigns);
+    this.selectedTrafficSigns.set(trafficSigns);
   }
 }

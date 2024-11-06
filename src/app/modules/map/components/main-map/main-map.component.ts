@@ -1,31 +1,76 @@
-import { Component, inject, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BaseMapComponent } from '@modules/map/components/base-map/base-map.component';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  output,
+  TemplateRef,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core';
+import { MapComponent } from '@modules/map/components/map';
+import { ControlPanelComponent } from '@modules/map/components/control-panel';
 import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
 import { DestinationElement } from '@modules/map/elements/destination/destination-element';
 import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
-import { AccessibilityDataService, TrafficSignService } from '@shared/services';
-import { DestinationDataService } from '@shared/services/destination-data.service';
-import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs/selected-traffic-signs.component';
-import { NavigationControl } from 'maplibre-gl';
 import { BrtElement } from '@modules/map/elements/brt/brt-element';
 import { AerialElement } from '@modules/map/elements/aerial/aerial-element';
-import { ControlPanelComponent } from '@modules/map/components/control-panel/control-panel.component';
+import { PopoverTriggerDirective } from '@ndwnu/design-system';
+import { AccessibilityDataService, DestinationDataService, TrafficSignService } from '@shared/services';
+import { NavigationControl } from 'maplibre-gl';
+
+import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs';
 
 @Component({
   selector: 'ber-main-map',
   standalone: true,
-  imports: [CommonModule, SelectedTrafficSignsComponent, ControlPanelComponent],
+  imports: [ControlPanelComponent, PopoverTriggerDirective, SelectedTrafficSignsComponent],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
 })
-export class MainMapComponent extends BaseMapComponent {
-  private readonly trafficSignService = inject(TrafficSignService);
-  private readonly accessibilityDataService = inject(AccessibilityDataService);
-  private readonly destinationDataService = inject(DestinationDataService);
+export class MainMapComponent extends MapComponent implements AfterViewInit {
+  readonly #accessibilityDataService = inject(AccessibilityDataService);
+  readonly #destinationDataService = inject(DestinationDataService);
+  readonly #overlay = inject(Overlay);
+  readonly #trafficSignService = inject(TrafficSignService);
+  readonly #viewContainerRef = inject(ViewContainerRef);
 
-  openPanel = output();
   showControlPanel = input(true);
+  openPanel = output();
+
+  popupRef = viewChild.required<TemplateRef<SelectedTrafficSignsComponent>>('trafficSignsPopup');
+
+  lngLat = computed(() => this.#trafficSignService.selectedTrafficSigns()?.[0].lnglat);
+
+  #overlayRef!: OverlayRef;
+  #positionStrategy = this.#overlay.position().global();
+
+  get trafficSignElement(): TrafficSignElement | undefined {
+    return this.mapElements.find((element) => element instanceof TrafficSignElement);
+  }
+
+  constructor() {
+    super();
+    effect(() => {
+      const templatePortal = new TemplatePortal(this.popupRef(), this.#viewContainerRef);
+      this.#overlayRef.detach();
+      this.#updatePopupPosition();
+      this.#overlayRef.attach(templatePortal);
+    });
+  }
+
+  override ngAfterViewInit() {
+    super.ngAfterViewInit();
+    this.#overlayRef = this.#overlay.create();
+
+    this.map?.on('move', () => {
+      this.#updatePopupPosition();
+    });
+  }
 
   protected override addButtons() {
     this.map.addControl(new NavigationControl(), 'bottom-right');
@@ -35,13 +80,21 @@ export class MainMapComponent extends BaseMapComponent {
     this.mapElements = [
       new BrtElement(this.map),
       new AerialElement(this.map),
-      new AccessibilityElement(this.map, this.accessibilityDataService),
-      new TrafficSignElement(this.map, this.trafficSignService, this.accessibilityDataService),
-      new DestinationElement(this.map, this.destinationDataService),
+      new AccessibilityElement(this.map, this.#accessibilityDataService),
+      new TrafficSignElement(this.map, this.#trafficSignService, this.#accessibilityDataService),
+      new DestinationElement(this.map, this.#destinationDataService),
     ];
 
-    this.initializeMapElements();
-    this.loadImages();
+    this.#initializeMapElements();
+    this.#loadImages();
+  }
+
+  closePopup() {
+    this.#overlayRef.detach();
+  }
+
+  handleTrafficSignVisible(visible: boolean) {
+    this.trafficSignElement?.setVisible(visible);
   }
 
   setBackgroundLayer(key: string) {
@@ -49,22 +102,14 @@ export class MainMapComponent extends BaseMapComponent {
     this.mapElements.find((element) => element instanceof AerialElement)?.setVisible(key === 'aerial');
   }
 
-  get trafficSignElement(): TrafficSignElement | undefined {
-    return this.mapElements.find((element) => element instanceof TrafficSignElement);
-  }
-
-  handleTrafficSignVisible(visible: boolean) {
-    this.trafficSignElement?.setVisible(visible);
-  }
-
-  private initializeMapElements() {
+  #initializeMapElements() {
     this.mapElements.forEach((element) => {
       element.onInit();
     });
     this.mapElements.find((element) => element instanceof TrafficSignElement)?.setVisible(false);
   }
 
-  private loadImages() {
+  #loadImages() {
     this.loadImage('arrow-icon', 'assets/images/arrow.png');
     this.loadImage('C6-ZB', 'assets/images/traffic-signs/C6-BEGIN.png', { pixelRatio: 2.5 });
     this.loadImage('C6-ZE', 'assets/images/traffic-signs/C6-END.png', { pixelRatio: 2.5 });
@@ -91,5 +136,28 @@ export class MainMapComponent extends BaseMapComponent {
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
     this.loadImage('text-sign', 'assets/images/text-sign.png', { pixelRatio: 2 });
     this.loadImage('marker', 'assets/images/marker-256.png');
+  }
+
+  #updatePopupPosition() {
+    const lngLat = this.lngLat();
+    if (!lngLat) {
+      return;
+    }
+
+    const { x, y } = this.map.project(lngLat);
+    this.#updatePositionStrategy(x, y);
+    this.#overlayRef.updatePosition();
+  }
+
+  #updatePositionStrategy(clickX: number, clickY: number) {
+    const { height, width, x, y } = (this.mapElementRef().nativeElement as HTMLDivElement).getBoundingClientRect();
+    clickX > width / 2
+      ? this.#positionStrategy.right(`${(width - clickX).toFixed()}px`)
+      : this.#positionStrategy.left(`${(clickX + x).toFixed()}px`);
+    clickY > height / 2
+      ? this.#positionStrategy.bottom(`${(height - clickY).toFixed()}px`)
+      : this.#positionStrategy.top(`${(clickY + y).toFixed()}px`);
+
+    this.#overlayRef.updatePositionStrategy(this.#positionStrategy);
   }
 }

@@ -1,45 +1,40 @@
 import {
   AfterViewInit,
   Component,
+  effect,
   ElementRef,
-  EventEmitter,
   inject,
-  Input,
-  OnChanges,
+  input,
   OnDestroy,
-  Output,
-  ViewChild,
+  output,
+  viewChild,
 } from '@angular/core';
-import { Feature } from 'geojson';
-import { CommonModule } from '@angular/common';
-import { MapState } from '@shared/models';
-import { NgChanges } from '@shared/types/ng-changes.type';
-import { MapService } from '@shared/services/map.service';
 import { MapElement } from '@modules/map/elements/base';
+import { MapState } from '@shared/models';
+import { MapService } from '@shared/services/map.service';
+import { Feature } from 'geojson';
 import { FilterSpecification, StyleImageMetadata, Map } from 'maplibre-gl';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
-  template: ``,
+  template: '',
 })
-export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDestroy {
-  readonly _map = inject(MapService);
+export abstract class MapComponent implements AfterViewInit, OnDestroy {
+  readonly #map = inject(MapService);
 
-  @Output() featureClick: EventEmitter<Feature[]> = new EventEmitter();
-  @Output() mapIdle: EventEmitter<MapState> = new EventEmitter();
+  expressions = input<FilterSpecification>();
+  featureClick = output<Feature[]>();
+  mapIdle = output<MapState>();
 
-  @ViewChild('map', { static: true }) mapElementRef!: ElementRef;
-
-  @Input() expressions: FilterSpecification | undefined = undefined;
+  mapElementRef = viewChild.required<ElementRef>('map');
 
   map!: Map;
   mapElements: MapElement[] = [];
 
-  ngOnChanges(changes: NgChanges<BaseMapComponent>) {
-    if (changes.expressions?.currentValue) {
-      this.addExpressionsToLayer(this.expressions);
-    }
+  constructor() {
+    effect(() => {
+      this.addExpressionsToLayer(this.expressions());
+    });
   }
 
   ngAfterViewInit() {
@@ -91,6 +86,6 @@ export abstract class BaseMapComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   private createMap() {
-    this.map = this._map.createMap(this.mapElementRef.nativeElement);
+    this.map = this.#map.createMap(this.mapElementRef().nativeElement);
   }
 }

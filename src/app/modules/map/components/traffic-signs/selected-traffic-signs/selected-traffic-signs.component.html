@@ -1,61 +1,81 @@
-@if (trafficSign(); as trafficSign) {
-  <div class="selected-traffic-signs">
-    <div class="selected-traffic-signs__item">
-      @if (trafficSign.image) {
-        <img [src]="trafficSign.image" alt="{{ trafficSign.rvvCode }} verkeersbord" />
+@if (selectedTrafficSigns(); as trafficSigns) {
+  <ndw-card>
+    <ndw-card-header>
+      @if (trafficSign(); as trafficSign) {
+        @if (trafficSigns.length > 1) {
+          <button ndwButton tertiary alternative class="back-button" (click)="showAll()">
+            <ndw-icon>keyboard_arrow_left</ndw-icon>
+            Terug naar overzicht
+          </button>
+        } @else {
+          Verkeersbord
+        }
       } @else {
-        <img src="assets/images/traffic-signs/not-available.png" alt="Afbeelding van verkeerdbord niet beschikbaar" />
+        Verkeersborden
       }
-
-      <div class="selected-traffic-signs__content">
-        <h1 class="ndw-paragraph-bold-lg">{{ trafficSign.roadName }}</h1>
-        <p>
-          {{ trafficSign.side | trafficSignOrientation }}
-          @if (trafficSign.bearing > 0) {
-            ({{ trafficSign.bearing }}°)
-          }
+      <button ndwButton ndwTooltip="Sluit popup" tertiary alternative (click)="close()">
+        <ndw-icon>close</ndw-icon>
+      </button>
+    </ndw-card-header>
+    <ndw-card-content>
+      @if (trafficSign(); as trafficSign) {
+        @if (trafficSigns.length > 1) {
+          <h4>Verkeersbord</h4>
+        }
+        <p class="road-name">
+          {{ trafficSign.roadName }}
         </p>
+        @if (trafficSign.image) {
+          <img [src]="trafficSign.image" alt="{{ trafficSign.rvvCode }} verkeersbord" />
+        } @else {
+          <img src="assets/images/traffic-signs/not-available.png" alt="Afbeelding van verkeersbord niet beschikbaar" />
+        }
 
-        @if (trafficSign.lnglat) {
-          <div>
-            <a ndwLink [href]="streetviewUrl()" target="_blank"> Streetview <ndw-icon>open_in_new</ndw-icon> </a>
-          </div>
+        {{ trafficSign.side | trafficSignOrientation }}
+        @if (trafficSign.bearing > 0) {
+          ({{ trafficSign.bearing }}°)
         }
         <div>
-          <a ndwLink [href]="georgeTrafficSignUrl()" target="_blank">
-            Bord in George <ndw-icon>open_in_new</ndw-icon>
-          </a>
-        </div>
-        @if (trafficSign.wvkId) {
+          @if (trafficSign.lnglat) {
+            <div>
+              <a ndwLink [href]="streetviewUrl()" target="_blank"> Streetview <ndw-icon>open_in_new</ndw-icon> </a>
+            </div>
+          }
           <div>
-            <a ndwLink [href]="georgeRoadSectionUrl()" target="_blank">
-              Wegvak in George <ndw-icon>open_in_new</ndw-icon>
+            <a ndwLink [href]="georgeTrafficSignUrl()" target="_blank">
+              Bord in George <ndw-icon>open_in_new</ndw-icon>
             </a>
           </div>
+          @if (trafficSign.wvkId) {
+            <div>
+              <a ndwLink [href]="georgeRoadSectionUrl()" target="_blank">
+                Wegvak in George <ndw-icon>open_in_new</ndw-icon>
+              </a>
+            </div>
+          }
+        </div>
+        @if (rvvExemptionUrl()) {
+          <div class="selected-traffic-signs__actions">
+            <button ndwButton large (click)="navigateToRvvExemption()">RVV ontheffing</button>
+          </div>
         }
-      </div>
-
-      @if (rvvExemptionUrl()) {
-        <div class="selected-traffic-signs__actions">
-          <button ndwButton large (click)="navigateToRvvExemption()">RVV ontheffing</button>
+      } @else {
+        <div class="list">
+          @for (trafficSign of trafficSigns; track trafficSign.id) {
+            <div class="list-item" role="button" (click)="setTrafficSign(trafficSign.id)">
+              @if (trafficSign.image) {
+                <img [src]="trafficSign.image" alt="{{ trafficSign.rvvCode }} verkeersbord" />
+              } @else {
+                <img
+                  src="assets/images/traffic-signs/not-available.png"
+                  alt="Afbeelding van verkeersbord niet beschikbaar"
+                />
+              }
+              <p>{{ trafficSign.rvvCode }} &ndash; {{ trafficSign.roadName }}</p>
+            </div>
+          }
         </div>
       }
-    </div>
-
-    @if ((selectedTrafficSigns()?.length ?? 0) > 1) {
-      <div class="selected-traffic-signs__pagination">
-        <button ndwButton title="Vorige bord" [attr.secondary]="true" (click)="previous()">
-          <ndw-icon>chevron_left</ndw-icon>
-        </button>
-        {{ selectIndex() + 1 }} van {{ selectedTrafficSigns()?.length }}
-        <button ndwButton title="Volgende bord" [attr.secondary]="true" (click)="next()">
-          <ndw-icon>chevron_right</ndw-icon>
-        </button>
-      </div>
-    }
-
-    <button class="selected-traffic-signs__close-button" ndwButton outline (click)="close()">
-      <ndw-icon>close</ndw-icon>
-    </button>
-  </div>
+    </ndw-card-content>
+  </ndw-card>
 }

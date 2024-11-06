@@ -12,5 +12,5 @@
   }
 </div>
 @if (currentStep() > 1) {
-  <button ndwButton large outline [disabled]="isLoading()" (click)="onPrevious()">Vorige</button>
+  <button ndwButton large secondary [disabled]="isLoading()" (click)="onPrevious()">Vorige</button>
 }

@@ -27,7 +27,7 @@
 
   <section>
     <h2>Kaartlagen</h2>
-    <ndw-form-field>
+    <ndw-form-field label="Kaartlagen" [hideLabel]="true">
       <div class="background-layers">
         <ndw-radio-group>
           @for (background of backgroundLayers(); track background.key) {
@@ -52,7 +52,7 @@
         </ndw-radio-group>
       </div>
     </ndw-form-field>
-    <ndw-form-field>
+    <ndw-form-field label="Toon verkeersborden" [hideLabel]="true">
       <ndw-checkbox [checked]="showTrafficSigns()" (checkedChange)="toggleTrafficSigns()">
         Toon verkeersborden
       </ndw-checkbox>

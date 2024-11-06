@@ -16,7 +16,6 @@ import { ControlPanelComponent } from '../../components/control-panel/control-pa
   standalone: true,
   imports: [
     CardComponent,
-    CommonModule,
     MainMapComponent,
     UserVehicleFormComponent,
     UserVehicleSummaryComponent,

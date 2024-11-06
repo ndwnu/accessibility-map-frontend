@@ -21,7 +21,7 @@
             />
           </div>
         </ndw-form-field>
-        <ndw-form-field>
+        <ndw-form-field label="Ik heb geen kenteken" [hideLabel]="true">
           <ndw-checkbox
             formControlName="unknownLicensePlate"
             [checked]="unknownLicensePlate"
@@ -51,7 +51,7 @@
             [value]="vehicleHeight()"
           />
         </ndw-form-field>
-        <ndw-form-field>
+        <ndw-form-field label="Ik heb een aanhanger en/of oplegger" [hideLabel]="true">
           <ndw-checkbox formControlName="trailer"> Ik heb een aanhanger en/of oplegger </ndw-checkbox>
         </ndw-form-field>
       </form>

@@ -1,26 +1,38 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, OnInit, output, signal } from '@angular/core';
 import { environment } from '@env/environment';
-import { CardComponent, IconComponent } from '@ndwnu/design-system';
+import {
+  CardComponent,
+  CardContentComponent,
+  CardHeaderComponent,
+  IconComponent,
+  TooltipDirective,
+} from '@ndwnu/design-system';
+import { TrafficSign } from '@shared/models/traffic-sign.model';
 import { TrafficSignOrientationPipe } from '@shared/pipes';
 import { MunicipalityService, TrafficSignService } from '@shared/services';
 
 @Component({
   selector: 'ber-selected-traffic-signs',
   standalone: true,
-  imports: [CommonModule, CardComponent, IconComponent, TrafficSignOrientationPipe],
+  imports: [
+    CardComponent,
+    CardContentComponent,
+    CardHeaderComponent,
+    IconComponent,
+    TooltipDirective,
+    TrafficSignOrientationPipe,
+  ],
   templateUrl: './selected-traffic-signs.component.html',
   styleUrl: './selected-traffic-signs.component.scss',
 })
-export class SelectedTrafficSignsComponent {
+export class SelectedTrafficSignsComponent implements OnInit {
   private readonly trafficSignService = inject(TrafficSignService);
   private readonly municipalityService = inject(MunicipalityService);
-  private readonly destroyRef = inject(DestroyRef);
 
-  selectedTrafficSigns = toSignal(this.trafficSignService.selectedTrafficSigns$);
-  selectIndex = signal(0);
-  trafficSign = computed(() => this.selectedTrafficSigns()?.[this.selectIndex()]);
+  onClose = output();
+
+  selectedTrafficSigns = this.trafficSignService.selectedTrafficSigns;
+  trafficSign = signal<TrafficSign | undefined>(undefined);
 
   streetviewUrl = computed(
     () =>
@@ -36,30 +48,27 @@ export class SelectedTrafficSignsComponent {
     return municipality?.properties?.requestExemptionUrl ?? '';
   });
 
-  constructor() {
-    this.trafficSignService.selectedTrafficSigns$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.selectIndex.set(0);
-    });
-  }
-
-  previous() {
-    if (this.selectIndex() > 0) {
-      this.selectIndex.update((i) => i - 1);
-    }
-  }
-
-  next() {
-    const selectedTrafficSigns = this.selectedTrafficSigns();
-    if (selectedTrafficSigns && this.selectIndex() < selectedTrafficSigns.length - 1) {
-      this.selectIndex.update((i) => i + 1);
+  ngOnInit() {
+    const trafficSigns = this.selectedTrafficSigns();
+    if (trafficSigns?.length === 1) {
+      this.setTrafficSign(trafficSigns[0].id);
     }
   }
 
   close() {
     this.trafficSignService.setSelectedTrafficSigns(undefined);
+    this.onClose.emit();
   }
 
   navigateToRvvExemption() {
     window.open(this.rvvExemptionUrl(), '_blank');
+  }
+
+  setTrafficSign(id: string) {
+    this.trafficSign.set(this.selectedTrafficSigns()?.find((trafficSign) => trafficSign.id === id));
+  }
+
+  showAll() {
+    this.trafficSign.set(undefined);
   }
 }

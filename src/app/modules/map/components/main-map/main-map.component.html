@@ -8,4 +8,6 @@
   />
 }
 
-<ber-selected-traffic-signs />
+<ng-template #trafficSignsPopup>
+  <ber-selected-traffic-signs (onClose)="closePopup()" />
+</ng-template>

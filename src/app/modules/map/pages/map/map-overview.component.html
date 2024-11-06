@@ -1,6 +1,5 @@
 <div class="map">
-  <ber-main-map #map [expressions]="expressions" (openPanel)="open(content)" [showControlPanel]="showControlPanel()">
-  </ber-main-map>
+  <ber-main-map #map [expressions]="expressions" (openPanel)="open(content)" [showControlPanel]="showControlPanel()" />
 </div>
 
 <ber-user-vehicle-form (modalClosed)="showControlPanel.set(true)" />

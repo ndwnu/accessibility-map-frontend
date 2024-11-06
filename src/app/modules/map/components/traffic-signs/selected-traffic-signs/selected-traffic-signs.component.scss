@@ -1,54 +1,77 @@
-.selected-traffic-signs {
-  position: absolute;
-  right: 3.5rem;
-  bottom: 2rem;
+:host {
+  width: 16rem;
 
-  &__item {
-    background-color: white;
-    border-radius: 0.25rem;
-    width: 15rem;
+  ndw-card {
+    gap: var(--ndw-spacing-md);
 
-    img {
-      border-radius: 0.25rem;
-      width: 15rem;
-      object-fit: contain;
+    ndw-card-header {
+      align-items: flex-start;
+      gap: var(--ndw-spacing-sm);
+      grid-template-columns: 1fr auto;
     }
-  }
 
-  &__content {
-    padding: 1rem;
+    ndw-card-content {
+      display: grid;
+      gap: var(--ndw-spacing-md);
 
-    h1 {
-      margin: 0;
+      .road-name {
+        font-size: var(--ndw-font-size-sm);
+        margin: var(--ndw-spacing-3xs) 0 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      img {
+        border-radius: var(--ndw-spacing-2xs);
+        width: 100%;
+        object-fit: contain;
+      }
+
+      [ndwButton] {
+        width: 100%;
+
+        &.back-button {
+          justify-self: flex-start;
+          width: fit-content;
+        }
+      }
+
+      .list {
+        display: grid;
+        max-height: 20rem;
+        overflow-y: auto;
+
+        .list-item {
+          align-items: center;
+          background-color: var(--ndw-color-white);
+          border-radius: var(--ndw-border-radius-sm);
+          display: grid;
+          gap: var(--ndw-spacing-xs);
+          grid-template-columns: auto 1fr;
+          padding: var(--ndw-spacing-xs);
+          transition: background-color 200ms ease-out;
+
+          &:hover {
+            background-color: var(--ndw-alpha-black-007);
+          }
+
+          &:active {
+            background-color: var(--ndw-alpha-black-015);
+          }
+
+          img {
+            height: var(--ndw-spacing-xl);
+          }
+
+          p {
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
     }
-  }
-
-  &__actions {
-    display: flex;
-    justify-content: end;
-    padding: 0 1rem 1rem 1rem;
-  }
-
-  &__pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    background-color: white;
-    width: 15rem;
-    word-spacing: 0.25rem;
-
-    button {
-      margin: 0 1rem;
-    }
-  }
-
-  &__close-button {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background-color: white;
   }
 }
