@@ -5,6 +5,7 @@ import {
   CardContentComponent,
   CardFooterComponent,
   CardHeaderComponent,
+  IconComponent,
 } from '@ndwnu/design-system';
 import { FeedbackHeaderComponent } from '../feedback-header';
 
@@ -18,6 +19,7 @@ import { FeedbackHeaderComponent } from '../feedback-header';
     CardFooterComponent,
     CardHeaderComponent,
     FeedbackHeaderComponent,
+    IconComponent,
   ],
   styleUrl: './disclaimer-card.component.scss',
   templateUrl: './disclaimer-card.component.html',
