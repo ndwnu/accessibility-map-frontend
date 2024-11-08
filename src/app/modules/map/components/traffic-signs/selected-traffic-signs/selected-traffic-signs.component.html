@@ -56,7 +56,7 @@
         </div>
         @if (rvvExemptionUrl()) {
           <div class="selected-traffic-signs__actions">
-            <button ndwButton large (click)="navigateToRvvExemption()">RVV ontheffing</button>
+            <a ndwButton large [href]="rvvExemptionUrl()" target="_blank">RVV ontheffing</a>
           </div>
         }
       } @else {

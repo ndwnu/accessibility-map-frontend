@@ -124,10 +124,10 @@
 
 @if (municipalityExemptionUrl) {
   <h5 class="mt-5">Ontheffing aanvragen?</h5>
-  <p>
-    Rvv ontheffingen voor de gemeente {{ municipalityName }} kunt aanvragen via deze
-    <a ndwLink [href]="municipalityExemptionUrl" target="_blank">link</a>.
-  </p>
+  <p class="mb-0">Vraag hier een RVV-ontheffing aan voor de gemeente {{ municipalityName }}:</p>
+  <div class="d-flex flex-row-reverse">
+    <a ndwButton secondary [href]="municipalityExemptionUrl" target="_blank">Ontheffing aanvragen</a>
+  </div>
 }
 
 <div class="d-flex justify-content-between mt-5">

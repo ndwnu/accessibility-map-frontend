@@ -60,10 +60,6 @@ export class SelectedTrafficSignsComponent implements OnInit {
     this.onClose.emit();
   }
 
-  navigateToRvvExemption() {
-    window.open(this.rvvExemptionUrl(), '_blank');
-  }
-
   setTrafficSign(id: string) {
     this.trafficSign.set(this.selectedTrafficSigns()?.find((trafficSign) => trafficSign.id === id));
   }
