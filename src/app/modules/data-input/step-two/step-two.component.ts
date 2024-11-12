@@ -20,6 +20,7 @@ import { PdokLookup, PdokSuggestion } from '@shared/models/pdok.model';
 import { PdokService } from '@shared/services/pdok.service';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import { ActionsComponent } from '../actions';
+import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
 
 @Component({
   selector: 'ber-step-two',
@@ -72,10 +73,20 @@ export class StepTwoComponent implements OnInit {
     return this.dataInputService.pdokDataControl;
   }
 
+  get latitude() {
+    return this.dataInputService.latitudeControl;
+  }
+
+  get longitude() {
+    return this.dataInputService.longitudeControl;
+  }
+
   ngOnInit() {
     if (environment.mock) {
-      const mockMunicipalityId = 'gem-0b2a8b92856b27f86fbd67ab35808ebf'; // Default: "Gemeente Amsterdam"
-      this.selectPdokSuggestion(mockMunicipalityId);
+      // const mockMunicipalityId = 'weg-91b90ecfed6d8e269987da70c7176803'; // Default: "Gemeente Amsterdam"
+      // const mockRoadId = 'weg-91b90ecfed6d8e269987da70c7176803'; // Default: "Sint Jorisstraat, Amsterdam"
+      const mockAddressId = 'adr-aa20cec20ce96eb1584903803c5936e2'; // Default: "Archimedeslaan 6, 3584BA Utrecht"
+      this.selectPdokSuggestion(mockAddressId);
     }
 
     this.form().markAsPristine();
@@ -100,13 +111,23 @@ export class StepTwoComponent implements OnInit {
   }
 
   private emptyStepTwo() {
-    this.updateFormValues(null);
+    this.municipalityId.setValue(null);
+    this.pdokId.setValue(null);
+    this.pdokData.setValue(null);
+    this.latitude.setValue(null);
+    this.longitude.setValue(null);
   }
 
-  private updateFormValues(pdokData: PdokLookup | null) {
-    this.pdokId.setValue(pdokData?.id ?? '');
+  private updateFormValues(pdokData: PdokLookup) {
+    this.pdokId.setValue(pdokData.id);
     this.pdokData.setValue(pdokData);
-    this.municipalityId.setValue(pdokData ? `GM${pdokData.gemeentecode}` : '');
+    this.municipalityId.setValue(`GM${pdokData.gemeentecode}`);
+    this.address.setValue(pdokData.weergavenaam, { emitEvent: false });
+    if (pdokData?.type !== 'gemeente') {
+      const centerPoint = extractPdokLngLatValue(pdokData.centroide_ll);
+      this.latitude.setValue(centerPoint[1]);
+      this.longitude.setValue(centerPoint[0]);
+    }
   }
 
   selectPdokSuggestion(pdokId: string) {
@@ -118,7 +139,6 @@ export class StepTwoComponent implements OnInit {
       .subscribe((res) => {
         const firstResult = res.response.docs[0];
         this.updateFormValues(firstResult);
-        this.address.setValue(firstResult.weergavenaam, { emitEvent: false });
         this.loading = false;
         this.cdr.detectChanges();
       });

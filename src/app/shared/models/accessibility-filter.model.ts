@@ -7,4 +7,6 @@ export interface AccessibilityFilter {
   vehicleWeight?: number;
   vehicleAxleWeight?: number;
   vehicleHasTrailer: boolean;
+  latitude?: number;
+  longitude?: number;
 }

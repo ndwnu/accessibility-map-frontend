@@ -18,7 +18,7 @@ import { environment } from '@env/environment';
 import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
-import { MainNavigationComponent } from '@ndwnu/design-system';
+import { MainNavigationComponent, ToastService } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
@@ -61,6 +61,7 @@ export class UserVehicleFormComponent implements OnInit {
   private readonly destinationDataService = inject(DestinationDataService);
   private readonly mapService = inject(MapService);
   private readonly municipalityService = inject(MunicipalityService);
+  private readonly toastService = inject(ToastService);
 
   private overlayRef!: OverlayRef;
   private currentStep = -1;
@@ -130,11 +131,13 @@ export class UserVehicleFormComponent implements OnInit {
         next: (response) => {
           this.destinationDataService.clearDestinationPoint();
           this.accessibilityDataService.setInaccessibleRoadSections(response.inaccessibleRoadSections);
+          this.accessibilityDataService.setMatchedRoadSection(response.matchedRoadSection);
           this.accessibilityDataService.setSelectedMunicipalityId(this.dataInputService.municipalityId);
           this.zoomToDestination();
         },
-        error: (error) => {
-          console.error(error);
+        error: () => {
+          this.toastService.open('Er is iets misgegaan bij het ophalen van de data');
+          this.loading.set(false);
         },
         complete: () => {
           this.loading.set(false);
@@ -214,6 +217,8 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleWeight: stepThree.vehicleTotalWeight! / 1000,
       vehicleAxleWeight: stepThree.vehicleAxleLoad! / 1000,
       vehicleHasTrailer: stepOne.trailer!,
+      latitude: stepTwo.latitude ?? undefined,
+      longitude: stepTwo.longitude ?? undefined,
     };
   }
 

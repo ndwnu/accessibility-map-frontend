@@ -76,3 +76,27 @@ button.link-button {
     text-decoration: underline;
   }
 }
+
+ndw-card {
+  gap: var(--ndw-spacing-sm);
+  padding: var(--ndw-spacing-sm);
+
+  .list-item {
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: var(--ndw-color-grey-500);
+    display: flex;
+    gap: var(--ndw-spacing-xs);
+    padding: 0;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--ndw-color-grey-700);
+    }
+
+    ndw-icon {
+      font-size: var(--ndw-font-size-lg);
+    }
+  }
+}

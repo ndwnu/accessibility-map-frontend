@@ -102,6 +102,14 @@ export class DataInputService {
     return this.pdokDataControl?.value;
   }
 
+  get latitudeControl() {
+    return this.stepTwoForm.get('latitude')!;
+  }
+
+  get longitudeControl() {
+    return this.stepTwoForm.get('longitude')!;
+  }
+
   // StepThreeForm
 
   get vehicleCurbWeightControl() {
@@ -181,6 +189,8 @@ export class DataInputService {
         municipalityId: new FormControl(null, Validators.required),
         address: new FormControl(null, Validators.required),
         pdokData: new FormControl(null),
+        latitude: new FormControl(null),
+        longitude: new FormControl(null),
       }),
 
       stepThree: new FormGroup<StepThreeFormGroup>({

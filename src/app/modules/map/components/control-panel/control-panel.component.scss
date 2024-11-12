@@ -2,7 +2,7 @@
   position: absolute;
   top: var(--ndw-spacing-xl);
   right: var(--ndw-spacing-xl);
-  z-index: 1025;
+  z-index: 925;
 }
 
 .control-panel {
@@ -63,15 +63,13 @@
   }
 
   .vehicle-type-container {
-    align-items: center;
-    display: grid;
-    font-family: var(--ndw-font-family-body);
-    font-size: var(--ndw-font-size-sm);
-
-    label {
+    .value {
       font-weight: var(--ndw-font-weight-bold);
-      height: 1.5rem;
     }
+  }
+  .accessibility-text {
+    font-style: italic;
+    color: var(--ndw-color-grey-500);
   }
 }
 

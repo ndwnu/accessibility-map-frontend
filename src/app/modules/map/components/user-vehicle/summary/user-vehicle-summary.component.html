@@ -130,7 +130,25 @@
   </p>
 }
 
-<div class="d-flex justify-content-end gap-3 mt-5">
-  <button ndwButton secondary (click)="startWithNewInput()">Begin opnieuw</button>
-  <button ndwButton (click)="onClose()">Bekijk kaart</button>
+<div class="d-flex justify-content-between mt-5">
+  <button ndwButton secondary [ndwPopoverTrigger]="download" [popoverPosition]="'nextToTriggerButton'">
+    <ndw-icon>download</ndw-icon>
+    Download
+  </button>
+  <div class="d-flex gap-2">
+    <button ndwButton secondary (click)="startWithNewInput()">Begin opnieuw</button>
+    <button ndwButton (click)="onClose()">Bekijk kaart</button>
+  </div>
+  <ng-template #download>
+    <ndw-card>
+      <button class="list-item" (click)="downloadTrafficSigns()" [disabled]="loadingTrafficSigns()">
+        <ndw-icon>{{ loadingTrafficSigns() ? 'hourglass_top' : 'directions' }}</ndw-icon>
+        Data verkeersborden
+      </button>
+      <button class="list-item" (click)="downloadRoadSections()" [disabled]="loadingRoadSections()">
+        <ndw-icon>{{ loadingRoadSections() ? 'hourglass_top' : 'remove_road' }}</ndw-icon>
+        Data niet toegankelijke wegen
+      </button>
+    </ndw-card>
+  </ng-template>
 </div>

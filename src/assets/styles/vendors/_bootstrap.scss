@@ -5,3 +5,11 @@
 [ndwButton] {
   line-height: normal;
 }
+
+.offcanvas-backdrop {
+  z-index: 900;
+}
+
+.offcanvas {
+  z-index: 945;
+}

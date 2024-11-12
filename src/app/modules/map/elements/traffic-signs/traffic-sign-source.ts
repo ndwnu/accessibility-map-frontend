@@ -45,35 +45,7 @@ export class TrafficSignSource extends MapSource {
   }
 
   getRvvCodes(filter: AccessibilityFilter | undefined) {
-    const defaultRvvCodes = ['C6', 'C12', 'C17', 'C18', 'C19', 'C20', 'C21'];
-
-    const vehicleSpecificRvvCodes: string[] = defaultRvvCodes;
-
-    switch (filter?.vehicleType) {
-      case 'truck':
-        vehicleSpecificRvvCodes.push(...['C7', 'C7b', 'C22c']);
-        break;
-      case 'light_commercial_vehicle':
-        vehicleSpecificRvvCodes.push(...['C22c']);
-        break;
-      case 'bus':
-        vehicleSpecificRvvCodes.push(...['C7a', 'C7b']);
-        break;
-      case 'tractor':
-        vehicleSpecificRvvCodes.push(...['C8', 'C9']);
-        break;
-      case 'motorcycle':
-        vehicleSpecificRvvCodes.push(...['C11']);
-        break;
-      default:
-        break;
-    }
-
-    if (filter?.vehicleHasTrailer) {
-      vehicleSpecificRvvCodes.push('C10');
-    }
-
-    return vehicleSpecificRvvCodes;
+    return this.accessibilityDataService.getRvvCodes(filter);
   }
 
   protected getSpecification(): Partial<SourceSpecification> {

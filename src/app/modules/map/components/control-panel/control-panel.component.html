@@ -1,8 +1,10 @@
 <div class="control-panel">
-  <section>
-    <h2>Uw voertuig</h2>
-
-    <div class="mb-1 pb-1">
+  <section class="d-flex flex-column gap-2">
+    <div class="d-flex justify-content-between align-items-baseline">
+      <h2>Uw gegevens</h2>
+      <button ndwButton secondary (click)="openModal.emit()">Bekijk</button>
+    </div>
+    <div>
       @if (isLicensePlateValid) {
         <div class="license-plate">
           <div class="license-plate_prefix">
@@ -16,13 +18,17 @@
         </div>
       } @else if (isLicensePlateInvalid) {
         <div class="vehicle-type-container">
-          <label> Voertuigtype </label>
-          <span>{{ vehicleType }}</span>
+          <span> Voertuigtype: </span>
+          <span class="value">{{ vehicleType }}</span>
         </div>
       }
     </div>
-
-    <button ndwButton (click)="openModal.emit()">Bekijk gegevens</button>
+    @if ((roadSectionInaccessible$ | async) && !isAddressControlDirty) {
+      <span>{{ address }} is niet toegankelijk voor uw voertuigtype.</span>
+    }
+    @if ((roadSectionInaccessible$ | async) === undefined && (filterContainsCoordinates$ | async)) {
+      <span>Er kon geen wegvak worden gevonden voor deze puntlocatie.</span>
+    }
   </section>
 
   <section>
