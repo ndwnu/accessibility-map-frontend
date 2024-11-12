@@ -1,6 +1,6 @@
-<div class="legend">
+<div class="legend d-flex flex-column gap-2">
   @for (item of legendItems; track item.name) {
-    <div class="row mb-1 pb-1">
+    <div class="row">
       <div class="col-2">
         @if (item.img) {
           <img [ngSrc]="item.img" width="24" height="24" [alt]="item.name" class="legend__image" />
@@ -12,10 +12,10 @@
           ></div>
         }
       </div>
-      <div class="col-10 d-flex flex-column">
-        <span>{{ item.name }}</span>
+      <div class="item col-10 d-flex flex-column">
+        <span class="item__name">{{ item.name }}</span>
         @if (item.subTitle) {
-          <small class="text-muted">{{ item.subTitle }}</small>
+          <small class="item__subtitle">{{ item.subTitle }}</small>
         }
       </div>
     </div>
