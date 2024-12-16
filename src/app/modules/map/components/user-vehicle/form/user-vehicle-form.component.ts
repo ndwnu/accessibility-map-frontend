@@ -215,7 +215,7 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleWidth: stepThree.vehicleWidth!,
       vehicleHeight: stepOne.height!,
       vehicleWeight: stepThree.vehicleTotalWeight! / 1000,
-      vehicleAxleWeight: stepThree.vehicleAxleLoad! / 1000,
+      vehicleAxleLoad: stepThree.vehicleAxleLoad! / 1000,
       vehicleHasTrailer: stepOne.trailer!,
       latitude: stepTwo.latitude ?? undefined,
       longitude: stepTwo.longitude ?? undefined,

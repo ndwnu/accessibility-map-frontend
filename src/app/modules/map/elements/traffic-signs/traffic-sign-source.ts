@@ -95,7 +95,7 @@ export class TrafficSignSource extends MapSource {
       [
         'all',
         ['==', ['get', 'rvvCode'], 'C20'],
-        ['>', ['to-number', ['get', 'blackCode']], filter?.vehicleAxleWeight ?? 0],
+        ['>', ['to-number', ['get', 'blackCode']], filter?.vehicleAxleLoad ?? 0],
       ],
     ]);
 
