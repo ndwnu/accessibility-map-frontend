@@ -15,7 +15,13 @@ import {
 import { Validators } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { environment } from '@env/environment';
-import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
+import {
+  maxDummyAxleWeight,
+  maxDummyVehicleTotalWeight,
+  StepOneComponent,
+  StepThreeComponent,
+  StepTwoComponent,
+} from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
 import { MainNavigationComponent, ToastService } from '@ndwnu/design-system';
@@ -89,6 +95,10 @@ export class UserVehicleFormComponent implements OnInit {
 
   protected get trailerControl() {
     return this.dataInputService.trailerControl;
+  }
+
+  get licensePlate() {
+    return this.dataInputService.licensePlate;
   }
 
   ngOnInit() {
@@ -173,8 +183,24 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleWidth: vehicleInfo.width,
     });
 
-    this.stepThreeForm?.get('vehicleLoad')?.setValidators([Validators.required, Validators.max(vehicleLoad)]);
-    this.stepThreeForm?.get('vehicleAxleLoad')?.setValidators([Validators.required, Validators.max(vehicleAxleLoad)]);
+    if (this.licensePlate) {
+      this.stepThreeForm?.get('vehicleLoad')?.setValidators([Validators.required, Validators.max(vehicleLoad)]);
+      this.stepThreeForm?.get('vehicleAxleLoad')?.setValidators([Validators.required, Validators.max(vehicleAxleLoad)]);
+    } else {
+      vehicleInfo = {
+        ...vehicleInfo,
+        maxAxleWeight: 11500,
+      };
+      this.stepThreeForm
+        ?.get('vehicleLoad')
+        ?.setValidators([Validators.required, Validators.max(maxDummyVehicleTotalWeight)]);
+      this.stepThreeForm
+        ?.get('vehicleTotalWeight')
+        ?.setValidators([Validators.required, Validators.max(maxDummyVehicleTotalWeight)]);
+      this.stepThreeForm
+        ?.get('vehicleAxleLoad')
+        ?.setValidators([Validators.required, Validators.max(maxDummyAxleWeight)]);
+    }
     this.vehicleInfo.set(vehicleInfo);
   }
 

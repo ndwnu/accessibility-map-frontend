@@ -16,7 +16,7 @@
       </p>
 
       <form [formGroup]="form()">
-        <ndw-form-field label="Rijklaar gewicht in kg" [disabled]="true">
+        <ndw-form-field label="Rijklaar gewicht in kg" [disabled]="!!licensePlate">
           <input ndwInput type="number" formControlName="vehicleCurbWeight" min="0" placeholder="0" step="1" />
         </ndw-form-field>
         <ndw-form-field
@@ -31,7 +31,15 @@
           <input ndwInput type="number" formControlName="vehicleLoad" min="0" placeholder="0" step="1" required />
         </ndw-form-field>
         <hr />
-        <ndw-form-field label="Totaal gewicht in kg" [disabled]="true">
+        <ndw-form-field
+          [label]="'Totaal gewicht in kg'"
+          [disabled]="true"
+          [error]="
+            vehicleTotalWeightControl.errors
+              ? 'Het totale gewicht mag niet boven de ' + maxDummyVehicleTotalWeight + ' uitkomen'
+              : undefined
+          "
+        >
           <input ndwInput type="number" formControlName="vehicleTotalWeight" min="0" placeholder="0" step="1" />
         </ndw-form-field>
 

@@ -15,6 +15,7 @@ import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepThreeFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 import { ActionsComponent } from '../actions';
+import { maxDummyVehicleTotalWeight } from '@modules/data-input';
 
 @Component({
   selector: 'ber-step-three',
@@ -44,6 +45,9 @@ export class StepThreeComponent implements OnInit {
   previous = output<void>();
 
   maxLoad = computed(() => {
+    if (!this.licensePlate) {
+      return maxDummyVehicleTotalWeight;
+    }
     const weight = (this.vehicleInfo()?.maxWeight ?? 0) - (this.vehicleInfo()?.weight ?? 0);
     const trailerWeight = this.vehicleInfo()?.trailerWeight ?? 0;
     return this.vehicleTrailerControl.value ? weight + trailerWeight : weight;
@@ -53,9 +57,18 @@ export class StepThreeComponent implements OnInit {
   private rdwService = inject(RdwService);
 
   ngOnInit() {
-    this.vehicleLoadControl.valueChanges.subscribe((value) => {
-      this.vehicleTotalWeightControl.patchValue((value ?? 0) + (this.vehicleInfo()?.weight ?? 0));
+    this.vehicleLoadControl.valueChanges.subscribe(() => {
+      this.updateTotalWeight();
     });
+    this.curbWeightControl.valueChanges.subscribe(() => {
+      this.updateTotalWeight();
+    });
+  }
+
+  updateTotalWeight() {
+    this.vehicleTotalWeightControl.patchValue(
+      (this.vehicleLoadControl.value ?? 0) + (this.curbWeightControl.value ?? 0),
+    );
   }
 
   onComplete() {
@@ -68,6 +81,10 @@ export class StepThreeComponent implements OnInit {
 
   get licensePlate() {
     return this.dataInputService.licensePlate;
+  }
+
+  get curbWeightControl() {
+    return this.dataInputService.vehicleCurbWeightControl;
   }
 
   get vehicleTotalWeightControl() {
@@ -97,4 +114,5 @@ export class StepThreeComponent implements OnInit {
   rdwLink() {
     return this.rdwService.getPlateCheckUrl(this.licensePlate);
   }
+  protected readonly maxDummyVehicleTotalWeight = maxDummyVehicleTotalWeight;
 }
