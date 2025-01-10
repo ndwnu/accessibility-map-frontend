@@ -111,6 +111,7 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
 
   #loadImages() {
     this.loadImage('arrow-icon', 'assets/images/arrow.png');
+    this.loadImage('black-arrow-icon', 'assets/images/black-arrow.png');
     this.loadImage('C6-ZB', 'assets/images/traffic-signs/C6-BEGIN.png', { pixelRatio: 2.5 });
     this.loadImage('C6-ZE', 'assets/images/traffic-signs/C6-END.png', { pixelRatio: 2.5 });
     this.loadImage('C7-ZB', 'assets/images/traffic-signs/C7-BEGIN.png', { pixelRatio: 2.5 });

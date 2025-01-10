@@ -9,6 +9,7 @@ import { TrafficSignClusterLabelLayer } from './traffic-sign-cluster-label-layer
 import { TrafficSignClusterLayer } from './traffic-sign-cluster-layer';
 import { TrafficSignLayer } from './traffic-sign-layer';
 import { TrafficSignTextSignLayer } from './traffic-sign-text-sign-layer';
+import { TrafficSignBearingLayer } from '@modules/map/elements/traffic-signs/traffic-sign-bearing-layer';
 
 export class TrafficSignSource extends MapSource {
   constructor(
@@ -20,6 +21,7 @@ export class TrafficSignSource extends MapSource {
 
     this.layers = [
       new TrafficSignLayer(map, this.id, trafficSignService),
+      new TrafficSignBearingLayer(map, this.id),
       new TrafficSignClusterLayer(map, this.id),
       new TrafficSignClusterLabelLayer(map, this.id),
       new TrafficSignTextSignLayer(map, this.id),
