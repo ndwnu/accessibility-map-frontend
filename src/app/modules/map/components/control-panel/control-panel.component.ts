@@ -43,10 +43,7 @@ export class ControlPanelComponent {
   );
 
   showTrafficSigns = signal(false);
-  roadSectionInaccessible$ = this.accessibilityDataService.matchedRoadSection$.pipe(
-    map((roadSection) => !roadSection?.backwardAccessible && !roadSection?.forwardAccessible),
-    map((inaccessible) => inaccessible && this.dataInputService.pdokData?.type !== 'gemeente'),
-  );
+  roadSectionInaccessible$ = this.accessibilityDataService.roadSectionInaccessible$;
   filterContainsCoordinates$ = this.accessibilityDataService.filterContainsCoordinates$;
 
   get isAddressControlDirty() {

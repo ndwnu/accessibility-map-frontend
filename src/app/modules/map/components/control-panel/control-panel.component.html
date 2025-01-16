@@ -24,7 +24,9 @@
       }
     </div>
     @if ((roadSectionInaccessible$ | async) && !isAddressControlDirty) {
-      <span>{{ address }} is niet toegankelijk voor uw voertuigtype.</span>
+      <span>{{ address }} is niet toegankelijk voor uw voertuig.</span>
+    } @else {
+      <span>{{ address }} is toegankelijk voor uw voertuig.</span>
     }
     @if ((roadSectionInaccessible$ | async) === undefined && (filterContainsCoordinates$ | async)) {
       <span>Er kon geen wegvak worden gevonden voor deze puntlocatie.</span>

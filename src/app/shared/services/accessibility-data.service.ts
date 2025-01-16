@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@env/environment';
+import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { AccessibilityFilter, InaccessibleRoadSection, InaccessibleRoadSectionsResponse } from '@shared/models';
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 
@@ -8,6 +9,7 @@ import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class AccessibilityDataService {
+  private readonly _dataInputService = inject(DataInputService);
   private readonly _http = inject(HttpClient);
   baseURL = environment.ndw.accessibilityUrl;
 
@@ -23,6 +25,11 @@ export class AccessibilityDataService {
   private readonly _filter = new BehaviorSubject<AccessibilityFilter | undefined>(undefined);
   filter$ = this._filter.asObservable();
   filterContainsCoordinates$ = this.filter$.pipe(map((filter) => filter?.latitude && filter?.longitude));
+
+  roadSectionInaccessible$ = this.matchedRoadSection$.pipe(
+    map((roadSection) => !roadSection?.backwardAccessible && !roadSection?.forwardAccessible),
+    map((inaccessible) => inaccessible && this._dataInputService.pdokData?.type !== 'gemeente'),
+  );
 
   showDisclaimer$ = new Subject<void>();
 

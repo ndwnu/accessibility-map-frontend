@@ -19,7 +19,6 @@ import { DestinationElement } from '@modules/map/elements/destination/destinatio
 import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
 import { BrtElement } from '@modules/map/elements/brt/brt-element';
 import { AerialElement } from '@modules/map/elements/aerial/aerial-element';
-import { PopoverTriggerDirective } from '@ndwnu/design-system';
 import { AccessibilityDataService, DestinationDataService, TrafficSignService } from '@shared/services';
 import { NavigationControl } from 'maplibre-gl';
 
@@ -28,7 +27,7 @@ import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic
 @Component({
   selector: 'ber-main-map',
   standalone: true,
-  imports: [ControlPanelComponent, PopoverTriggerDirective, SelectedTrafficSignsComponent],
+  imports: [ControlPanelComponent, SelectedTrafficSignsComponent],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
 })
@@ -82,7 +81,7 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
       new AerialElement(this.map),
       new AccessibilityElement(this.map, this.#accessibilityDataService),
       new TrafficSignElement(this.map, this.#trafficSignService, this.#accessibilityDataService),
-      new DestinationElement(this.map, this.#destinationDataService),
+      new DestinationElement(this.map, this.#accessibilityDataService, this.#destinationDataService),
     ];
 
     this.#initializeMapElements();
@@ -136,7 +135,8 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.loadImage('C21-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
     this.loadImage('text-sign', 'assets/images/text-sign.png', { pixelRatio: 2 });
-    this.loadImage('marker', 'assets/images/marker-256.png');
+    this.loadImage('marker-negative', 'assets/images/marker-negative.png');
+    this.loadImage('marker-positive', 'assets/images/marker-positive.png');
   }
 
   #updatePopupPosition() {
