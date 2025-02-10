@@ -122,11 +122,11 @@
   </table>
 </div>
 
-@if (municipalityExemptionUrl) {
+@if (roadOperatorRequestExemptionUrl$ | async; as requestExemptionUrl) {
   <h5 class="mt-5">Ontheffing aanvragen?</h5>
-  <p class="mb-0">Vraag hier een RVV-ontheffing aan voor de gemeente {{ municipalityName }}:</p>
+  <p class="mb-0">Vraag hier een RVV-ontheffing aan voor {{ (roadOperator$ | async)?.roadOperatorName }}:</p>
   <div class="d-flex flex-row-reverse">
-    <a ndwButton secondary [href]="municipalityExemptionUrl" target="_blank">Ontheffing aanvragen</a>
+    <a ndwButton secondary [href]="requestExemptionUrl" target="_blank">Ontheffing aanvragen</a>
   </div>
 }
 

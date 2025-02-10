@@ -2,7 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@env/environment';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
-import { AccessibilityFilter, InaccessibleRoadSection, InaccessibleRoadSectionsResponse } from '@shared/models';
+import {
+  AccessibilityFilter,
+  InaccessibleRoadSection,
+  InaccessibleRoadSectionsResponse,
+  RoadOperator,
+} from '@shared/models';
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -21,6 +26,9 @@ export class AccessibilityDataService {
 
   private readonly matchedRoadSection = new BehaviorSubject<InaccessibleRoadSection | undefined>(undefined);
   matchedRoadSection$ = this.matchedRoadSection.asObservable();
+
+  private readonly roadOperator = new BehaviorSubject<RoadOperator | undefined>(undefined);
+  roadOperator$ = this.roadOperator.asObservable();
 
   private readonly _filter = new BehaviorSubject<AccessibilityFilter | undefined>(undefined);
   filter$ = this._filter.asObservable();
@@ -67,6 +75,10 @@ export class AccessibilityDataService {
 
   setMatchedRoadSection(matchedRoadSection: InaccessibleRoadSection | undefined) {
     this.matchedRoadSection.next(matchedRoadSection);
+  }
+
+  setRoadOperator(roadOperator: RoadOperator) {
+    this.roadOperator.next(roadOperator);
   }
 
   setSelectedMunicipalityId(municipalityId: string) {

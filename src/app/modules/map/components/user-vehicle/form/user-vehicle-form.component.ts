@@ -13,7 +13,6 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
 import { environment } from '@env/environment';
 import {
   maxDummyAxleWeight,
@@ -24,29 +23,23 @@ import {
 } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
-import { MainNavigationComponent, ToastService } from '@ndwnu/design-system';
+import { ToastService } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
-import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
+import { AccessibilityFilter, exampleVehicleInfoList, InaccessibleRoadSection, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
+import { RoadOperatorService } from '@shared/services/road-operator.service';
 import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
-import { LngLatLike } from 'maplibre-gl';
+import { LngLatLike, MapGeoJSONFeature } from 'maplibre-gl';
+import { delay, map, switchMap } from 'rxjs';
 
 @UntilDestroy()
 @Component({
   selector: 'ber-user-vehicle-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    DisclaimerCardComponent,
-    MainNavigationComponent,
-    RouterOutlet,
-    StepOneComponent,
-    StepThreeComponent,
-    StepTwoComponent,
-  ],
+  imports: [CommonModule, DisclaimerCardComponent, StepOneComponent, StepThreeComponent, StepTwoComponent],
   templateUrl: './user-vehicle-form.component.html',
 })
 export class UserVehicleFormComponent implements OnInit {
@@ -67,6 +60,7 @@ export class UserVehicleFormComponent implements OnInit {
   private readonly destinationDataService = inject(DestinationDataService);
   private readonly mapService = inject(MapService);
   private readonly municipalityService = inject(MunicipalityService);
+  private readonly roadOperatorService = inject(RoadOperatorService);
   private readonly toastService = inject(ToastService);
 
   private overlayRef!: OverlayRef;
@@ -136,14 +130,36 @@ export class UserVehicleFormComponent implements OnInit {
     this.loading.set(true);
     this.accessibilityDataService
       .getInaccessibleRoadSections(this.mapFormToFilterCriteria())
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: (response) => {
+      .pipe(
+        map((response) => {
           this.destinationDataService.clearDestinationPoint();
           this.accessibilityDataService.setInaccessibleRoadSections(response.inaccessibleRoadSections);
           this.accessibilityDataService.setMatchedRoadSection(response.matchedRoadSection);
           this.accessibilityDataService.setSelectedMunicipalityId(this.dataInputService.municipalityId);
           this.zoomToDestination();
+          return response.matchedRoadSection;
+        }),
+        delay(100), // Needed to be sure the map has jumped to the destination
+        switchMap((matchedRoadSection) =>
+          this.roadOperatorService.loadRoadOperators().pipe(map(() => matchedRoadSection)),
+        ),
+        untilDestroyed(this),
+      )
+      .subscribe({
+        next: (matchedRoadSection) => {
+          const features = this.mapService.getRenderedFeatures(['accessibility-layer']);
+          const properties = features.find((f) => f.id === matchedRoadSection?.roadSectionId)?.properties;
+          if (!properties) {
+            return;
+          }
+
+          const roadOperator = this.roadOperatorService.getRoadOperator(properties.roadOperatorCode);
+          if (!roadOperator) {
+            this.toastService.open('Er is geen wegbeheerder gevonden voor deze weg');
+            return;
+          }
+
+          this.accessibilityDataService.setRoadOperator(roadOperator);
         },
         error: () => {
           this.toastService.open('Er is iets misgegaan bij het ophalen van de data');

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { MAP_DEFAULT_ZOOM, MAP_MAX_ZOOM, MAP_MIN_ZOOM } from '@modules/map/elements/constants';
 import { BOUNDS_NL } from '@shared/constants/map.constants';
-import { LngLatBoundsLike, LngLatLike, Map } from 'maplibre-gl';
+import { LngLatBoundsLike, LngLatLike, Map, MapGeoJSONFeature } from 'maplibre-gl';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +35,10 @@ export class MapService {
 
   private ensureMapInitialized() {
     if (!this.map) throw new Error("Map is not initialized. Call 'createMap' first.");
+  }
+
+  getRenderedFeatures(layers?: string[]): MapGeoJSONFeature[] {
+    return this.map.queryRenderedFeatures(layers ? { layers } : undefined);
   }
 
   // This function should always be called first! To ensure that the map is initialized

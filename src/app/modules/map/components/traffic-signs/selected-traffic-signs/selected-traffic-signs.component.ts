@@ -10,6 +10,7 @@ import {
 import { TrafficSign } from '@shared/models/traffic-sign.model';
 import { TrafficSignOrientationPipe } from '@shared/pipes';
 import { MunicipalityService, TrafficSignService } from '@shared/services';
+import { RoadOperatorService } from '@shared/services/road-operator.service';
 
 @Component({
   selector: 'ber-selected-traffic-signs',
@@ -26,8 +27,9 @@ import { MunicipalityService, TrafficSignService } from '@shared/services';
   styleUrl: './selected-traffic-signs.component.scss',
 })
 export class SelectedTrafficSignsComponent implements OnInit {
-  private readonly trafficSignService = inject(TrafficSignService);
   private readonly municipalityService = inject(MunicipalityService);
+  private readonly roadOperatorService = inject(RoadOperatorService);
+  private readonly trafficSignService = inject(TrafficSignService);
 
   onClose = output();
 
@@ -44,8 +46,8 @@ export class SelectedTrafficSignsComponent implements OnInit {
     () => `${environment.georgeUrl}/wegkenmerken/wegvakken/${this.trafficSign()?.wvkId}?zoom=true`,
   );
   rvvExemptionUrl = computed(() => {
-    const municipality = this.municipalityService.getMunicipality(this.trafficSign()?.countyCode ?? '');
-    return municipality?.properties?.requestExemptionUrl ?? '';
+    const roadOperator = this.roadOperatorService.getRoadOperator(this.trafficSign()?.countyCode ?? '');
+    return roadOperator?.requestExemptionUrl ?? '';
   });
 
   ngOnInit() {

@@ -1,18 +1,18 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, inject, output, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActionsComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { CardComponent, IconComponent, PopoverTriggerDirective, ToastService } from '@ndwnu/design-system';
 import { DataInputFormGroup } from '@shared/models';
 import { AccessibilityDataService, MunicipalityService, TrafficSignService } from '@shared/services';
 import { FileDownloadService } from '@shared/services/file-download.service';
+import { map, tap } from 'rxjs';
 
 @Component({
   selector: 'ber-user-vehicle-summary',
   standalone: true,
 
-  imports: [ActionsComponent, CommonModule, IconComponent, DecimalPipe, PopoverTriggerDirective, CardComponent],
+  imports: [CommonModule, IconComponent, DecimalPipe, PopoverTriggerDirective, CardComponent],
   templateUrl: './user-vehicle-summary.component.html',
   styleUrl: './user-vehicle-summary.component.scss',
 })
@@ -27,6 +27,9 @@ export class UserVehicleSummaryComponent {
 
   loadingRoadSections = signal(false);
   loadingTrafficSigns = signal(false);
+
+  roadOperator$ = this.accessibilityDataService.roadOperator$;
+  roadOperatorRequestExemptionUrl$ = this.roadOperator$?.pipe(map((roadOperator) => roadOperator?.requestExemptionUrl));
 
   get form(): FormGroup<DataInputFormGroup> {
     return this.dataInputService.form;
@@ -67,12 +70,6 @@ export class UserVehicleSummaryComponent {
 
   get pdokData() {
     return this.dataInputService.pdokData;
-  }
-
-  get municipalityExemptionUrl(): string {
-    const municipalityId = this.municipalityId ?? '';
-    const municipality = this.municipalityService.getMunicipality(municipalityId);
-    return municipality?.properties?.requestExemptionUrl ?? '';
   }
 
   get municipalityName(): string {
