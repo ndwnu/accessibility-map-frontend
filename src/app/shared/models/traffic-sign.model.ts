@@ -1,17 +1,17 @@
-import { FeatureCollection, Position } from 'geojson';
+import { FeatureCollection } from 'geojson';
 import { LngLat } from 'maplibre-gl';
 
 export type TrafficSignFeatureCollection = FeatureCollection<any, TrafficSign>;
 
 export interface TrafficSign {
   id: string;
-  wvkId?: string;
+  roadSectionId?: string;
   rvvCode: string;
   countyCode: string;
   countyName: string;
   blackCode?: string;
   roadName: string;
-  image: string;
+  imageUrl: string;
   bearing: number;
   side: SideEnum;
   textSigns: TextSign[];

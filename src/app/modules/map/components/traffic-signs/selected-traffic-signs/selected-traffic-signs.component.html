@@ -25,8 +25,8 @@
         <p class="road-name">
           {{ trafficSign.roadName }}
         </p>
-        @if (trafficSign.image) {
-          <img [src]="trafficSign.image" alt="{{ trafficSign.rvvCode }} verkeersbord" />
+        @if (trafficSign.imageUrl) {
+          <img [src]="trafficSign.imageUrl" alt="{{ trafficSign.rvvCode }} verkeersbord" />
         } @else {
           <img src="assets/images/traffic-signs/not-available.png" alt="Afbeelding van verkeersbord niet beschikbaar" />
         }
@@ -46,7 +46,7 @@
               Bord in George <ndw-icon>open_in_new</ndw-icon>
             </a>
           </div>
-          @if (trafficSign.wvkId) {
+          @if (trafficSign.roadSectionId) {
             <div>
               <a ndwLink [href]="georgeRoadSectionUrl()" target="_blank">
                 Wegvak in George <ndw-icon>open_in_new</ndw-icon>
@@ -63,8 +63,8 @@
         <div class="list">
           @for (trafficSign of trafficSigns; track trafficSign.id) {
             <div class="list-item" role="button" (click)="setTrafficSign(trafficSign.id)">
-              @if (trafficSign.image) {
-                <img [src]="trafficSign.image" alt="{{ trafficSign.rvvCode }} verkeersbord" />
+              @if (trafficSign.imageUrl) {
+                <img [src]="trafficSign.imageUrl" alt="{{ trafficSign.rvvCode }} verkeersbord" />
               } @else {
                 <img
                   src="assets/images/traffic-signs/not-available.png"

@@ -21,7 +21,7 @@ export class TrafficSignService {
     });
 
     let params = new HttpParams()
-      .append('townCode', municipalityId)
+      .append('countyCode', municipalityId)
       .append('rvvCode', rvvCode.join(','))
       .append('status', 'PLACED');
 
