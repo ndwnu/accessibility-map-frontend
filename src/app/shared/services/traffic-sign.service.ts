@@ -21,8 +21,8 @@ export class TrafficSignService {
     });
 
     let params = new HttpParams()
-      .append('town-code', municipalityId)
-      .append('rvv-code', rvvCode.join(','))
+      .append('townCode', municipalityId)
+      .append('rvvCode', rvvCode.join(','))
       .append('status', 'PLACED');
 
     return this.http.get<TrafficSignFeatureCollection>(url, { headers, params }).pipe(
