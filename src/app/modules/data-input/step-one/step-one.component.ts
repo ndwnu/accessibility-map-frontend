@@ -23,7 +23,6 @@ import {
   CardHeaderComponent,
   CheckboxComponent,
   FormFieldComponent,
-  IconComponent,
 } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
@@ -45,7 +44,6 @@ import { ActionsComponent } from '../actions';
     CommonModule,
     FeedbackHeaderComponent,
     FormFieldComponent,
-    IconComponent,
     ReactiveFormsModule,
   ],
   templateUrl: './step-one.component.html',

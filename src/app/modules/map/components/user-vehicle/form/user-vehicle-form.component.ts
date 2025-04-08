@@ -15,6 +15,7 @@ import {
 import { Validators } from '@angular/forms';
 import { environment } from '@env/environment';
 import {
+  defaultMaxCombinedWeight,
   maxDummyAxleWeight,
   maxDummyVehicleTotalWeight,
   StepOneComponent,
@@ -27,12 +28,12 @@ import { ToastService } from '@ndwnu/design-system';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
-import { AccessibilityFilter, exampleVehicleInfoList, InaccessibleRoadSection, VehicleInfo } from '@shared/models';
+import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
 import { RoadOperatorService } from '@shared/services/road-operator.service';
 import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
-import { LngLatLike, MapGeoJSONFeature } from 'maplibre-gl';
+import { LngLatLike } from 'maplibre-gl';
 import { delay, map, switchMap } from 'rxjs';
 
 @UntilDestroy()
@@ -181,9 +182,11 @@ export class UserVehicleFormComponent implements OnInit {
 
   setVehicleInfo(vehicleInfo: VehicleInfo) {
     this.stepOneForm?.get('vehicleType')?.setValue(vehicleInfo.type, { emitEvent: false });
+    const maxWeight = this.trailerControl.value
+      ? vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight
+      : vehicleInfo.maxWeight;
 
-    let vehicleLoad =
-      vehicleInfo.maxWeight && vehicleInfo.weight ? Math.round(vehicleInfo.maxWeight - vehicleInfo.weight) : 0;
+    let vehicleLoad = maxWeight && vehicleInfo.weight ? Math.round(maxWeight - vehicleInfo.weight) : 0;
     if (this.trailerControl.value) {
       vehicleLoad += vehicleInfo.trailerWeight ?? 0;
     }
@@ -192,7 +195,7 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleCurbWeight: vehicleInfo.weight,
       vehicleLoad,
       vehicleTotalWeight: this.trailerControl.value
-        ? vehicleInfo.combinedMaxWeight ?? vehicleInfo.maxWeight
+        ? vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight
         : vehicleInfo.maxWeight,
       vehicleAxleLoad,
       vehicleLength: vehicleInfo.length,

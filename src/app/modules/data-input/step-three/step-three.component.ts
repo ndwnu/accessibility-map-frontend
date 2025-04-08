@@ -15,7 +15,7 @@ import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepThreeFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 import { ActionsComponent } from '../actions';
-import { maxDummyVehicleTotalWeight } from '@modules/data-input';
+import { defaultMaxCombinedWeight, maxDummyVehicleTotalWeight } from '@modules/data-input';
 
 @Component({
   selector: 'ber-step-three',
@@ -48,9 +48,11 @@ export class StepThreeComponent implements OnInit {
     if (!this.licensePlate) {
       return maxDummyVehicleTotalWeight;
     }
-    const weight = (this.vehicleInfo()?.maxWeight ?? 0) - (this.vehicleInfo()?.weight ?? 0);
-    const trailerWeight = this.vehicleInfo()?.trailerWeight ?? 0;
-    return this.vehicleTrailerControl.value ? weight + trailerWeight : weight;
+    const vehicleWeight = this.vehicleInfo()?.weight ?? 0;
+    const maxWeight = this.vehicleTrailerControl.value
+      ? this.vehicleInfo()?.combinedMaxWeight ?? defaultMaxCombinedWeight
+      : this.vehicleInfo()?.maxWeight ?? 0;
+    return maxWeight - vehicleWeight;
   });
 
   private dataInputService = inject(DataInputService);
