@@ -1,5 +1,10 @@
-@import '@angular/cdk/a11y-prebuilt.css';
-@import '@angular/cdk/overlay-prebuilt.css';
-@import 'abstracts';
-@import 'components/input';
-@import 'vendors/bootstrap';
+@use '@angular/cdk/a11y-prebuilt.css';
+@use '@angular/cdk/overlay-prebuilt.css';
+@use 'abstracts';
+@use 'components/input';
+@use 'vendors/bootstrap';
+
+body {
+  font-family: var(--ndw-font-family-body);
+  font-size: var(--ndw-base-font-size);
+}

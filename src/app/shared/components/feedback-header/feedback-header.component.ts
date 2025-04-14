@@ -3,7 +3,6 @@ import { IconComponent } from '@ndwnu/design-system';
 
 @Component({
   selector: 'ber-feedback-header',
-  standalone: true,
   imports: [IconComponent],
   styleUrl: './feedback-header.component.scss',
   templateUrl: './feedback-header.component.html',

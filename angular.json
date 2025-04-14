@@ -36,7 +36,7 @@
               "src/assets/styles/main.scss",
               "node_modules/boxicons/css/boxicons.min.css",
               "node_modules/maplibre-gl/dist/maplibre-gl.css",
-              "node_modules/@ndwnu/design-system/core/styles/nwb-styles.scss"
+              "node_modules/@ndwnu/design-system/styles/index.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src/assets/styles", "node_modules/bootstrap"]

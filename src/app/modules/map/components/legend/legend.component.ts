@@ -16,7 +16,6 @@ interface ILegendItem {
 
 @Component({
   selector: 'ber-legend',
-  standalone: true,
   imports: [NgOptimizedImage],
   templateUrl: './legend.component.html',
   styleUrl: './legend.component.scss',

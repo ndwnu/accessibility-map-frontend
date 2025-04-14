@@ -14,7 +14,6 @@ interface BackgroundLayer {
 
 @Component({
   selector: 'ber-control-panel',
-  standalone: true,
   imports: [
     CommonModule,
     LegendComponent,

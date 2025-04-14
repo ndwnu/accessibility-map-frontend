@@ -19,7 +19,6 @@ import { defaultMaxCombinedWeight, maxDummyVehicleTotalWeight } from '@modules/d
 
 @Component({
   selector: 'ber-step-three',
-  standalone: true,
   imports: [
     ActionsComponent,
     CardComponent,

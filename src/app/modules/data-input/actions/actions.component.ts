@@ -3,7 +3,6 @@ import { IconComponent } from '@ndwnu/design-system';
 
 @Component({
   selector: 'ber-actions',
-  standalone: true,
   imports: [IconComponent],
   templateUrl: './actions.component.html',
   styleUrl: './actions.component.scss',

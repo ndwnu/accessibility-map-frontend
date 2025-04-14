@@ -26,7 +26,6 @@ import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic
 
 @Component({
   selector: 'ber-main-map',
-  standalone: true,
   imports: [ControlPanelComponent, SelectedTrafficSignsComponent],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
@@ -56,9 +55,9 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     super();
     effect(() => {
       const templatePortal = new TemplatePortal(this.popupRef(), this.#viewContainerRef);
-      this.#overlayRef.detach();
+      this.#overlayRef?.detach();
       this.#updatePopupPosition();
-      this.#overlayRef.attach(templatePortal);
+      this.#overlayRef?.attach(templatePortal);
     });
   }
 

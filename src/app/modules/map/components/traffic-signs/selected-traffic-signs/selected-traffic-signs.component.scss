@@ -6,6 +6,7 @@
 
     ndw-card-header {
       align-items: flex-start;
+      display: grid;
       gap: var(--ndw-spacing-sm);
       grid-template-columns: 1fr auto;
     }

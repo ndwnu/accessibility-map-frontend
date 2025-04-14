@@ -1,15 +1,11 @@
-<ndw-main-navigation
+<ndw-layout
   applicationName="Bereikbaarheidskaart BETA"
-  [brand]="brandEnum.NWB"
-  [footerTexts]="footerTexts"
+  brand="NWB"
   [isCollapsible]="true"
   [isExpanded]="false"
+  [menuFooterTexts]="footerTexts"
   [topMenuItems]="topMenuItems"
   [bottomMenuItems]="bottomMenuItems"
-  (selected)="onMenuItemSelected($event)"
-/>
-<router-outlet />
-
-<ng-template #disclaimer>
-  <ber-disclaimer-card (confirmed)="closeDisclaimerModal()" />
-</ng-template>
+>
+  <router-outlet />
+</ndw-layout>

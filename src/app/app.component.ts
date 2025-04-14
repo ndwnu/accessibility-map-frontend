@@ -1,32 +1,23 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, TemplateRef, viewChild, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MainNavigationComponent, MenuItem, NdwBrand } from '@ndwnu/design-system';
-import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
+import { LayoutComponent, MenuItem } from '@ndwnu/design-system';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 import { AccessibilityDataService, MunicipalityService } from '@shared/services';
 
 @Component({
   selector: 'ber-root',
-  standalone: true,
-  imports: [CommonModule, DisclaimerCardComponent, MainNavigationComponent, RouterOutlet],
+  imports: [LayoutComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   readonly #overlay = inject(Overlay);
-  readonly #viewContainerRef = inject(ViewContainerRef);
 
   readonly #accessibilityDataService = inject(AccessibilityDataService);
   readonly #municipalityService = inject(MunicipalityService);
 
-  disclaimerRef = viewChild.required<TemplateRef<DisclaimerCardComponent>>('disclaimer');
-
   private overlayRef!: OverlayRef;
-
-  brandEnum = NdwBrand;
 
   footerTexts = ['Versie 0.0.3-beta'];
 
@@ -68,15 +59,8 @@ export class AppComponent implements OnInit {
     this.overlayRef.detach();
   }
 
-  onMenuItemSelected(id: number) {
-    if (id === 1) {
-      this.#accessibilityDataService.showDisclaimer$.next();
-    }
-  }
-
   openDisclaimerModal() {
-    const templatePortal = new TemplatePortal(this.disclaimerRef(), this.#viewContainerRef);
-    this.overlayRef.attach(templatePortal);
+    this.#accessibilityDataService.showDisclaimer$.next();
   }
 
   openFeedbackMail() {

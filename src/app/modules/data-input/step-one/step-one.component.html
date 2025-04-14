@@ -17,7 +17,7 @@
               type="text"
               class="license-plate_input"
               formControlName="licensePlate"
-              [ngClass]="{ disabled: unknownLicensePlate }"
+              [class.disabled]="unknownLicensePlate"
             />
           </div>
         </ndw-form-field>

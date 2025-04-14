@@ -33,7 +33,6 @@ import { ActionsComponent } from '../actions';
 @UntilDestroy()
 @Component({
   selector: 'ber-step-one',
-  standalone: true,
   imports: [
     ActionsComponent,
     CardComponent,

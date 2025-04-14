@@ -6,18 +6,16 @@ import { CardComponent, IconComponent, PopoverTriggerDirective, ToastService } f
 import { DataInputFormGroup } from '@shared/models';
 import { AccessibilityDataService, MunicipalityService, TrafficSignService } from '@shared/services';
 import { FileDownloadService } from '@shared/services/file-download.service';
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'ber-user-vehicle-summary',
-  standalone: true,
-
   imports: [CommonModule, IconComponent, DecimalPipe, PopoverTriggerDirective, CardComponent],
   templateUrl: './user-vehicle-summary.component.html',
   styleUrl: './user-vehicle-summary.component.scss',
 })
 export class UserVehicleSummaryComponent {
-  close = output<void>();
+  closed = output<void>();
 
   private readonly municipalityService = inject(MunicipalityService);
   private readonly dataInputService = inject(DataInputService);
@@ -104,18 +102,18 @@ export class UserVehicleSummaryComponent {
 
   onEditStep(step: number) {
     this.dataInputService.setActiveStep(step);
-    this.onClose();
+    this.emitClose();
   }
 
-  onClose() {
-    this.close.emit();
+  emitClose() {
+    this.closed.emit();
   }
 
   startWithNewInput() {
     this.dataInputService.resetForm();
     this.dataInputService.setActiveStep(1);
     this.accessibilityDataService.setMatchedRoadSection(undefined);
-    this.onClose();
+    this.emitClose();
   }
 
   isDateLessThanSixMonths(date?: Date): boolean {

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -9,9 +8,7 @@ import {
   CardContentComponent,
   CardFooterComponent,
   CardHeaderComponent,
-  CheckboxComponent,
   FormFieldComponent,
-  IconComponent,
   InputDirective,
 } from '@ndwnu/design-system';
 import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
@@ -24,19 +21,15 @@ import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
 
 @Component({
   selector: 'ber-step-two',
-  standalone: true,
   imports: [
     ActionsComponent,
     CardComponent,
     CardContentComponent,
     CardFooterComponent,
     CardHeaderComponent,
-    CheckboxComponent,
     FeedbackHeaderComponent,
     FormFieldComponent,
-    IconComponent,
     InputDirective,
-    NgClass,
     ReactiveFormsModule,
   ],
   templateUrl: './step-two.component.html',

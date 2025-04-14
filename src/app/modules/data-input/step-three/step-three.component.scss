@@ -8,6 +8,11 @@ ndw-card {
     .content {
       width: 100%;
       min-height: 36rem;
+
+      form {
+        display: grid;
+        gap: var(--ndw-spacing-md);
+      }
     }
   }
 }

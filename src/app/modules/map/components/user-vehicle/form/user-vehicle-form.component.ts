@@ -39,7 +39,6 @@ import { delay, map, switchMap } from 'rxjs';
 @UntilDestroy()
 @Component({
   selector: 'ber-user-vehicle-form',
-  standalone: true,
   imports: [CommonModule, DisclaimerCardComponent, StepOneComponent, StepThreeComponent, StepTwoComponent],
   templateUrl: './user-vehicle-form.component.html',
 })

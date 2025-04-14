@@ -9,12 +9,11 @@ import {
 } from '@ndwnu/design-system';
 import { TrafficSign } from '@shared/models/traffic-sign.model';
 import { TrafficSignOrientationPipe } from '@shared/pipes';
-import { MunicipalityService, TrafficSignService } from '@shared/services';
+import { TrafficSignService } from '@shared/services';
 import { RoadOperatorService } from '@shared/services/road-operator.service';
 
 @Component({
   selector: 'ber-selected-traffic-signs',
-  standalone: true,
   imports: [
     CardComponent,
     CardContentComponent,
@@ -27,11 +26,10 @@ import { RoadOperatorService } from '@shared/services/road-operator.service';
   styleUrl: './selected-traffic-signs.component.scss',
 })
 export class SelectedTrafficSignsComponent implements OnInit {
-  private readonly municipalityService = inject(MunicipalityService);
   private readonly roadOperatorService = inject(RoadOperatorService);
   private readonly trafficSignService = inject(TrafficSignService);
 
-  onClose = output();
+  closed = output();
 
   selectedTrafficSigns = this.trafficSignService.selectedTrafficSigns;
   trafficSign = signal<TrafficSign | undefined>(undefined);
@@ -59,7 +57,7 @@ export class SelectedTrafficSignsComponent implements OnInit {
 
   close() {
     this.trafficSignService.setSelectedTrafficSigns(undefined);
-    this.onClose.emit();
+    this.closed.emit();
   }
 
   setTrafficSign(id: string) {
