@@ -86,7 +86,7 @@ export class AccessibilityDataService {
   }
 
   getRvvCodes(filter: AccessibilityFilter | undefined) {
-    const defaultRvvCodes = ['C6', 'C12', 'C17', 'C18', 'C19', 'C20', 'C21'];
+    const defaultRvvCodes = ['C1', 'C6', 'C12', 'C17', 'C18', 'C19', 'C20', 'C21'];
 
     const vehicleSpecificRvvCodes: string[] = defaultRvvCodes;
 
