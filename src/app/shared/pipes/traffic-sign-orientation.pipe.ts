@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class TrafficSignOrientationPipe implements PipeTransform {
-  private translations: { [key: string]: string } = {
+  readonly #translations: { [key: string]: string } = {
     N: 'Noord',
     O: 'Oost',
     Z: 'Zuid',
@@ -17,6 +17,6 @@ export class TrafficSignOrientationPipe implements PipeTransform {
       return 'Onbekend';
     }
 
-    return this.translations[value] || 'Onbekend';
+    return this.#translations[value] || 'Onbekend';
   }
 }

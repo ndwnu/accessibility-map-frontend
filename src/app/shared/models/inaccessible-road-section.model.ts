@@ -5,6 +5,6 @@ export interface InaccessibleRoadSectionsResponse {
 
 export interface InaccessibleRoadSection {
   roadSectionId: number;
-  forwardAccessible: boolean;
-  backwardAccessible: boolean;
+  forwardAccessible: boolean | undefined;
+  backwardAccessible: boolean | undefined;
 }

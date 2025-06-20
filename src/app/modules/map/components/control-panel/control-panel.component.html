@@ -65,10 +65,15 @@
         Toon verkeersborden
       </ndw-checkbox>
     </ndw-form-field>
+    <ndw-form-field label="Gedetailleerde Weergave" [hideLabel]="true">
+      <ndw-checkbox [checked]="showDetailedAccessibility()" (checkedChange)="toggleDetailedAccessibility()">
+        Gedetailleerde Weergave
+      </ndw-checkbox>
+    </ndw-form-field>
   </section>
 
   <section>
     <h2>Legenda</h2>
-    <ber-legend />
+    <ber-legend [showDetailedAccessibility]="showDetailedAccessibility()" />
   </section>
 </div>

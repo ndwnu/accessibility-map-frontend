@@ -4,7 +4,6 @@ import { DataInputService } from '@modules/data-input/services/data-input.servic
 import { LegendComponent } from '@modules/map/components/legend/legend.component';
 import { CheckboxComponent, FormFieldComponent, RadioGroupComponent } from '@ndwnu/design-system';
 import { AccessibilityDataService } from '@shared/services';
-import { map } from 'rxjs';
 
 interface BackgroundLayer {
   name: string;
@@ -32,6 +31,7 @@ export class ControlPanelComponent {
   openModal = output();
   changeBackgroundLayer = output<string>();
   showTrafficSignsLayer = output<boolean>();
+  showDetailedAccessibilityLayer = output<boolean>();
 
   activeBackgroundLayer = signal('brt');
   backgroundLayers = computed<BackgroundLayer[]>(() =>
@@ -42,6 +42,7 @@ export class ControlPanelComponent {
   );
 
   showTrafficSigns = signal(false);
+  showDetailedAccessibility = signal(false);
   roadSectionInaccessible$ = this.accessibilityDataService.roadSectionInaccessible$;
   filterContainsCoordinates$ = this.accessibilityDataService.filterContainsCoordinates$;
 
@@ -89,5 +90,9 @@ export class ControlPanelComponent {
   toggleTrafficSigns() {
     this.showTrafficSigns.set(!this.showTrafficSigns());
     this.showTrafficSignsLayer.emit(this.showTrafficSigns());
+  }
+  toggleDetailedAccessibility() {
+    this.showDetailedAccessibility.update((b) => !b);
+    this.showDetailedAccessibilityLayer.emit(this.showDetailedAccessibility());
   }
 }

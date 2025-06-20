@@ -16,6 +16,10 @@ import { StepThreeFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 import { ActionsComponent } from '../actions';
 import { defaultMaxCombinedWeight, maxDummyVehicleTotalWeight } from '@modules/data-input';
+import { EmissionClass } from '@shared/models/emission-class.model';
+import { FuelType } from '@shared/models/fuel-type.model';
+import { EmissionClassPipe } from '@shared/pipes/emission-class.pipe';
+import { FuelTypePipe } from '@shared/pipes/fuel-type.pipe';
 
 @Component({
   selector: 'ber-step-three',
@@ -26,7 +30,9 @@ import { defaultMaxCombinedWeight, maxDummyVehicleTotalWeight } from '@modules/d
     CardFooterComponent,
     CardHeaderComponent,
     CommonModule,
+    EmissionClassPipe,
     FeedbackHeaderComponent,
+    FuelTypePipe,
     FormFieldComponent,
     IconComponent,
     InputDirective,
@@ -56,6 +62,9 @@ export class StepThreeComponent implements OnInit {
 
   private dataInputService = inject(DataInputService);
   private rdwService = inject(RdwService);
+
+  emissionClassOptions = Object.values(EmissionClass);
+  fuelTypeOptions = Object.values(FuelType);
 
   ngOnInit() {
     this.vehicleLoadControl.valueChanges.subscribe(() => {

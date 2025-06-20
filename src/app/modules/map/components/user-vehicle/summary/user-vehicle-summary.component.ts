@@ -134,9 +134,9 @@ export class UserVehicleSummaryComponent {
     }
     this.loadingRoadSections.set(true);
     this.accessibilityDataService.getInaccessibleRoadSections(filter, true).subscribe({
-      next: (response) => {
+      next: ([rvv, ez]) => {
         FileDownloadService.downloadFile(
-          new Blob([JSON.stringify(response)]),
+          new Blob([JSON.stringify({ rvv, ez })]),
           this.#getFileName('wegvakken'),
           'application/json',
         );

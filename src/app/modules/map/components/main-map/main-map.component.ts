@@ -95,6 +95,10 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.trafficSignElement?.setVisible(visible);
   }
 
+  handleDetailedAccessibilityVisible($event: boolean) {
+    this.#accessibilityDataService.setShowDetailedAccessibility($event);
+  }
+
   setBackgroundLayer(key: string) {
     this.mapElements.find((element) => element instanceof BrtElement)?.setVisible(key === 'brt');
     this.mapElements.find((element) => element instanceof AerialElement)?.setVisible(key === 'aerial');

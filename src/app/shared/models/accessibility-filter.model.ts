@@ -1,3 +1,6 @@
+import { EmissionClass } from '@shared/models/emission-class.model';
+import { FuelType } from '@shared/models/fuel-type.model';
+
 export interface AccessibilityFilter {
   municipalityId: string;
   vehicleType: string;
@@ -9,4 +12,6 @@ export interface AccessibilityFilter {
   vehicleHasTrailer: boolean;
   latitude?: number;
   longitude?: number;
+  emissionClass?: EmissionClass;
+  fuelType?: FuelType;
 }

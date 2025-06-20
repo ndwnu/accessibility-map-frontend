@@ -131,9 +131,12 @@ export class UserVehicleFormComponent implements OnInit {
     this.accessibilityDataService
       .getInaccessibleRoadSections(this.mapFormToFilterCriteria())
       .pipe(
-        map((response) => {
+        map(([response, ezResponse]) => {
           this.destinationDataService.clearDestinationPoint();
-          this.accessibilityDataService.setInaccessibleRoadSections(response.inaccessibleRoadSections);
+          this.accessibilityDataService.setInaccessibleRoadSectionsDetailed(
+            response.inaccessibleRoadSections,
+            ezResponse.inaccessibleRoadSections,
+          );
           this.accessibilityDataService.setMatchedRoadSection(response.matchedRoadSection);
           this.accessibilityDataService.setSelectedMunicipalityId(this.dataInputService.municipalityId);
           this.zoomToDestination();
@@ -161,7 +164,8 @@ export class UserVehicleFormComponent implements OnInit {
 
           this.accessibilityDataService.setRoadOperator(roadOperator);
         },
-        error: () => {
+        error: (err) => {
+          console.error(err);
           this.toastService.open('Er is iets misgegaan bij het ophalen van de data');
           this.loading.set(false);
         },
@@ -199,6 +203,8 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleAxleLoad,
       vehicleLength: vehicleInfo.length,
       vehicleWidth: vehicleInfo.width,
+      vehicleEmissionClass: vehicleInfo.emissionClass,
+      vehicleFuelType: vehicleInfo.fuelType,
     });
 
     if (this.licensePlate) {
@@ -263,6 +269,8 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleHasTrailer: stepOne.trailer!,
       latitude: stepTwo.latitude ?? undefined,
       longitude: stepTwo.longitude ?? undefined,
+      emissionClass: stepThree.vehicleEmissionClass ?? undefined,
+      fuelType: stepThree.vehicleFuelType ?? undefined,
     };
   }
 

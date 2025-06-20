@@ -8,6 +8,8 @@ export const environment: Environment = {
   georgeUrl: 'https://wegkenmerken.staging.ndw.nu',
   ndw: {
     trafficSignUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/traffic-signs/v4/current-state',
+    // Uncomment the line below to use the data from mockoon
+    // accessibilityUrl: 'http://localhost:3001/api/rest/static-road-data/accessibility-map/v1',
     accessibilityUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
     roadSectionsUrl: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/tiles/{z}/{x}/{y}.pbf',
     spriteUrl: 'https://maps.ndw.nu/styles/sprites/osm-default/osm-default',

@@ -200,6 +200,8 @@ export class DataInputService {
         vehicleAxleLoad: new FormControl(null, [Validators.required, Validators.min(0)]),
         vehicleLength: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(22)]),
         vehicleWidth: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(3)]),
+        vehicleEmissionClass: new FormControl(null),
+        vehicleFuelType: new FormControl(null),
       }),
     });
   }

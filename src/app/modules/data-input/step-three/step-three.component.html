@@ -65,6 +65,24 @@
         >
           <input ndwInput type="number" formControlName="vehicleWidth" min="0" placeholder="0" step="1" required />
         </ndw-form-field>
+
+        <!-- Emissie velden -->
+        <ndw-form-field label="Emissieklasse">
+          <select ndwInput formControlName="vehicleEmissionClass">
+            <option value="">Niet bekend</option>
+            @for (emissionClass of emissionClassOptions; track emissionClass) {
+              <option [value]="emissionClass">{{ emissionClass | emissionClass }}</option>
+            }
+          </select>
+        </ndw-form-field>
+        <ndw-form-field label="Brandstof">
+          <select ndwInput formControlName="vehicleFuelType">
+            <option value="">Niet bekend</option>
+            @for (fuelType of fuelTypeOptions; track fuelType) {
+              <option [value]="fuelType">{{ fuelType | fuelType }}</option>
+            }
+          </select>
+        </ndw-form-field>
       </form>
     </div>
   </ndw-card-content>

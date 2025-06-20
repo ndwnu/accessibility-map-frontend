@@ -1,5 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { VehicleType } from '@modules/map/models';
+import { EmissionClass } from '@shared/models/emission-class.model';
+import { FuelType } from '@shared/models/fuel-type.model';
 import { PdokLookup } from '@shared/models/pdok.model';
 
 export interface StepOneFormGroup {
@@ -26,6 +28,8 @@ export interface StepThreeFormGroup {
   vehicleAxleLoad: FormControl<number | null>;
   vehicleLength: FormControl<number | null>;
   vehicleWidth: FormControl<number | null>;
+  vehicleEmissionClass: FormControl<EmissionClass | null>;
+  vehicleFuelType: FormControl<FuelType | null>;
 }
 
 export interface DataInputFormGroup {

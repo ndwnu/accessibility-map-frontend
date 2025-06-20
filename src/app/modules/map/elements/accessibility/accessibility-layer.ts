@@ -1,14 +1,17 @@
-import { InaccessibleRoadSection } from '@shared/models';
 import { AccessibilityDataService } from '@shared/services';
 import { ExpressionSpecification, LayerSpecification, Map } from 'maplibre-gl';
 import { combineLatest, filter, takeUntil } from 'rxjs';
 import { MapLayer } from '../base/map-layer';
 import {
+  ACCESSIBLE_EZ_BUT_NOT_RVV_COLOR,
   ACCESSIBLE_ROAD_SECTION_COLOR,
+  ACCESSIBLE_RVV_BUT_NOT_EZ_COLOR,
   INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
   INACCESSIBLE_ROAD_SECTION_COLOR,
   MAP_MIN_ZOOM,
 } from '../constants';
+import { CalculatedAccessibility } from '@shared/models/calculated.accessibility';
+import { groupByAndMap } from '@shared/utils/collection-utils';
 
 export const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'CADO', 'FP', 'OVB', 'RP', 'VDF', 'VDV', 'VP', 'VV', 'VZ'];
 
@@ -22,13 +25,14 @@ export class AccessibilityLayer extends MapLayer {
     combineLatest([
       accessibilityDataService.inaccessibleRoadSections$,
       accessibilityDataService.selectedMunicipalityId$,
+      accessibilityDataService.showDetailedAccessibility$,
     ])
       .pipe(
         filter(([, municipalityId]) => !!municipalityId),
         takeUntil(this.unsubscribe),
       )
-      .subscribe(([inaccessibleRoadSections, selectedMunicipalityId]) => {
-        this.updateStyles(inaccessibleRoadSections, selectedMunicipalityId!);
+      .subscribe(([inaccessibleRoadSections, selectedMunicipalityId, showDetailedAccessibility]) => {
+        this.updateStyles(inaccessibleRoadSections, selectedMunicipalityId!, showDetailedAccessibility);
       });
   }
 
@@ -85,17 +89,33 @@ export class AccessibilityLayer extends MapLayer {
     ];
   }
 
-  protected updateStyles(inaccessibleRoadSections: InaccessibleRoadSection[], municipality: string) {
-    const inaccessibleRoadSectionIds = inaccessibleRoadSections
-      .filter((section) => {
-        const bothDirectionsInaccessible = section.forwardAccessible === false && section.backwardAccessible === false;
-        const forwardInaccessible = section.forwardAccessible === false && section.backwardAccessible === undefined;
-        const backwardInaccessible = section.forwardAccessible === undefined && section.backwardAccessible === false;
-        return bothDirectionsInaccessible || forwardInaccessible || backwardInaccessible;
-      })
-      .map((section) => section.roadSectionId);
+  #colorForSection(section: CalculatedAccessibility): string {
+    if (!section.inaccessible) {
+      return ACCESSIBLE_ROAD_SECTION_COLOR;
+    } else if (!section.inaccessible_rvv && section.inaccessible_ez) {
+      return ACCESSIBLE_RVV_BUT_NOT_EZ_COLOR;
+    } else if (section.inaccessible_rvv && !section.inaccessible_ez) {
+      return ACCESSIBLE_EZ_BUT_NOT_RVV_COLOR;
+    } else {
+      return INACCESSIBLE_ROAD_SECTION_COLOR;
+    }
+  }
 
+  protected updateStyles(
+    inaccessibleRoadSections: CalculatedAccessibility[],
+    municipality: string,
+    showDetailedAccessibility: boolean,
+  ): void {
     const municipalityId = Number(municipality.replace(/^GM/, '').replace(/^0+/, ''));
+    const groupedByColor = groupByAndMap(
+      inaccessibleRoadSections,
+      this.#colorForSection,
+      (section) => section.roadSectionId,
+    );
+
+    const inaccessibleRoadSectionIds = groupedByColor[INACCESSIBLE_ROAD_SECTION_COLOR] || [];
+    const rvvButNotEzRoadSectionIds = groupedByColor[ACCESSIBLE_RVV_BUT_NOT_EZ_COLOR] || [];
+    const ezButNotRvvRoadSectionIds = groupedByColor[ACCESSIBLE_EZ_BUT_NOT_RVV_COLOR] || [];
 
     if (this.styleLayer) {
       this.map.setPaintProperty(this.id, 'line-opacity', LINE_OPACITY);
@@ -107,6 +127,10 @@ export class AccessibilityLayer extends MapLayer {
         INACTIVE_MUNICIPALITY_COLOR,
         ['in', ['get', 'roadSectionId'], ['literal', inaccessibleRoadSectionIds]],
         INACCESSIBLE_ROAD_SECTION_COLOR,
+        ['in', ['get', 'roadSectionId'], ['literal', rvvButNotEzRoadSectionIds]],
+        showDetailedAccessibility ? ACCESSIBLE_RVV_BUT_NOT_EZ_COLOR : INACCESSIBLE_ROAD_SECTION_COLOR,
+        ['in', ['get', 'roadSectionId'], ['literal', ezButNotRvvRoadSectionIds]],
+        showDetailedAccessibility ? ACCESSIBLE_EZ_BUT_NOT_RVV_COLOR : INACCESSIBLE_ROAD_SECTION_COLOR,
         // default
         ACCESSIBLE_ROAD_SECTION_COLOR,
       ]);

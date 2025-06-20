@@ -1,5 +1,5 @@
 <div class="legend d-flex flex-column gap-2">
-  @for (item of legendItems; track item.name) {
+  @for (item of legendItems(); track item.name) {
     <div class="row">
       <div class="col-2">
         @if (item.img) {

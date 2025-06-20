@@ -20,5 +20,6 @@ window.environment = {
     axleUrl: '${RDW_AXLE_URL}',
     plateCheckUrl: '${RDW_PLATE_CHECK_URL}',
     registeredVehicleUrl: '${RDW_REGISTERED_VEHICLE_URL}',
+    vehicleClassUrl: '${RDW_VEHICLE_CLASS_URL}',
   },
 };
