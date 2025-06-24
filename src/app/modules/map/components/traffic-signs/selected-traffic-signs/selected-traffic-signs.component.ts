@@ -41,7 +41,9 @@ export class SelectedTrafficSignsComponent implements OnInit {
   );
   georgeTrafficSignUrl = computed(() => `${environment.georgeUrl}/verkeersborden/${this.trafficSign()?.id}`);
   georgeRoadSectionUrl = computed(
-    () => `${environment.georgeUrl}/wegkenmerken/wegvakken/${this.trafficSign()?.roadSectionId}?zoom=true`,
+    () =>
+      `${environment.georgeUrl}/wegkenmerken/wegvakken/${this.trafficSign()
+        ?.roadSectionId}/kenmerken/maximumsnelheid?zoom=true`,
   );
   rvvExemptionUrl = computed(() => {
     const roadOperator = this.roadOperatorService.getRoadOperator(this.trafficSign()?.countyCode ?? '');
