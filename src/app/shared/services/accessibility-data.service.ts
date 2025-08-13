@@ -154,19 +154,16 @@ export class AccessibilityDataService {
   }
 
   getRvvCodes(filter: AccessibilityFilter | undefined) {
-    const defaultRvvCodes = ['C1', 'C6', 'C12', 'C17', 'C18', 'C19', 'C20', 'C21'];
+    const defaultRvvCodes = ['C1', 'C6', 'C12', 'C17', 'C18', 'C19', 'C20', 'C21', 'C22a', 'C22b'];
 
     const vehicleSpecificRvvCodes: string[] = defaultRvvCodes;
 
     switch (filter?.vehicleType) {
-      case 'car':
-        vehicleSpecificRvvCodes.push(...['C22a', 'C22c']);
-        break;
       case 'truck':
-        vehicleSpecificRvvCodes.push(...['C7', 'C7b', 'C22a', 'C22c']);
+        vehicleSpecificRvvCodes.push(...['C7', 'C7b', 'C22c', 'C22d']);
         break;
       case 'light_commercial_vehicle':
-        vehicleSpecificRvvCodes.push(...['C22a', 'C22c']);
+        vehicleSpecificRvvCodes.push(...['C22c', 'C22d']);
         break;
       case 'bus':
         vehicleSpecificRvvCodes.push(...['C7a', 'C7b']);
