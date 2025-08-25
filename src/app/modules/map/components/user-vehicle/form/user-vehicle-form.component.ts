@@ -12,7 +12,7 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormArray, FormControl, Validators } from '@angular/forms';
 import { environment } from '@env/environment';
 import {
   defaultMaxCombinedWeight,
@@ -204,8 +204,13 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleLength: vehicleInfo.length,
       vehicleWidth: vehicleInfo.width,
       vehicleEmissionClass: vehicleInfo.emissionClass,
-      vehicleFuelType: vehicleInfo.fuelType,
     });
+
+    const fuelTypeArray = this.stepThreeForm?.get('vehicleFuelTypes') as FormArray;
+    if (fuelTypeArray && vehicleInfo.fuelType) {
+      fuelTypeArray.clear();
+      fuelTypeArray.push(new FormControl(vehicleInfo.fuelType));
+    }
 
     if (this.licensePlate) {
       this.stepThreeForm?.get('vehicleLoad')?.setValidators([Validators.required, Validators.max(vehicleLoad)]);
@@ -270,7 +275,7 @@ export class UserVehicleFormComponent implements OnInit {
       latitude: stepTwo.latitude ?? undefined,
       longitude: stepTwo.longitude ?? undefined,
       emissionClass: stepThree.vehicleEmissionClass ?? undefined,
-      fuelType: stepThree.vehicleFuelType ?? undefined,
+      fuelTypes: stepThree.vehicleFuelTypes ?? undefined,
     };
   }
 

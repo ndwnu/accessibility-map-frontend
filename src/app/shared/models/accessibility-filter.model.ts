@@ -13,5 +13,5 @@ export interface AccessibilityFilter {
   latitude?: number;
   longitude?: number;
   emissionClass?: EmissionClass;
-  fuelType?: FuelType;
+  fuelTypes?: FuelType[];
 }

@@ -1,7 +1,16 @@
 import { Injectable, signal } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { VEHICLE_TYPES } from '@modules/map/models';
 import { DataInputFormGroup, StepOneFormGroup, StepThreeFormGroup, StepTwoFormGroup } from '@shared/models';
+import { FuelType } from '@shared/models/fuel-type.model';
 
 @Injectable({
   providedIn: 'root',
@@ -160,6 +169,22 @@ export class DataInputService {
     return this.vehicleWidthControl?.value ?? 0;
   }
 
+  get vehicleEmissionClassControl() {
+    return this.stepThreeForm.get('vehicleEmissionClass')!;
+  }
+
+  get vehicleEmissionClass() {
+    return this.vehicleEmissionClassControl?.value;
+  }
+
+  get vehicleFuelTypesControl() {
+    return this.stepThreeForm.get('vehicleFuelTypes')! as FormArray<FormControl<FuelType>>;
+  }
+
+  get vehicleFuelTypes() {
+    return this.vehicleFuelTypesControl?.value;
+  }
+
   setActiveStep(step: number) {
     this.activeStep.set(step);
   }
@@ -201,7 +226,7 @@ export class DataInputService {
         vehicleLength: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(22)]),
         vehicleWidth: new FormControl(null, [Validators.required, Validators.min(0), Validators.max(3)]),
         vehicleEmissionClass: new FormControl(null),
-        vehicleFuelType: new FormControl(null),
+        vehicleFuelTypes: new FormArray<FormControl<FuelType>>([]),
       }),
     });
   }

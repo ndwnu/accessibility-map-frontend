@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { VehicleType } from '@modules/map/models';
 import { EmissionClass } from '@shared/models/emission-class.model';
 import { FuelType } from '@shared/models/fuel-type.model';
@@ -29,7 +29,7 @@ export interface StepThreeFormGroup {
   vehicleLength: FormControl<number | null>;
   vehicleWidth: FormControl<number | null>;
   vehicleEmissionClass: FormControl<EmissionClass | null>;
-  vehicleFuelType: FormControl<FuelType | null>;
+  vehicleFuelTypes: FormArray<FormControl<FuelType>>;
 }
 
 export interface DataInputFormGroup {

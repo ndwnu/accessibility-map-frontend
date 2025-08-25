@@ -67,14 +67,14 @@ export class AccessibilityDataService {
       .filter((key) => key !== 'municipalityId')
       .forEach((key) => {
         const filterValue = filter[key as keyof AccessibilityFilter];
-        if (filterValue && key !== 'emissionClass' && key !== 'fuelType') {
+        if (filterValue && key !== 'emissionClass' && key !== 'fuelTypes') {
           params = params.append(key, filterValue.toString());
         }
         if (
           filterValue &&
           (key === 'vehicleType' ||
             key === 'emissionClass' ||
-            key === 'fuelType' ||
+            key === 'fuelTypes' ||
             key === 'latitude' ||
             key === 'longitude')
         ) {
@@ -85,7 +85,7 @@ export class AccessibilityDataService {
     const url = `${this.baseURL}/municipalities/${municipalityId}/road-sections${geojson}`;
 
     const basicResponse = this._http.get<InaccessibleRoadSectionsResponse>(url, { params }).pipe(shareReplay(1));
-    if (ezParams.has('fuelType') || ezParams.has('emissionClass')) {
+    if (ezParams.has('fuelTypes') || ezParams.has('emissionClass')) {
       const ezResponse = this._http
         .get<InaccessibleRoadSectionsResponse>(url, { params: ezParams })
         .pipe(shareReplay(1));

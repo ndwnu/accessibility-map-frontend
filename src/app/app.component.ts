@@ -24,7 +24,6 @@ export class AppComponent implements OnInit {
   topMenuItems: MenuItem[] = [
     {
       icon: 'map',
-      id: 0,
       label: 'Kaart',
     },
   ];
@@ -33,13 +32,11 @@ export class AppComponent implements OnInit {
     {
       callback: () => this.openFeedbackMail(),
       icon: 'feedback',
-      id: 1,
       label: 'Feedback',
     },
     {
       callback: () => this.openDisclaimerModal(),
       icon: 'error',
-      id: 2,
       label: 'Disclaimer',
     },
   ];

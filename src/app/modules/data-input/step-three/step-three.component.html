@@ -76,12 +76,17 @@
           </select>
         </ndw-form-field>
         <ndw-form-field label="Brandstof">
-          <select ndwInput formControlName="vehicleFuelType">
-            <option value="">Niet bekend</option>
+          <ndw-dropdown buttonText="Selecteer brandstof" [selectAmount]="selectedFuelTypesCount()" [chevron]="true">
             @for (fuelType of fuelTypeOptions; track fuelType) {
-              <option [value]="fuelType">{{ fuelType | fuelType }}</option>
+              <ndw-list-item
+                [checkable]="true"
+                [checked]="isFuelTypeSelected(fuelType)"
+                (click)="onFuelTypeToggle(fuelType)"
+              >
+                {{ fuelType | fuelType }}
+              </ndw-list-item>
             }
-          </select>
+          </ndw-dropdown>
         </ndw-form-field>
       </form>
     </div>

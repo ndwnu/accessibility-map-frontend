@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, output } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import {
   CardComponent,
   CardContentComponent,
   CardFooterComponent,
   CardHeaderComponent,
+  DropdownComponent,
   FormFieldComponent,
   IconComponent,
   InputDirective,
+  ListItemComponent,
 } from '@ndwnu/design-system';
 import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepThreeFormGroup, VehicleInfo } from '@shared/models';
@@ -20,6 +22,7 @@ import { EmissionClass } from '@shared/models/emission-class.model';
 import { FuelType } from '@shared/models/fuel-type.model';
 import { EmissionClassPipe } from '@shared/pipes/emission-class.pipe';
 import { FuelTypePipe } from '@shared/pipes/fuel-type.pipe';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'ber-step-three',
@@ -30,12 +33,14 @@ import { FuelTypePipe } from '@shared/pipes/fuel-type.pipe';
     CardFooterComponent,
     CardHeaderComponent,
     CommonModule,
+    DropdownComponent,
     EmissionClassPipe,
     FeedbackHeaderComponent,
     FuelTypePipe,
     FormFieldComponent,
     IconComponent,
     InputDirective,
+    ListItemComponent,
     ReactiveFormsModule,
   ],
   templateUrl: './step-three.component.html',
@@ -65,6 +70,39 @@ export class StepThreeComponent implements OnInit {
 
   emissionClassOptions = Object.values(EmissionClass);
   fuelTypeOptions = Object.values(FuelType);
+
+  selectedFuelTypes = toSignal(this.vehicleFuelTypesControl.valueChanges, {
+    initialValue: this.vehicleFuelTypesControl.value,
+  });
+
+  selectedFuelTypesCount = computed(() => {
+    const selected = this.selectedFuelTypes() ?? [];
+    return selected.filter((value) => value !== null).length;
+  });
+
+  onFuelTypeToggle(fuelType: FuelType) {
+    const formArray = this.vehicleFuelTypesControl;
+    const currentValues = formArray.value;
+    const isSelected = currentValues.includes(fuelType);
+
+    if (isSelected) {
+      const indexToRemove = formArray.controls.findIndex((control) => control.value === fuelType);
+      if (indexToRemove !== -1) {
+        formArray.removeAt(indexToRemove);
+      }
+    } else {
+      formArray.push(new FormControl(fuelType, { nonNullable: true }));
+    }
+  }
+
+  isFuelTypeSelected(fuelType: FuelType): boolean {
+    const selected = this.selectedFuelTypes() ?? [];
+    return selected.filter((value) => value !== null).includes(fuelType);
+  }
+
+  get vehicleFuelTypesControl() {
+    return this.dataInputService.vehicleFuelTypesControl;
+  }
 
   ngOnInit() {
     this.vehicleLoadControl.valueChanges.subscribe(() => {
