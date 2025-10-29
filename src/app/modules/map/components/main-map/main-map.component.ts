@@ -24,6 +24,12 @@ import { NavigationControl } from 'maplibre-gl';
 
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs';
 
+const zoneCodeNames = {
+  ZB: 'BEGIN',
+  ZE: 'END',
+  ZH: 'REPEAT',
+};
+
 @Component({
   selector: 'ber-main-map',
   imports: [ControlPanelComponent, SelectedTrafficSignsComponent],
@@ -114,32 +120,36 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
   #loadImages() {
     this.loadImage('arrow-icon', 'assets/images/arrow.png');
     this.loadImage('black-arrow-icon', 'assets/images/black-arrow.png');
-    this.loadImage('C6-ZB', 'assets/images/traffic-signs/C6-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C6-ZE', 'assets/images/traffic-signs/C6-END.png', { pixelRatio: 2.5 });
-    this.loadImage('C7-ZB', 'assets/images/traffic-signs/C7-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C7-ZH', 'assets/images/traffic-signs/C7-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C7-ZE', 'assets/images/traffic-signs/C7-END.png', { pixelRatio: 2.5 });
+    const all_zones_signs = ['C1', 'C2', 'C3', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
+    const begin_end_signs = ['C17', 'C18', 'C19', 'C20', 'C21'];
+
+    all_zones_signs.forEach((code) => {
+      this.#loadSign(code);
+      this.#loadSign(code, 'ZB');
+      this.#loadSign(code, 'ZE');
+      this.#loadSign(code, 'ZH');
+    });
+
+    begin_end_signs.forEach((code) => {
+      this.#loadSign(code);
+      this.#loadSign(code, 'ZB');
+      this.#loadSign(code, 'ZE');
+    });
+
     this.loadImage('C7a', 'assets/images/traffic-signs/C7a.png', { pixelRatio: 2 });
     this.loadImage('C7b', 'assets/images/traffic-signs/C7b.png', { pixelRatio: 2 });
-    this.loadImage('C17', 'assets/images/traffic-signs/C17.png', { pixelRatio: 2 });
-    this.loadImage('C17-ZB', 'assets/images/traffic-signs/C17-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C17-ZE', 'assets/images/traffic-signs/C17-END.png', { pixelRatio: 2.5 });
-    this.loadImage('C18', 'assets/images/traffic-signs/C18.png', { pixelRatio: 2 });
-    this.loadImage('C18-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C18-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
-    this.loadImage('C19', 'assets/images/traffic-signs/C19.png', { pixelRatio: 2 });
-    this.loadImage('C19-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C19-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
-    this.loadImage('C20', 'assets/images/traffic-signs/C20.png', { pixelRatio: 2 });
-    this.loadImage('C20-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C20-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
-    this.loadImage('C21', 'assets/images/traffic-signs/C21.png', { pixelRatio: 2 });
-    this.loadImage('C21-ZB', 'assets/images/traffic-signs/C18-BEGIN.png', { pixelRatio: 2.5 });
-    this.loadImage('C21-ZE', 'assets/images/traffic-signs/C18-END.png', { pixelRatio: 2.5 });
     this.loadImage('C22c', 'assets/images/traffic-signs/C22c.png', { pixelRatio: 2 });
     this.loadImage('text-sign', 'assets/images/text-sign.png', { pixelRatio: 2 });
     this.loadImage('marker-negative', 'assets/images/marker-negative.png');
     this.loadImage('marker-positive', 'assets/images/marker-positive.png');
+  }
+
+  #loadSign(code: string, zoneCode?: 'ZB' | 'ZH' | 'ZE') {
+    const imageName = zoneCode ? `${code}-${zoneCode}` : code;
+    const path = zoneCode
+      ? `assets/images/traffic-signs/${code}-${zoneCodeNames[zoneCode]}.png`
+      : `assets/images/traffic-signs/${code}.png`;
+    this.loadImage(imageName, path, { pixelRatio: 2.5 });
   }
 
   #updatePopupPosition() {
