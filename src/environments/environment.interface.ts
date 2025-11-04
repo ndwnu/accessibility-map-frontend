@@ -20,5 +20,6 @@ export interface Environment {
     axleUrl: string;
     plateCheckUrl: string;
     registeredVehicleUrl: string;
+    vehicleClassUrl: string;
   };
 }

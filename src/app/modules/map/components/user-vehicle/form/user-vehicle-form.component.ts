@@ -207,9 +207,11 @@ export class UserVehicleFormComponent implements OnInit {
     });
 
     const fuelTypeArray = this.stepThreeForm?.get('vehicleFuelTypes') as FormArray;
-    if (fuelTypeArray && vehicleInfo.fuelType) {
+    if (fuelTypeArray && vehicleInfo.fuelTypes) {
       fuelTypeArray.clear();
-      fuelTypeArray.push(new FormControl(vehicleInfo.fuelType));
+      vehicleInfo.fuelTypes.forEach((fuelType) => {
+        fuelTypeArray.push(new FormControl(fuelType));
+      });
     }
 
     if (this.licensePlate) {

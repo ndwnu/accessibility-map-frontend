@@ -13,7 +13,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxWeight: 18000,
     maxAxleWeight: 9000,
     emissionClass: EmissionClass.Euro2,
-    fuelType: FuelType.Diesel,
+    fuelTypes: [FuelType.Diesel],
   },
   {
     type: NlsVehicleType.Car,
@@ -25,7 +25,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxWeight: 3000,
     maxAxleWeight: 1500,
     emissionClass: EmissionClass.Zero,
-    fuelType: FuelType.Electric,
+    fuelTypes: [FuelType.Electric],
   },
   {
     type: NlsVehicleType.LightCommercialVehicle,
@@ -37,7 +37,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxWeight: 5000,
     maxAxleWeight: 2500,
     emissionClass: EmissionClass.Euro6,
-    fuelType: FuelType.Hydrogen,
+    fuelTypes: [FuelType.Hydrogen],
   },
   {
     type: NlsVehicleType.Motorcycle,
@@ -49,7 +49,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxWeight: 300,
     maxAxleWeight: 150,
     emissionClass: EmissionClass.Euro6,
-    fuelType: FuelType.Petrol,
+    fuelTypes: [FuelType.Petrol],
   },
   {
     type: NlsVehicleType.Tractor,
@@ -61,7 +61,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxWeight: 0,
     maxAxleWeight: 0,
     emissionClass: EmissionClass.Euro1,
-    fuelType: FuelType.Diesel,
+    fuelTypes: [FuelType.Diesel],
   },
   {
     type: NlsVehicleType.Truck,
@@ -73,7 +73,7 @@ export const exampleVehicleInfoList: VehicleInfo[] = [
     maxWeight: 20000,
     maxAxleWeight: 10000,
     emissionClass: EmissionClass.Euro5,
-    fuelType: FuelType.Diesel,
+    fuelTypes: [FuelType.Diesel],
   },
 ];
 
@@ -89,5 +89,5 @@ export interface VehicleInfo {
   combinedMaxWeight?: number;
   trailerWeight?: number;
   emissionClass?: EmissionClass;
-  fuelType?: FuelType;
+  fuelTypes?: FuelType[];
 }

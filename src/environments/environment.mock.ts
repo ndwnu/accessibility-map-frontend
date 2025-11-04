@@ -25,6 +25,7 @@ export const environment: Environment = {
     axleUrl: 'https://opendata.rdw.nl/resource/3huj-srit.json',
     plateCheckUrl: 'https://ovi.rdw.nl/default.aspx?kenteken={plateNumber}',
     registeredVehicleUrl: 'https://opendata.rdw.nl/resource/m9d7-ebf2.json',
+    vehicleClassUrl: 'https://opendata.rdw.nl/resource/8ys7-d773.json',
   },
   ...window.environment,
 };
