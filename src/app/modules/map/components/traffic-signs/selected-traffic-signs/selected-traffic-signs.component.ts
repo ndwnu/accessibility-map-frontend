@@ -39,12 +39,15 @@ export class SelectedTrafficSignsComponent implements OnInit {
       `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${this.trafficSign()?.lnglat
         ?.lat},${this.trafficSign()?.lnglat?.lng}`,
   );
-  georgeTrafficSignUrl = computed(() => `${environment.georgeUrl}/verkeersborden/${this.trafficSign()?.id}`);
-  georgeRoadSectionUrl = computed(
-    () =>
-      `${environment.georgeUrl}/wegkenmerken/wegvakken/${this.trafficSign()
-        ?.roadSectionId}/kenmerken/maximumsnelheid?zoom=true`,
+  georgeTrafficSignUrl = computed(
+    () => `${environment.georgeUrl}/kaart/verkeersborden/${this.trafficSign()?.id}?zoom=true`,
   );
+  georgeRoadSectionUrl = computed(() => {
+    return this.trafficSign()?.roadSectionId
+      ? `${environment.georgeUrl}/kaart/wegvakken/${this.trafficSign()
+          ?.roadSectionId}/kenmerken/maximumsnelheid?zoom=true`
+      : undefined;
+  });
   rvvExemptionUrl = computed(() => {
     const roadOperator = this.roadOperatorService.getRoadOperator(this.trafficSign()?.countyCode ?? '');
     return roadOperator?.requestExemptionUrl ?? '';
