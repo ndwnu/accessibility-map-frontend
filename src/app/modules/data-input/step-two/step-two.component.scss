@@ -1,8 +1,11 @@
 ndw-card {
   align-content: flex-start;
-  margin-inline: var(--ndw-spacing-sm);
-  max-width: 100%;
+  height: 100%;
   width: 30rem;
+
+  @media (max-width: 30rem) {
+    width: 100vw;
+  }
 
   ndw-card-content {
     .content {
