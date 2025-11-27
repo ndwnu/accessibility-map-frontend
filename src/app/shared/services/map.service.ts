@@ -21,6 +21,7 @@ export class MapService {
       interactive: true,
       maxZoom: MAP_MAX_ZOOM,
       minZoom: MAP_MIN_ZOOM,
+      attributionControl: false,
       style: {
         version: 8,
         center: [5.41, 52.15],
@@ -30,6 +31,7 @@ export class MapService {
         glyphs: environment.ndw.glyphsUrl,
       },
     });
+
     return this.map;
   }
 

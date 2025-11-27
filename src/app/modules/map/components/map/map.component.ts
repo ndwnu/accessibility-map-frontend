@@ -15,10 +15,7 @@ import { MapService } from '@shared/services/map.service';
 import { Feature } from 'geojson';
 import { FilterSpecification, StyleImageMetadata, Map } from 'maplibre-gl';
 
-@Component({
-  standalone: true,
-  template: '',
-})
+@Component({ standalone: true, template: '' })
 export abstract class MapComponent implements AfterViewInit, OnDestroy {
   readonly #map = inject(MapService);
 
@@ -39,7 +36,6 @@ export abstract class MapComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.createMap();
-    this.addButtons();
     this.map.once('render', () => this.onRenderMap());
     this.map.once('load', () => this.initiateMapLoading());
   }
@@ -60,24 +56,22 @@ export abstract class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  protected loadImage(name: string, path: string, options?: Partial<StyleImageMetadata>) {
+  protected async loadImage(name: string, path: string, options?: Partial<StyleImageMetadata>) {
     if (this.map.hasImage(name)) {
       this.map.removeImage(name);
     }
 
-    this.map.loadImage(path, (error, image) => {
-      if (!image || error) {
-        console.error(`Failed to load ${name} image:`, error);
-        return;
-      }
-
-      this.map.addImage(name, image, options);
-    });
+    try {
+      const image = await this.map.loadImage(path);
+      this.map.addImage(name, image.data, options);
+    } catch (error) {
+      console.error(`Failed to load ${name} image:`, error);
+      return;
+    }
   }
 
   private onRenderMap() {}
 
-  protected abstract addButtons(): void;
   protected abstract onLoadMap(): void;
 
   protected initiateMapLoading() {

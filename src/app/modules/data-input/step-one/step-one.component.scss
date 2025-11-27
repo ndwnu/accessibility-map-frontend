@@ -12,14 +12,17 @@ ndw-card {
         gap: var(--ndw-spacing-md);
 
         ndw-form-field {
+          &.license-plate-field {
+            max-width: 12rem;
+          }
           .license-plate {
             display: grid;
             grid-template-columns: auto 1fr;
 
             &_prefix {
               background-color: #004699;
-              border-top-left-radius: var(--ndw-border-radius-sm);
-              border-bottom-left-radius: var(--ndw-border-radius-sm);
+              border-top-left-radius: 3px;
+              border-bottom-left-radius: 3px;
               color: var(--ndw-color-white);
               display: grid;
               padding: var(--ndw-spacing-3xs);
@@ -36,15 +39,14 @@ ndw-card {
 
             &_input {
               background-color: #ffe041;
-              border-color: #8b760d;
               border-top-left-radius: 0;
               border-bottom-left-radius: 0;
               font-family: 'Kenteken', sans-serif;
               font-size: var(--ndw-font-size-xl);
-              margin-left: calc(var(--ndw-border-size-sm) * -1);
-              max-width: 10rem;
               text-align: center;
               text-transform: uppercase;
+              border-top-right-radius: 3px;
+              border-bottom-right-radius: 3px;
 
               &.disabled {
                 background-color: var(--ndw-color-grey-100);

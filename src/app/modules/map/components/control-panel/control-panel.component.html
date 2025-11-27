@@ -34,32 +34,6 @@
   </section>
 
   <section>
-    <h2>Kaartlagen</h2>
-    <ndw-form-field label="Kaartlagen" [hideLabel]="true">
-      <div class="background-layers">
-        <ndw-radio-group>
-          @for (background of backgroundLayers(); track background.key) {
-            <label>
-              <input
-                ndwInput
-                type="radio"
-                name="background"
-                [value]="background.key"
-                [checked]="background.active"
-                (change)="selectBackgroundLayer(background)"
-              />
-              <img
-                ngSrc="./assets/images/background-layer-icon/{{ background.key }}.jpg"
-                width="30"
-                height="30"
-                role="presentation"
-                [alt]="background.name"
-              />
-            </label>
-          }
-        </ndw-radio-group>
-      </div>
-    </ndw-form-field>
     <ndw-form-field label="Toon verkeersborden" [hideLabel]="true">
       <ndw-checkbox [checked]="showTrafficSigns()" (checkedChange)="toggleTrafficSigns()">
         Toon verkeersborden

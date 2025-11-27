@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
@@ -32,7 +31,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
     CardContentComponent,
     CardFooterComponent,
     CardHeaderComponent,
-    CommonModule,
     DropdownComponent,
     EmissionClassPipe,
     FeedbackHeaderComponent,
@@ -60,8 +58,8 @@ export class StepThreeComponent implements OnInit {
     }
     const vehicleWeight = this.vehicleInfo()?.weight ?? 0;
     const maxWeight = this.vehicleTrailerControl.value
-      ? this.vehicleInfo()?.combinedMaxWeight ?? defaultMaxCombinedWeight
-      : this.vehicleInfo()?.maxWeight ?? 0;
+      ? (this.vehicleInfo()?.combinedMaxWeight ?? defaultMaxCombinedWeight)
+      : (this.vehicleInfo()?.maxWeight ?? 0);
     return maxWeight - vehicleWeight;
   });
 

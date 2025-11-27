@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   effect,
@@ -39,7 +39,7 @@ import { delay, map, switchMap } from 'rxjs';
 @UntilDestroy()
 @Component({
   selector: 'ber-user-vehicle-form',
-  imports: [CommonModule, DisclaimerCardComponent, StepOneComponent, StepThreeComponent, StepTwoComponent],
+  imports: [DisclaimerCardComponent, StepOneComponent, StepThreeComponent, StepTwoComponent],
   templateUrl: './user-vehicle-form.component.html',
 })
 export class UserVehicleFormComponent implements OnInit {
@@ -186,7 +186,7 @@ export class UserVehicleFormComponent implements OnInit {
   setVehicleInfo(vehicleInfo: VehicleInfo) {
     this.stepOneForm?.get('vehicleType')?.setValue(vehicleInfo.type, { emitEvent: false });
     const maxWeight = this.trailerControl.value
-      ? vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight
+      ? (vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight)
       : vehicleInfo.maxWeight;
 
     let vehicleLoad = maxWeight && vehicleInfo.weight ? Math.round(maxWeight - vehicleInfo.weight) : 0;
@@ -198,7 +198,7 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleCurbWeight: vehicleInfo.weight,
       vehicleLoad,
       vehicleTotalWeight: this.trailerControl.value
-        ? vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight
+        ? (vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight)
         : vehicleInfo.maxWeight,
       vehicleAxleLoad,
       vehicleLength: vehicleInfo.length,

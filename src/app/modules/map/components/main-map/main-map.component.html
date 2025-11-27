@@ -3,7 +3,6 @@
 @if (showControlPanel()) {
   <ber-control-panel
     (openModal)="openPanel.emit()"
-    (changeBackgroundLayer)="setBackgroundLayer($event)"
     (showTrafficSignsLayer)="handleTrafficSignVisible($event)"
     (showDetailedAccessibilityLayer)="handleDetailedAccessibilityVisible($event)"
   />
@@ -12,3 +11,9 @@
 <ng-template #trafficSignsPopup>
   <ber-selected-traffic-signs (closed)="closePopup()" />
 </ng-template>
+
+<div class="map-controls">
+  <ndw-map-button icon="zoom-in" (click)="zoomIn()" />
+  <ndw-map-button icon="zoom-out" (click)="zoomOut()" />
+  <ndw-map-display [backgroundOptions]="backgroundOptions" (backgroundChange)="onBackgroundChange($event)" />
+</div>

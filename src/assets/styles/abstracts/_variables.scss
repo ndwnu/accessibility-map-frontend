@@ -77,11 +77,13 @@ $enable-negative-margins: true;
 // Shadows
 :root {
   --shadow-color: 0deg 0% 0%;
-  --shadow-elevation-low: 0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.23),
-    0.4px 1.3px 1.4px -3.3px hsl(var(--shadow-color) / 0.17);
-  --shadow-elevation-medium: 0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.21),
-    0.4px 1.5px 1.5px -1.7px hsl(var(--shadow-color) / 0.18), 1.9px 6.7px 6.9px -3.3px hsl(var(--shadow-color) / 0.14);
-  --shadow-elevation-high: 0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.3),
-    1px 3.5px 3.6px -1.1px hsl(var(--shadow-color) / 0.26), 3.5px 12.5px 12.9px -2.2px hsl(var(--shadow-color) / 0.22),
+  --shadow-elevation-low:
+    0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.23), 0.4px 1.3px 1.4px -3.3px hsl(var(--shadow-color) / 0.17);
+  --shadow-elevation-medium:
+    0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.21), 0.4px 1.5px 1.5px -1.7px hsl(var(--shadow-color) / 0.18),
+    1.9px 6.7px 6.9px -3.3px hsl(var(--shadow-color) / 0.14);
+  --shadow-elevation-high:
+    0.1px 0.3px 0.3px hsl(var(--shadow-color) / 0.3), 1px 3.5px 3.6px -1.1px hsl(var(--shadow-color) / 0.26),
+    3.5px 12.5px 12.9px -2.2px hsl(var(--shadow-color) / 0.22),
     9.9px 34.9px 36.2px -3.3px hsl(var(--shadow-color) / 0.18);
 }

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -40,7 +39,6 @@ import { ActionsComponent } from '../actions';
     CardFooterComponent,
     CardHeaderComponent,
     CheckboxComponent,
-    CommonModule,
     FeedbackHeaderComponent,
     FormFieldComponent,
     ReactiveFormsModule,

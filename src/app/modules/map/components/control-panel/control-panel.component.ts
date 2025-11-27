@@ -29,17 +29,8 @@ export class ControlPanelComponent {
   private readonly accessibilityDataService = inject(AccessibilityDataService);
 
   openModal = output();
-  changeBackgroundLayer = output<string>();
   showTrafficSignsLayer = output<boolean>();
   showDetailedAccessibilityLayer = output<boolean>();
-
-  activeBackgroundLayer = signal('brt');
-  backgroundLayers = computed<BackgroundLayer[]>(() =>
-    [
-      { name: 'BRT', key: 'brt', active: false },
-      { name: 'Luchtfoto', key: 'aerial', active: false },
-    ].map((l) => ({ ...l, active: l.key === this.activeBackgroundLayer() })),
-  );
 
   showTrafficSigns = signal(false);
   showDetailedAccessibility = signal(false);
@@ -80,11 +71,6 @@ export class ControlPanelComponent {
 
   get isLicensePlateInvalid(): boolean {
     return this.unknownLicensePlate && !!this.vehicleType;
-  }
-
-  selectBackgroundLayer(layer: BackgroundLayer) {
-    this.activeBackgroundLayer.set(layer.key);
-    this.changeBackgroundLayer.emit(layer.key);
   }
 
   toggleTrafficSigns() {

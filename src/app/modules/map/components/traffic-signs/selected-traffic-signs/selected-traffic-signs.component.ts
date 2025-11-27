@@ -36,16 +36,18 @@ export class SelectedTrafficSignsComponent implements OnInit {
 
   streetviewUrl = computed(
     () =>
-      `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${this.trafficSign()?.lnglat
-        ?.lat},${this.trafficSign()?.lnglat?.lng}`,
+      `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${
+        this.trafficSign()?.lnglat?.lat
+      },${this.trafficSign()?.lnglat?.lng}`,
   );
   georgeTrafficSignUrl = computed(
     () => `${environment.georgeUrl}/kaart/verkeersborden/${this.trafficSign()?.id}?zoom=true`,
   );
   georgeRoadSectionUrl = computed(() => {
     return this.trafficSign()?.roadSectionId
-      ? `${environment.georgeUrl}/kaart/wegvakken/${this.trafficSign()
-          ?.roadSectionId}/kenmerken/maximumsnelheid?zoom=true`
+      ? `${environment.georgeUrl}/kaart/wegvakken/${
+          this.trafficSign()?.roadSectionId
+        }/kenmerken/maximumsnelheid?zoom=true`
       : undefined;
   });
   rvvExemptionUrl = computed(() => {

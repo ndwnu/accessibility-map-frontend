@@ -20,19 +20,15 @@ import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-
 import { BrtElement } from '@modules/map/elements/brt/brt-element';
 import { AerialElement } from '@modules/map/elements/aerial/aerial-element';
 import { AccessibilityDataService, DestinationDataService, TrafficSignService } from '@shared/services';
-import { NavigationControl } from 'maplibre-gl';
 
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs';
+import { MapBackgroundOption, MapDisplayComponent, MapButtonComponent } from '@ndwnu/design-system';
 
-const zoneCodeNames = {
-  ZB: 'BEGIN',
-  ZE: 'END',
-  ZH: 'REPEAT',
-};
+const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
 
 @Component({
   selector: 'ber-main-map',
-  imports: [ControlPanelComponent, SelectedTrafficSignsComponent],
+  imports: [ControlPanelComponent, SelectedTrafficSignsComponent, MapDisplayComponent, MapButtonComponent],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
 })
@@ -49,6 +45,11 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
   popupRef = viewChild.required<TemplateRef<SelectedTrafficSignsComponent>>('trafficSignsPopup');
 
   lngLat = computed(() => this.#trafficSignService.selectedTrafficSigns()?.[0].lnglat);
+
+  backgroundOptions: MapBackgroundOption[] = [
+    { id: 'brt', name: 'BRT', style: '', imageLink: 'assets/images/background-layer-icon/brt.jpg' },
+    { id: 'aerial', name: 'Luchtfoto', style: '', imageLink: 'assets/images/background-layer-icon/aerial.jpg' },
+  ];
 
   #overlayRef!: OverlayRef;
   #positionStrategy = this.#overlay.position().global();
@@ -76,8 +77,12 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     });
   }
 
-  protected override addButtons() {
-    this.map.addControl(new NavigationControl(), 'bottom-right');
+  zoomIn() {
+    this.map.zoomIn();
+  }
+
+  zoomOut() {
+    this.map.zoomOut();
   }
 
   protected async onLoadMap() {
@@ -105,9 +110,9 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.#accessibilityDataService.setShowDetailedAccessibility($event);
   }
 
-  setBackgroundLayer(key: string) {
-    this.mapElements.find((element) => element instanceof BrtElement)?.setVisible(key === 'brt');
-    this.mapElements.find((element) => element instanceof AerialElement)?.setVisible(key === 'aerial');
+  onBackgroundChange(backgroundOptions: MapBackgroundOption) {
+    this.mapElements.find((element) => element instanceof BrtElement)?.setVisible(backgroundOptions.id === 'brt');
+    this.mapElements.find((element) => element instanceof AerialElement)?.setVisible(backgroundOptions.id === 'aerial');
   }
 
   #initializeMapElements() {
