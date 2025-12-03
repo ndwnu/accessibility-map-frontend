@@ -13,14 +13,7 @@ interface BackgroundLayer {
 
 @Component({
   selector: 'ber-control-panel',
-  imports: [
-    CommonModule,
-    LegendComponent,
-    FormFieldComponent,
-    RadioGroupComponent,
-    NgOptimizedImage,
-    CheckboxComponent,
-  ],
+  imports: [CommonModule, LegendComponent, FormFieldComponent, CheckboxComponent],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss',
 })

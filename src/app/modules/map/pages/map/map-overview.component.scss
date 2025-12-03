@@ -1,15 +1,31 @@
 :host {
   height: 100svh;
+  display: block;
 }
 
 .map {
   position: relative;
   height: 100%;
+}
 
-  .spinner {
+ndw-card {
+  width: 400px;
+  height: 100dvh;
+  box-shadow: var(--ndw-elevation-popover);
+  animation: slideIn 0.3s ease-out;
+
+  ndw-card-header {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }

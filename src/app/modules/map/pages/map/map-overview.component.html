@@ -1,15 +1,24 @@
 <div class="map">
-  <ber-main-map #map [expressions]="expressions" (openPanel)="open(content)" [showControlPanel]="showControlPanel()" />
+  <ber-main-map
+    #map
+    [expressions]="expressions"
+    (openPanel)="open(drawerContent)"
+    [showControlPanel]="showControlPanel()"
+  />
 </div>
 
 <ber-user-vehicle-form (modalClosed)="showControlPanel.set(true)" />
 
-<ng-template #content let-offcanvas>
-  <div class="offcanvas-header">
-    <h2 class="offcanvas-title" id="offcanvas-basic-title">Bereikbaarheid</h2>
-    <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
-  </div>
-  <div class="offcanvas-body">
-    <ber-user-vehicle-summary (closed)="close()" />
-  </div>
+<ng-template #drawerContent>
+  <ndw-card>
+    <ndw-card-header>
+      <h2>Bereikbaarheid</h2>
+      <button ndwButton secondary alternative type="button" title="Sluiten" (click)="close()">
+        <ndw-icon>close</ndw-icon>
+      </button></ndw-card-header
+    >
+    <ndw-card-content>
+      <ber-user-vehicle-summary (closed)="close()" />
+    </ndw-card-content>
+  </ndw-card>
 </ng-template>
