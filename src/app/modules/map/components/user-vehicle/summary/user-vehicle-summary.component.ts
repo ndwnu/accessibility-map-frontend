@@ -2,21 +2,22 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, inject, output, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
-import { CardComponent, IconComponent, PopoverTriggerDirective, ToastService } from '@ndwnu/design-system';
+import { IconComponent, PopoverTriggerDirective, ToastService } from '@ndwnu/design-system';
 import { DataInputFormGroup } from '@shared/models';
-import { AccessibilityDataService, MunicipalityService, TrafficSignService } from '@shared/services';
+import { AccessibilityDataService, MunicipalityService, PdokLookupService, TrafficSignService } from '@shared/services';
 import { FileDownloadService } from '@shared/services/file-download.service';
 import { map } from 'rxjs';
 
 @Component({
   selector: 'ber-user-vehicle-summary',
-  imports: [CommonModule, IconComponent, DecimalPipe, PopoverTriggerDirective, CardComponent],
+  imports: [CommonModule, IconComponent, DecimalPipe, PopoverTriggerDirective],
   templateUrl: './user-vehicle-summary.component.html',
   styleUrl: './user-vehicle-summary.component.scss',
 })
 export class UserVehicleSummaryComponent {
   closed = output<void>();
 
+  readonly #pdokLookupService = inject(PdokLookupService);
   private readonly municipalityService = inject(MunicipalityService);
   private readonly dataInputService = inject(DataInputService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
@@ -59,17 +60,11 @@ export class UserVehicleSummaryComponent {
   // StepTwoForm
 
   get municipalityId(): string {
-    return this.dataInputService.municipalityId;
+    return this.#pdokLookupService.municipalityId() ?? '';
   }
-
   get destination(): string {
-    return this.dataInputService.address;
+    return this.#pdokLookupService.pdokLookup()?.weergavenaam ?? '';
   }
-
-  get pdokData() {
-    return this.dataInputService.pdokData;
-  }
-
   get municipalityName(): string {
     return this.municipalityService.getMunicipality(this.municipalityId)?.properties.name ?? '';
   }

@@ -87,38 +87,6 @@ export class DataInputService {
     return this.municipalityIdControl?.value ?? '';
   }
 
-  get addressControl() {
-    return this.stepTwoForm.get('address')!;
-  }
-
-  get address() {
-    return this.addressControl?.value ?? '';
-  }
-
-  get pdokIdControl() {
-    return this.stepTwoForm.get('pdokId')!;
-  }
-
-  get pdokId() {
-    return this.pdokIdControl?.value ?? '';
-  }
-
-  get pdokDataControl() {
-    return this.stepTwoForm.get('pdokData')!;
-  }
-
-  get pdokData() {
-    return this.pdokDataControl?.value;
-  }
-
-  get latitudeControl() {
-    return this.stepTwoForm.get('latitude')!;
-  }
-
-  get longitudeControl() {
-    return this.stepTwoForm.get('longitude')!;
-  }
-
   // StepThreeForm
 
   get vehicleCurbWeightControl() {
@@ -210,12 +178,7 @@ export class DataInputService {
         [this.eitherVehicleTypeOrLicensePlate()],
       ),
       stepTwo: new FormGroup<StepTwoFormGroup>({
-        pdokId: new FormControl(null, Validators.required),
         municipalityId: new FormControl(null, Validators.required),
-        address: new FormControl(null, Validators.required),
-        pdokData: new FormControl(null),
-        latitude: new FormControl(null),
-        longitude: new FormControl(null),
       }),
 
       stepThree: new FormGroup<StepThreeFormGroup>({

@@ -1,8 +1,9 @@
 @use '@angular/cdk/a11y-prebuilt.css';
 @use '@angular/cdk/overlay-prebuilt.css';
+@use 'reset';
 @use 'abstracts';
 @use 'components/input';
-@use 'vendors/bootstrap';
+@use 'utilities/layout';
 
 body {
   font-family: var(--ndw-font-family-body);

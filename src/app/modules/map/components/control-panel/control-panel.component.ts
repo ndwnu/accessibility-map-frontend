@@ -1,9 +1,9 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, computed, inject, output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, output, signal } from '@angular/core';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { LegendComponent } from '@modules/map/components/legend/legend.component';
-import { CheckboxComponent, FormFieldComponent, RadioGroupComponent } from '@ndwnu/design-system';
-import { AccessibilityDataService } from '@shared/services';
+import { CheckboxComponent, FormFieldComponent } from '@ndwnu/design-system';
+import { AccessibilityDataService, PdokLookupService } from '@shared/services';
 
 interface BackgroundLayer {
   name: string;
@@ -20,6 +20,7 @@ interface BackgroundLayer {
 export class ControlPanelComponent {
   private readonly dataInputService = inject(DataInputService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
+  readonly #pdokLookupService = inject(PdokLookupService);
 
   openModal = output();
   showTrafficSignsLayer = output<boolean>();
@@ -31,15 +32,11 @@ export class ControlPanelComponent {
   filterContainsCoordinates$ = this.accessibilityDataService.filterContainsCoordinates$;
 
   get isAddressControlDirty() {
-    return this.dataInputService.addressControl.dirty;
+    return this.dataInputService.municipalityIdControl.dirty;
   }
 
   get address(): string {
-    return this.dataInputService.address;
-  }
-
-  get hasLatitudeLongitude() {
-    return !!this.dataInputService.latitudeControl.value && !!this.dataInputService.longitudeControl.value;
+    return this.#pdokLookupService.pdokLookup()?.weergavenaam || '';
   }
 
   get isLicensePlateControlDirty() {

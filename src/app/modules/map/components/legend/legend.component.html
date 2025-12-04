@@ -1,23 +1,21 @@
-<div class="legend d-flex flex-column gap-2">
-  @for (item of legendItems(); track item.name) {
-    <div class="row">
-      <div class="col-2">
-        @if (item.img) {
-          <img [ngSrc]="item.img" width="24" height="24" [alt]="item.name" class="legend__image" />
-        } @else {
-          <div
-            class="legend__line"
-            [style.background-color]="item.color"
-            [style.border-color]="item.outlineColor"
-          ></div>
-        }
-      </div>
-      <div class="item col-10 d-flex flex-column">
-        <span class="item__name">{{ item.name }}</span>
-        @if (item.subTitle) {
-          <small class="item__subtitle">{{ item.subTitle }}</small>
-        }
-      </div>
+@for (item of legendItems(); track item.name) {
+  <div class="legend-item">
+    <div class="legend-item__icon">
+      @if (item.img) {
+        <img [ngSrc]="item.img" width="24" height="24" [alt]="item.name" class="legend__image" />
+      } @else {
+        <div
+          class="legend-item__line"
+          [style.background-color]="item.color"
+          [style.border-color]="item.outlineColor"
+        ></div>
+      }
     </div>
-  }
-</div>
+    <div class="legend-item__description">
+      <span class="legend-item__name">{{ item.name }}</span>
+      @if (item.subTitle) {
+        <small class="legend-item__subtitle">{{ item.subTitle }}</small>
+      }
+    </div>
+  </div>
+}

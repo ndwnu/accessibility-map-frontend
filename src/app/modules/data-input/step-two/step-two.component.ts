@@ -1,28 +1,32 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '@env/environment';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import {
+  AutosuggestPanelComponent,
+  AutosuggestDirective,
+  AutosuggestOption,
   CardComponent,
   CardContentComponent,
   CardFooterComponent,
   CardHeaderComponent,
   FormFieldComponent,
   InputDirective,
+  AlertComponent,
 } from '@ndwnu/design-system';
 import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepTwoFormGroup } from '@shared/models';
-import { PdokLookup, PdokSuggestion } from '@shared/models/pdok.model';
-import { PdokService } from '@shared/services/pdok.service';
-import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
+import { PdokSuggestion } from '@shared/models/pdok.model';
 import { ActionsComponent } from '../actions';
-import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
+import { PdokSuggestionService } from '@shared/services/pdok-suggestion.service';
+import { PdokLookupService } from '@shared/services/pdok-lookup.service';
 
 @Component({
   selector: 'ber-step-two',
   imports: [
     ActionsComponent,
+    AutosuggestPanelComponent,
+    AutosuggestDirective,
     CardComponent,
     CardContentComponent,
     CardFooterComponent,
@@ -31,47 +35,55 @@ import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
     FormFieldComponent,
     InputDirective,
     ReactiveFormsModule,
+    AlertComponent,
   ],
   templateUrl: './step-two.component.html',
   styleUrl: './step-two.component.scss',
 })
 export class StepTwoComponent implements OnInit {
+  pdokSuggestionService = inject(PdokSuggestionService);
+  pdokLookupService = inject(PdokLookupService);
+  private dataInputService = inject(DataInputService);
+
   form = input.required<FormGroup<StepTwoFormGroup>>();
+  autosuggestOptions = computed<AutosuggestOption[]>(() => {
+    return this.pdokSuggestionService.pdokSuggestions().map((suggestion: PdokSuggestion) => ({
+      label: suggestion.weergavenaam,
+      value: suggestion.id,
+    }));
+  });
+  noResultText = computed(() => {
+    const response = this.pdokSuggestionService.pdokSuggestionResponse;
+    const searchLength = this.pdokSuggestionService.enteredSearch().length;
+    const suggestionsLength = this.pdokSuggestionService.pdokSuggestions().length;
+
+    if (searchLength < 3) {
+      return 'Voer minimaal 3 karakters in om te zoeken';
+    }
+
+    if (response.isLoading()) {
+      return 'Gegevens worden geladen...';
+    }
+
+    if (response.error()) {
+      return 'Er is een fout opgetreden bij het ophalen van zoekresultaten';
+    }
+
+    if (suggestionsLength === 0) {
+      return 'Er kan geen gemeente of adres worden gevonden met die naam';
+    }
+
+    return '';
+  });
+
+  lookupIsLoading = computed(() => this.pdokLookupService.pdokLookupResponse.isLoading());
+  lookupError = computed(() => this.pdokLookupService.pdokLookupResponse.error());
 
   next = output<void>();
   previous = output<void>();
 
-  loading = false;
-  pdokSuggestions?: PdokSuggestion[];
-
-  private cdr = inject(ChangeDetectorRef);
-  private destroyRef = inject(DestroyRef);
-
-  private dataInputService = inject(DataInputService);
-  private pdokService = inject(PdokService);
-
   get municipalityId() {
     return this.dataInputService.municipalityIdControl;
-  }
-
-  get address() {
-    return this.dataInputService.addressControl;
-  }
-
-  get pdokId() {
-    return this.dataInputService.pdokIdControl;
-  }
-
-  get pdokData() {
-    return this.dataInputService.pdokDataControl;
-  }
-
-  get latitude() {
-    return this.dataInputService.latitudeControl;
-  }
-
-  get longitude() {
-    return this.dataInputService.longitudeControl;
   }
 
   ngOnInit() {
@@ -79,62 +91,19 @@ export class StepTwoComponent implements OnInit {
       // const mockMunicipalityId = 'weg-91b90ecfed6d8e269987da70c7176803'; // Default: "Gemeente Amsterdam"
       // const mockRoadId = 'weg-91b90ecfed6d8e269987da70c7176803'; // Default: "Sint Jorisstraat, Amsterdam"
       const mockAddressId = 'adr-aa20cec20ce96eb1584903803c5936e2'; // Default: "Archimedeslaan 6, 3584BA Utrecht"
-      this.selectPdokSuggestion(mockAddressId);
+      this.pdokLookupService.selectedSuggestionId.set(mockAddressId);
     }
 
     this.form().markAsPristine();
-    this.address.valueChanges
-      .pipe(
-        tap((_term) => this.emptyStepTwo()),
-        filter((term) => !!term && term.length > 2),
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((term) => {
-          this.loading = true;
-          this.pdokSuggestions = undefined;
-          return this.pdokService.getSuggestions(term!);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((res) => {
-        this.loading = false;
-        this.pdokSuggestions = res.response.docs;
-        this.cdr.detectChanges();
-      });
   }
 
-  private emptyStepTwo() {
-    this.municipalityId.setValue(null);
-    this.pdokId.setValue(null);
-    this.pdokData.setValue(null);
-    this.latitude.setValue(null);
-    this.longitude.setValue(null);
+  addressSearchChanged(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.pdokSuggestionService.enteredSearch.set(input.value);
   }
 
-  private updateFormValues(pdokData: PdokLookup) {
-    this.pdokId.setValue(pdokData.id);
-    this.pdokData.setValue(pdokData);
-    this.municipalityId.setValue(`GM${pdokData.gemeentecode}`);
-    this.address.setValue(pdokData.weergavenaam, { emitEvent: false });
-    if (pdokData?.type !== 'gemeente') {
-      const centerPoint = extractPdokLngLatValue(pdokData.centroide_ll);
-      this.latitude.setValue(centerPoint[1]);
-      this.longitude.setValue(centerPoint[0]);
-    }
-  }
-
-  selectPdokSuggestion(pdokId: string) {
-    this.loading = true;
-    this.pdokSuggestions = undefined;
-    this.pdokService
-      .getPointData(pdokId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((res) => {
-        const firstResult = res.response.docs[0];
-        this.updateFormValues(firstResult);
-        this.loading = false;
-        this.cdr.detectChanges();
-      });
+  onOptionSelected(option: AutosuggestOption | null) {
+    this.pdokLookupService.selectedSuggestionId.set(option ? (option.value as string) : undefined);
   }
 
   onNext() {

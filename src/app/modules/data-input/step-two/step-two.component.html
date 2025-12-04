@@ -5,34 +5,40 @@
 
   <ndw-card-content>
     <div class="content">
-      <form [formGroup]="form()">
+      <form>
         <ndw-form-field label="Selecteer de gemeente of het adres van uw bestemming">
-          <input ndwInput formControlName="address" type="search" placeholder="Voer gemeente of adres in" />
+          <input
+            ndwInput
+            type="search"
+            placeholder="Voer gemeente of adres in"
+            [ndwAutosuggest]="autoSuggestPanel"
+            (input)="addressSearchChanged($event)"
+            [value]="pdokLookupService.pdokLookup()?.weergavenaam"
+          />
+          <ndw-autosuggest
+            #autoSuggestPanel
+            [options]="autosuggestOptions()"
+            [noResultText]="noResultText()"
+            (optionSelected)="onOptionSelected($event)"
+          />
         </ndw-form-field>
-
-        @if (loading) {
-          <span>Loading...</span>
-        }
-
-        <ul class="list-group pdok-suggestion-list">
-          @for (suggestion of pdokSuggestions; track suggestion.id) {
-            <li class="list-group-item pdok-suggestion" (click)="selectPdokSuggestion(suggestion.id)">
-              {{ suggestion.weergavenaam }}
-            </li>
-          }
-        </ul>
-
-        @if (pdokSuggestions?.length === 0) {
-          <span>Er kan geen gemeente of adres worden gevonden met die naam</span>
-        }
       </form>
+      <small>
+        {{ lookupIsLoading() ? 'Laden...' : '' }}
+      </small>
     </div>
+    @if (lookupError()) {
+      <ndw-alert type="critical">
+        Er is een fout opgetreden bij het ophalen van de gegevens. Probeer het later opnieuw.
+      </ndw-alert>
+    }
   </ndw-card-content>
 
   <ndw-card-footer>
     <ber-actions
       [currentStep]="2"
-      [disableNext]="form().invalid"
+      [disableNext]="!pdokLookupService.pdokLookup()"
+      [isLoading]="lookupIsLoading()"
       [steps]="3"
       (next)="onNext()"
       (previous)="onPrevious()"

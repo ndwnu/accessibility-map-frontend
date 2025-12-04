@@ -1,5 +1,13 @@
 :host {
-  .legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ndw-spacing-xs);
+
+  .legend-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--ndw-spacing-sm);
+
     &__line {
       width: var(--ndw-spacing-lg);
       height: var(--ndw-spacing-sm);
@@ -11,11 +19,14 @@
       width: var(--ndw-spacing-lg);
       height: var(--ndw-spacing-lg);
     }
-  }
 
-  .item {
+    &__description {
+      align-self: center;
+      display: grid;
+    }
+
     &__subtitle {
-      color: var(--ndw-color-grey-400);
+      color: var(--ndw-color-grey-500);
     }
   }
 }

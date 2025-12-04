@@ -10,6 +10,8 @@ import {
 } from '@shared/models';
 import { BehaviorSubject, forkJoin, map, Observable, shareReplay, Subject } from 'rxjs';
 import { CalculatedAccessibility } from '@shared/models/calculated.accessibility';
+import { PdokLookupService } from '@shared/services/pdok-lookup.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 export function isAccessibleSection(section: InaccessibleRoadSection): boolean {
   return !!section.forwardAccessible || !!section.backwardAccessible;
@@ -19,12 +21,11 @@ export function isAccessibleSection(section: InaccessibleRoadSection): boolean {
   providedIn: 'root',
 })
 export class AccessibilityDataService {
-  private readonly _dataInputService = inject(DataInputService);
+  readonly #pdokLookupService = inject(PdokLookupService);
   private readonly _http = inject(HttpClient);
   baseURL = environment.ndw.accessibilityUrl;
 
-  private readonly selectedMunicipalityId = new BehaviorSubject<string | undefined>(undefined);
-  selectedMunicipalityId$ = this.selectedMunicipalityId.asObservable();
+  selectedMunicipalityId$ = toObservable(this.#pdokLookupService.municipalityId);
 
   private readonly inaccessibleRoadSections = new BehaviorSubject<CalculatedAccessibility[]>([]);
   inaccessibleRoadSections$ = this.inaccessibleRoadSections.asObservable();
@@ -41,7 +42,7 @@ export class AccessibilityDataService {
 
   roadSectionInaccessible$ = this.matchedRoadSection$.pipe(
     map((roadSection) => !roadSection?.backwardAccessible && !roadSection?.forwardAccessible),
-    map((inaccessible) => inaccessible && this._dataInputService.pdokData?.type !== 'gemeente'),
+    map((inaccessible) => inaccessible && this.#pdokLookupService.pdokLookup()?.type !== 'gemeente'),
   );
 
   showDisclaimer$ = new Subject<void>();
@@ -143,10 +144,6 @@ export class AccessibilityDataService {
 
   setRoadOperator(roadOperator: RoadOperator) {
     this.roadOperator.next(roadOperator);
-  }
-
-  setSelectedMunicipalityId(municipalityId: string) {
-    this.selectedMunicipalityId.next(municipalityId);
   }
 
   setShowDetailedAccessibility(showDetailedAccessibility: boolean) {

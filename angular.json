@@ -39,7 +39,7 @@
               "node_modules/@ndwnu/design-system/styles/index.scss"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/assets/styles", "node_modules/bootstrap"]
+              "includePaths": ["src/assets/styles"]
             },
             "scripts": []
           },

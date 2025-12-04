@@ -14,11 +14,6 @@ export interface StepOneFormGroup {
 
 export interface StepTwoFormGroup {
   municipalityId: FormControl<string | null>;
-  address: FormControl<string | null>;
-  pdokId: FormControl<string | null>;
-  pdokData: FormControl<PdokLookup | null>;
-  latitude: FormControl<number | null>;
-  longitude: FormControl<number | null>;
 }
 
 export interface StepThreeFormGroup {

@@ -13,6 +13,7 @@ ndw-card {
   height: 100dvh;
   box-shadow: var(--ndw-elevation-popover);
   animation: slideIn 0.3s ease-out;
+  grid-template-rows: auto 1fr;
 
   ndw-card-header {
     display: flex;

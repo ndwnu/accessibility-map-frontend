@@ -12,13 +12,10 @@
 <div class="steps">
   <!-- Step 1 -->
   <div class="steps__header">
-    <div class="d-flex justify-content-between">
-      <span>Stap 1, Voertuig</span>
-      <button (click)="onEditStep(1)" class="link-button" aria-label="Wijzig de invoer van stap 1, uw voertuig">
-        wijzig
-      </button>
-    </div>
-    <hr />
+    <span>Stap 1, Voertuig</span>
+    <button (click)="onEditStep(1)" class="link-button" aria-label="Wijzig de invoer van stap 1, uw voertuig">
+      wijzig
+    </button>
   </div>
   <table>
     <tbody>
@@ -49,17 +46,10 @@
 
   <!-- Step 2 -->
   <div class="steps__header mt-4">
-    <div class="d-flex justify-content-between">
-      <span>Stap 2, Gemeente</span>
-      <button
-        (click)="onEditStep(2)"
-        class="link-button"
-        aria-label="Wijzig de invoer van stap 2, uw gemeente selectie"
-      >
-        wijzig
-      </button>
-    </div>
-    <hr />
+    <span>Stap 2, Gemeente</span>
+    <button (click)="onEditStep(2)" class="link-button" aria-label="Wijzig de invoer van stap 2, uw gemeente selectie">
+      wijzig
+    </button>
   </div>
   <table>
     <tbody>
@@ -72,13 +62,10 @@
 
   <!-- Step 3 -->
   <div class="steps__header mt-4">
-    <div class="d-flex justify-content-between">
-      <span>Stap 3, Voertuigdetails</span>
-      <button (click)="onEditStep(3)" class="link-button" aria-label="Wijzig de invoer van stap 3, uw voertuigdetails">
-        wijzig
-      </button>
-    </div>
-    <hr />
+    <span>Stap 3, Voertuigdetails</span>
+    <button (click)="onEditStep(3)" class="link-button" aria-label="Wijzig de invoer van stap 3, uw voertuigdetails">
+      wijzig
+    </button>
   </div>
   <table>
     <tbody>
@@ -125,22 +112,20 @@
 @if (roadOperatorRequestExemptionUrl$ | async; as requestExemptionUrl) {
   <h5 class="mt-5">Ontheffing aanvragen?</h5>
   <p class="mb-0">Vraag hier een RVV-ontheffing aan voor {{ (roadOperator$ | async)?.roadOperatorName }}:</p>
-  <div class="d-flex flex-row-reverse">
-    <a ndwButton secondary [href]="requestExemptionUrl" target="_blank">Ontheffing aanvragen</a>
-  </div>
+  <a ndwButton secondary [href]="requestExemptionUrl" target="_blank">Ontheffing aanvragen</a>
 }
 
-<div class="d-flex justify-content-between mt-5">
+<div class="actions">
   <button ndwButton secondary [ndwPopoverTrigger]="download" [popoverPosition]="'nextToTriggerButton'">
     <ndw-icon>download</ndw-icon>
     Download
   </button>
-  <div class="d-flex gap-2">
+  <div>
     <button ndwButton secondary (click)="startWithNewInput()">Begin opnieuw</button>
     <button ndwButton (click)="emitClose()">Bekijk kaart</button>
   </div>
   <ng-template #download>
-    <ndw-card>
+    <div class="download">
       <button class="list-item" (click)="downloadTrafficSigns()" [disabled]="loadingTrafficSigns()">
         <ndw-icon>{{ loadingTrafficSigns() ? 'hourglass_top' : 'directions' }}</ndw-icon>
         Data verkeersborden
@@ -149,6 +134,6 @@
         <ndw-icon>{{ loadingRoadSections() ? 'hourglass_top' : 'remove_road' }}</ndw-icon>
         Data niet toegankelijke wegen
       </button>
-    </ndw-card>
+    </div>
   </ng-template>
 </div>

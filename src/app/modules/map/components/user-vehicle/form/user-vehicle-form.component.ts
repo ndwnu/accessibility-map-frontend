@@ -29,7 +29,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
-import { AccessibilityDataService, MapService, MunicipalityService } from '@shared/services';
+import { AccessibilityDataService, MapService, MunicipalityService, PdokLookupService } from '@shared/services';
 import { DestinationDataService } from '@shared/services/destination-data.service';
 import { RoadOperatorService } from '@shared/services/road-operator.service';
 import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
@@ -55,6 +55,7 @@ export class UserVehicleFormComponent implements OnInit {
   private readonly overlay = inject(Overlay);
   private readonly viewContainerRef = inject(ViewContainerRef);
 
+  readonly #pdokLookupService = inject(PdokLookupService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly dataInputService = inject(DataInputService);
   private readonly destinationDataService = inject(DestinationDataService);
@@ -138,7 +139,6 @@ export class UserVehicleFormComponent implements OnInit {
             ezResponse.inaccessibleRoadSections,
           );
           this.accessibilityDataService.setMatchedRoadSection(response.matchedRoadSection);
-          this.accessibilityDataService.setSelectedMunicipalityId(this.dataInputService.municipalityId);
           this.zoomToDestination();
           return response.matchedRoadSection;
         }),
@@ -265,8 +265,10 @@ export class UserVehicleFormComponent implements OnInit {
 
   private mapFormToFilterCriteria(): AccessibilityFilter {
     const { stepOne, stepTwo, stepThree } = this.form.getRawValue();
+    const municipalityId = this.#pdokLookupService.pdokLookup()?.gemeentecode;
+    const centerPoint = this.#pdokLookupService.centerPoint();
     return {
-      municipalityId: stepTwo.municipalityId!,
+      municipalityId: municipalityId ? `GM${municipalityId}` : '',
       vehicleType: mapToNlsVehicleType(stepOne.vehicleType!),
       vehicleLength: stepThree.vehicleLength!,
       vehicleWidth: stepThree.vehicleWidth!,
@@ -274,8 +276,8 @@ export class UserVehicleFormComponent implements OnInit {
       vehicleWeight: stepThree.vehicleTotalWeight! / 1000,
       vehicleAxleLoad: stepThree.vehicleAxleLoad! / 1000,
       vehicleHasTrailer: stepOne.trailer!,
-      latitude: stepTwo.latitude ?? undefined,
-      longitude: stepTwo.longitude ?? undefined,
+      latitude: centerPoint ? centerPoint[1] : undefined,
+      longitude: centerPoint ? centerPoint[0] : undefined,
       emissionClass: stepThree.vehicleEmissionClass ?? undefined,
       fuelTypes: stepThree.vehicleFuelTypes ?? undefined,
     };
@@ -287,17 +289,17 @@ export class UserVehicleFormComponent implements OnInit {
   }
 
   private zoomToDestination() {
-    const chosenMunicipality = this.municipalityService.getMunicipality(this.dataInputService.municipalityId);
+    const chosenMunicipality = this.municipalityService.getMunicipality(this.#pdokLookupService.municipalityId()!);
     if (!chosenMunicipality) throw Error('Municipality is required');
 
     // Always set max bounds, as every destination always has a municipality
     this.mapService.setMaxBounds(chosenMunicipality.properties.bounds);
+    const pdokLookup = this.#pdokLookupService.pdokLookup();
+    if (!pdokLookup) return;
 
-    if (!this.dataInputService.pdokData) return;
+    const centerPoint = extractPdokLngLatValue(pdokLookup.centroide_ll);
 
-    const centerPoint = extractPdokLngLatValue(this.dataInputService.pdokData.centroide_ll);
-
-    if (this.dataInputService.pdokData.type !== 'gemeente') {
+    if (pdokLookup.type !== 'gemeente') {
       this.destinationDataService.setDestinationPoint(centerPoint);
       this.mapService.jumpTo(centerPoint as LngLatLike);
     } else {
