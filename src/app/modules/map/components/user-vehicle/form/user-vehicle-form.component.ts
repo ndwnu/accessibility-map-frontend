@@ -3,6 +3,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 
 import {
   Component,
+  DestroyRef,
   effect,
   inject,
   OnInit,
@@ -12,6 +13,7 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { environment } from '@env/environment';
 import {
@@ -25,7 +27,6 @@ import {
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
 import { ToastService } from '@ndwnu/design-system';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
@@ -36,7 +37,6 @@ import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
 import { LngLatLike } from 'maplibre-gl';
 import { delay, map, switchMap } from 'rxjs';
 
-@UntilDestroy()
 @Component({
   selector: 'ber-user-vehicle-form',
   imports: [DisclaimerCardComponent, StepOneComponent, StepThreeComponent, StepTwoComponent],
@@ -56,6 +56,7 @@ export class UserVehicleFormComponent implements OnInit {
   private readonly viewContainerRef = inject(ViewContainerRef);
 
   readonly #pdokLookupService = inject(PdokLookupService);
+  readonly #destroyRef = inject(DestroyRef);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly dataInputService = inject(DataInputService);
   private readonly destinationDataService = inject(DestinationDataService);
@@ -146,7 +147,7 @@ export class UserVehicleFormComponent implements OnInit {
         switchMap((matchedRoadSection) =>
           this.roadOperatorService.loadRoadOperators().pipe(map(() => matchedRoadSection)),
         ),
-        untilDestroyed(this),
+        takeUntilDestroyed(this.#destroyRef),
       )
       .subscribe({
         next: (matchedRoadSection) => {

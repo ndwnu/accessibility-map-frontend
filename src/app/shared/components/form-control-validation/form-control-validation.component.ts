@@ -1,8 +1,15 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  Input,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-@UntilDestroy()
 @Component({
   selector: 'ber-form-control-validation',
   templateUrl: './form-control-validation.component.html',
@@ -11,6 +18,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 })
 export class FormControlValidationComponent implements AfterViewInit {
   private readonly cdr = inject(ChangeDetectorRef);
+  readonly #destroyRef = inject(DestroyRef);
   @Input() control!: FormControl | AbstractControl | null;
   get errorMessage(): string {
     if (!this.error) return '';
@@ -31,7 +39,7 @@ export class FormControlValidationComponent implements AfterViewInit {
   };
 
   ngAfterViewInit() {
-    this.control?.statusChanges.pipe(untilDestroyed(this)).subscribe(() => {
+    this.control?.statusChanges.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe(() => {
       if (!this.control) return;
 
       this.error = undefined;

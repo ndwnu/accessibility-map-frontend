@@ -1,6 +1,5 @@
 import { Component, signal, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 import { MainMapComponent } from '@modules/map/components/main-map/main-map.component';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { FilterSpecification } from 'maplibre-gl';
 import { UserVehicleSummaryComponent } from '@modules/map/components/user-vehicle/summary/user-vehicle-summary.component';
 import { UserVehicleFormComponent } from '@modules/map/components/user-vehicle/form/user-vehicle-form.component';
@@ -9,7 +8,6 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CardHeaderComponent, CardComponent, CardContentComponent, IconComponent } from '@ndwnu/design-system';
 
-@UntilDestroy()
 @Component({
   selector: 'ber-map',
   imports: [

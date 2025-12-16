@@ -23,13 +23,11 @@ import {
   CheckboxComponent,
   FormFieldComponent,
 } from '@ndwnu/design-system';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FeedbackHeaderComponent } from '@shared/components/feedback-header';
 import { StepOneFormGroup, VehicleInfo } from '@shared/models';
 import { RdwService } from '@shared/services';
 import { ActionsComponent } from '../actions';
 
-@UntilDestroy()
 @Component({
   selector: 'ber-step-one',
   imports: [
@@ -142,7 +140,7 @@ export class StepOneComponent implements OnInit {
 
     this.rdwService
       .getVehicleInfo(licensePlate)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((vehicleInfo) => {
         if (!this.isValidLicensePlate(vehicleInfo)) {
           return;
