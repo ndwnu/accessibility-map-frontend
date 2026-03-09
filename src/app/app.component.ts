@@ -3,7 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LayoutComponent, MenuItem } from '@ndwnu/design-system';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
-import { AccessibilityDataService, MunicipalityService } from '@shared/services';
+import { AccessibilityDataOldService, MunicipalityService } from '@shared/services';
 
 @Component({
   selector: 'ber-root',
@@ -14,7 +14,7 @@ import { AccessibilityDataService, MunicipalityService } from '@shared/services'
 export class AppComponent implements OnInit {
   readonly #overlay = inject(Overlay);
 
-  readonly #accessibilityDataService = inject(AccessibilityDataService);
+  readonly #accessibilityDataService = inject(AccessibilityDataOldService);
   readonly #municipalityService = inject(MunicipalityService);
 
   private overlayRef!: OverlayRef;

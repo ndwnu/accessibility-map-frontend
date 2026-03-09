@@ -4,7 +4,13 @@ import { FormGroup } from '@angular/forms';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { IconComponent, PopoverTriggerDirective, ToastService } from '@ndwnu/design-system';
 import { DataInputFormGroup } from '@shared/models';
-import { AccessibilityDataService, MunicipalityService, PdokLookupService, TrafficSignService } from '@shared/services';
+import {
+  AccessibilityDataOldService,
+  AccessibilityDataService,
+  MunicipalityService,
+  PdokLookupService,
+  TrafficSignService,
+} from '@shared/services';
 import { FileDownloadService } from '@shared/services/file-download.service';
 import { map } from 'rxjs';
 
@@ -20,6 +26,7 @@ export class UserVehicleSummaryComponent {
   readonly #pdokLookupService = inject(PdokLookupService);
   private readonly municipalityService = inject(MunicipalityService);
   private readonly dataInputService = inject(DataInputService);
+  private readonly accessibilityDataOldService = inject(AccessibilityDataOldService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly trafficSignService = inject(TrafficSignService);
   private readonly toastService = inject(ToastService);
@@ -27,7 +34,7 @@ export class UserVehicleSummaryComponent {
   loadingRoadSections = signal(false);
   loadingTrafficSigns = signal(false);
 
-  roadOperator$ = this.accessibilityDataService.roadOperator$;
+  roadOperator$ = this.accessibilityDataOldService.roadOperator$;
   roadOperatorRequestExemptionUrl$ = this.roadOperator$?.pipe(map((roadOperator) => roadOperator?.requestExemptionUrl));
 
   get form(): FormGroup<DataInputFormGroup> {
@@ -107,7 +114,6 @@ export class UserVehicleSummaryComponent {
   startWithNewInput() {
     this.dataInputService.resetForm();
     this.dataInputService.setActiveStep(1);
-    this.accessibilityDataService.setMatchedRoadSection(undefined);
     this.emitClose();
   }
 
@@ -123,15 +129,15 @@ export class UserVehicleSummaryComponent {
   }
 
   downloadRoadSections() {
-    const filter = this.accessibilityDataService.filter;
+    const filter = this.accessibilityDataOldService.filter;
     if (!filter) {
       return;
     }
     this.loadingRoadSections.set(true);
-    this.accessibilityDataService.getInaccessibleRoadSections(filter, true).subscribe({
-      next: ([rvv, ez]) => {
+    this.accessibilityDataService.getRoadAccessibility(filter).subscribe({
+      next: (featureCollection) => {
         FileDownloadService.downloadFile(
-          new Blob([JSON.stringify({ rvv, ez })]),
+          new Blob([JSON.stringify(featureCollection)]),
           this.#getFileName('wegvakken'),
           'application/json',
         );
@@ -147,8 +153,8 @@ export class UserVehicleSummaryComponent {
 
   downloadTrafficSigns() {
     this.loadingTrafficSigns.set(true);
-    const filter = this.accessibilityDataService.filter;
-    const vehicleSpecificRvvCodes = this.accessibilityDataService.getRvvCodes(filter);
+    const filter = this.accessibilityDataOldService.filter;
+    const vehicleSpecificRvvCodes = this.accessibilityDataOldService.getRvvCodes(filter);
     this.trafficSignService.getTrafficSigns(this.municipalityId, vehicleSpecificRvvCodes).subscribe({
       next: (response) => {
         FileDownloadService.downloadFile(

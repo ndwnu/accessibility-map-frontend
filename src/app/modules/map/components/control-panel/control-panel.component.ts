@@ -2,37 +2,37 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, output, signal } from '@angular/core';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { LegendComponent } from '@modules/map/components/legend/legend.component';
-import { CheckboxComponent, FormFieldComponent } from '@ndwnu/design-system';
-import { AccessibilityDataService, PdokLookupService } from '@shared/services';
-
-interface BackgroundLayer {
-  name: string;
-  key: string;
-  active: boolean;
-}
+import { CheckboxComponent, FormFieldComponent, SwitcherComponent, SwitcherOption } from '@ndwnu/design-system';
+import {
+  AccessibilityDataOldService,
+  AccessibilityDataService,
+  DetailOption,
+  PdokLookupService,
+} from '@shared/services';
 
 @Component({
   selector: 'ber-control-panel',
-  imports: [CommonModule, LegendComponent, FormFieldComponent, CheckboxComponent],
+  imports: [CommonModule, LegendComponent, FormFieldComponent, CheckboxComponent, SwitcherComponent],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss',
 })
 export class ControlPanelComponent {
-  private readonly dataInputService = inject(DataInputService);
-  private readonly accessibilityDataService = inject(AccessibilityDataService);
+  readonly #dataInputService = inject(DataInputService);
+  readonly #accessibilityDataService = inject(AccessibilityDataService);
+  readonly #accessibilityDataOldService = inject(AccessibilityDataOldService);
   readonly #pdokLookupService = inject(PdokLookupService);
 
   openModal = output();
   showTrafficSignsLayer = output<boolean>();
-  showDetailedAccessibilityLayer = output<boolean>();
 
-  showTrafficSigns = signal(false);
-  showDetailedAccessibility = signal(false);
-  roadSectionInaccessible$ = this.accessibilityDataService.roadSectionInaccessible$;
-  filterContainsCoordinates$ = this.accessibilityDataService.filterContainsCoordinates$;
+  showTrafficSigns = signal(true);
+  showDetailedAccessibility = this.#accessibilityDataService.showDetailedAccessibility;
+  selectedDetailValue = this.#accessibilityDataService.selectedDetailValue;
+  destinationResults = this.#accessibilityDataService.destinationResults;
+  filterContainsCoordinates$ = this.#accessibilityDataOldService.filterContainsCoordinates$;
 
   get isAddressControlDirty() {
-    return this.dataInputService.municipalityIdControl.dirty;
+    return this.#dataInputService.municipalityIdControl.dirty;
   }
 
   get address(): string {
@@ -40,19 +40,19 @@ export class ControlPanelComponent {
   }
 
   get isLicensePlateControlDirty() {
-    return this.dataInputService.licensePlateControl.dirty;
+    return this.#dataInputService.licensePlateControl.dirty;
   }
 
   get licensePlate() {
-    return this.dataInputService.licensePlate;
+    return this.#dataInputService.licensePlate;
   }
 
   get unknownLicensePlate() {
-    return this.dataInputService.unknownLicensePlate;
+    return this.#dataInputService.unknownLicensePlate;
   }
 
   get vehicleType() {
-    return this.dataInputService.vehicleType;
+    return this.#dataInputService.vehicleType;
   }
 
   get isLicensePlateValid(): boolean {
@@ -63,12 +63,23 @@ export class ControlPanelComponent {
     return this.unknownLicensePlate && !!this.vehicleType;
   }
 
+  detailOptions: SwitcherOption[] = [
+    { value: DetailOption.Vehicle, label: 'Voertuig', icon: 'local_shipping' },
+    { value: DetailOption.Emission, label: 'Emissie', icon: 'nature' },
+  ];
+
+  onDetailChange(event: string) {
+    this.selectedDetailValue.set(event as DetailOption);
+  }
+
   toggleTrafficSigns() {
     this.showTrafficSigns.set(!this.showTrafficSigns());
     this.showTrafficSignsLayer.emit(this.showTrafficSigns());
   }
+
   toggleDetailedAccessibility() {
     this.showDetailedAccessibility.update((b) => !b);
-    this.showDetailedAccessibilityLayer.emit(this.showDetailedAccessibility());
+    // Also update old service for backward compatibility with AccessibilityLayer
+    this.#accessibilityDataOldService.setShowDetailedAccessibility(this.showDetailedAccessibility());
   }
 }

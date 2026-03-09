@@ -1,5 +1,4 @@
 import { LayerSpecification, Map } from 'maplibre-gl';
-
 import { MapLayer } from '../base/map-layer';
 
 export class DestinationLayer extends MapLayer {
@@ -12,11 +11,12 @@ export class DestinationLayer extends MapLayer {
       id: this.id,
       source: this.sourceId,
       type: 'symbol',
+      filter: ['==', ['geometry-type'], 'Point'],
       layout: {
-        'icon-image': ['case', ['==', ['get', 'inaccessible'], true], 'marker-negative', 'marker-positive'],
+        'icon-image': ['case', ['==', ['get', 'accessible'], false], 'marker-negative', 'marker-positive'],
         'icon-anchor': 'bottom',
         'icon-size': 0.2,
-        'text-field': ['case', ['==', ['get', 'inaccessible'], true], 'Onbereikbaar', 'Bereikbaar'],
+        'text-field': ['case', ['==', ['get', 'accessible'], false], 'Onbereikbaar', 'Bereikbaar'],
         'text-offset': [0, 1],
       },
       paint: {

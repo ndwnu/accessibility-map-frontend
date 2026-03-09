@@ -25,8 +25,8 @@ export class TrafficSignClusterLayer extends MapLayer {
       type: 'circle',
       filter: this.getFilterSpecification(),
       paint: {
-        'circle-color': ['step', ['get', 'point_count'], '#006FD3', 100, '#DD9900'],
-        'circle-radius': ['step', ['get', 'point_count'], 20, 100, 35],
+        'circle-color': '#006FD3',
+        'circle-radius': 12,
       },
     };
   }

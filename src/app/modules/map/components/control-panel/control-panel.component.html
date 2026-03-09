@@ -23,13 +23,12 @@
         </div>
       }
     </div>
-    @if ((roadSectionInaccessible$ | async) && !isAddressControlDirty) {
-      <span>{{ address }} is niet toegankelijk voor uw voertuig.</span>
-    } @else {
-      <span>{{ address }} is toegankelijk voor uw voertuig.</span>
-    }
-    @if ((roadSectionInaccessible$ | async) === undefined && (filterContainsCoordinates$ | async)) {
-      <span>Er kon geen wegvak worden gevonden voor deze puntlocatie.</span>
+    @if (filterContainsCoordinates$ | async) {
+      @if (destinationResults()?.accessible) {
+        <span>{{ address }} is toegankelijk voor uw voertuig.</span>
+      } @else {
+        <span>{{ address }} is niet toegankelijk voor uw voertuig.</span>
+      }
     }
   </section>
 
@@ -39,15 +38,24 @@
         Toon verkeersborden
       </ndw-checkbox>
     </ndw-form-field>
-    <ndw-form-field label="Gedetailleerde Weergave" [hideLabel]="true">
+    <ndw-form-field label="Toon gedetailleerde toegankelijkheid" [hideLabel]="true">
       <ndw-checkbox [checked]="showDetailedAccessibility()" (checkedChange)="toggleDetailedAccessibility()">
-        Gedetailleerde Weergave
+        Gedetailleerde weergave
       </ndw-checkbox>
     </ndw-form-field>
+    @if (showDetailedAccessibility()) {
+      <ndw-form-field label="Gedetailleerde Weergave" [hideLabel]="true">
+        <ndw-switcher
+          [selectedValue]="selectedDetailValue()"
+          (selectionChange)="onDetailChange($event)"
+          [options]="detailOptions"
+        />
+      </ndw-form-field>
+    }
   </section>
 
   <section>
     <h2>Legenda</h2>
-    <ber-legend [showDetailedAccessibility]="showDetailedAccessibility()" />
+    <ber-legend />
   </section>
 </div>

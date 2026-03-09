@@ -14,15 +14,17 @@ import {
 } from '@angular/core';
 import { MapComponent } from '@modules/map/components/map';
 import { ControlPanelComponent } from '@modules/map/components/control-panel';
-import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
 import { DestinationElement } from '@modules/map/elements/destination/destination-element';
 import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
 import { BrtElement } from '@modules/map/elements/brt/brt-element';
 import { AerialElement } from '@modules/map/elements/aerial/aerial-element';
-import { AccessibilityDataService, DestinationDataService, TrafficSignService } from '@shared/services';
+import { AccessibilityDataOldService, AccessibilityDataService, TrafficSignService } from '@shared/services';
 
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs';
 import { MapBackgroundOption, MapDisplayComponent, MapButtonComponent } from '@ndwnu/design-system';
+import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
+import { MotorizedNoAccessElement } from '@modules/map/elements/motorized-no-access/motorized-no-access-element';
+import { DrivingDirectionElement } from '@modules/map/elements/driving-direction/driving-direction-element';
 
 const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
 
@@ -33,8 +35,8 @@ const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
   styleUrl: './main-map.component.scss',
 })
 export class MainMapComponent extends MapComponent implements AfterViewInit {
+  readonly #accessibilityDataOldService = inject(AccessibilityDataOldService);
   readonly #accessibilityDataService = inject(AccessibilityDataService);
-  readonly #destinationDataService = inject(DestinationDataService);
   readonly #overlay = inject(Overlay);
   readonly #trafficSignService = inject(TrafficSignService);
   readonly #viewContainerRef = inject(ViewContainerRef);
@@ -89,9 +91,11 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.mapElements = [
       new BrtElement(this.map),
       new AerialElement(this.map),
+      new MotorizedNoAccessElement(this.map, this.#accessibilityDataOldService),
       new AccessibilityElement(this.map, this.#accessibilityDataService),
-      new TrafficSignElement(this.map, this.#trafficSignService, this.#accessibilityDataService),
-      new DestinationElement(this.map, this.#accessibilityDataService, this.#destinationDataService),
+      new DrivingDirectionElement(this.map),
+      new TrafficSignElement(this.map, this.#trafficSignService, this.#accessibilityDataOldService),
+      new DestinationElement(this.map, this.#accessibilityDataService),
     ];
 
     this.#initializeMapElements();
@@ -106,10 +110,6 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.trafficSignElement?.setVisible(visible);
   }
 
-  handleDetailedAccessibilityVisible($event: boolean) {
-    this.#accessibilityDataService.setShowDetailedAccessibility($event);
-  }
-
   onBackgroundChange(backgroundOptions: MapBackgroundOption) {
     this.mapElements.find((element) => element instanceof BrtElement)?.setVisible(backgroundOptions.id === 'brt');
     this.mapElements.find((element) => element instanceof AerialElement)?.setVisible(backgroundOptions.id === 'aerial');
@@ -119,13 +119,15 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.mapElements.forEach((element) => {
       element.onInit();
     });
-    this.mapElements.find((element) => element instanceof TrafficSignElement)?.setVisible(false);
+    this.mapElements.find((element) => element instanceof TrafficSignElement)?.setVisible(true);
+    this.mapElements.find((element) => element instanceof AccessibilityElement)?.setVisible(true);
+    this.mapElements.find((element) => element instanceof MotorizedNoAccessElement)?.setVisible(true);
   }
 
   #loadImages() {
     this.loadImage('arrow-icon', 'assets/images/arrow.png');
     this.loadImage('black-arrow-icon', 'assets/images/black-arrow.png');
-    const all_zones_signs = ['C1', 'C2', 'C3', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
+    const all_zones_signs = ['C1', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
     const begin_end_signs = ['C17', 'C18', 'C19', 'C20', 'C21'];
 
     all_zones_signs.forEach((code) => {

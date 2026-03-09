@@ -1,42 +1,21 @@
 import { Map, SourceSpecification } from 'maplibre-gl';
-import { combineLatest, map as rxMap } from 'rxjs';
 import { MapSource } from '@modules/map/elements/base/map-source';
 import { DestinationLayer } from '@modules/map/elements/destination/destination-layer';
-import { DestinationDataService } from '@shared/services/destination-data.service';
 import { AccessibilityDataService } from '@shared/services';
-import { featureCollection, point } from '@turf/helpers';
+import { EMPTY_SOURCE_SPECIFICATION } from '@modules/map/elements/constants';
 
 export class DestinationSource extends MapSource {
-  constructor(
-    map: Map,
-    accessibilityDataService: AccessibilityDataService,
-    destinationDataService: DestinationDataService,
-  ) {
+  constructor(map: Map, accessibilityDataService: AccessibilityDataService) {
     super('destination-point', map);
 
     this.layers = [new DestinationLayer(map, this.id)];
 
-    this.featureCollection$ = combineLatest([
-      destinationDataService.destinationPoint$,
-      accessibilityDataService.roadSectionInaccessible$,
-    ]).pipe(
-      rxMap(([destinationPoint, inaccessible]) => {
-        if (!destinationPoint) {
-          return featureCollection([]);
-        }
-        const pointFeature = point(destinationPoint, { inaccessible });
-        return featureCollection([pointFeature]);
-      }),
-    );
+    // In the accessibility response a point is included whenever a destination is set.
+    // At this moment all other features are linestrings, so we can use this source to display the destination point on the map.
+    this.featureCollection$ = accessibilityDataService.roadAccessibility$;
   }
 
   protected getSpecification(): Partial<SourceSpecification> {
-    return {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: [],
-      },
-    };
+    return EMPTY_SOURCE_SPECIFICATION;
   }
 }

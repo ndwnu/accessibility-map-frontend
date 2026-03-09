@@ -12,7 +12,7 @@ export const environment: Environment = {
   georgeUrl: 'https://wegkenmerken.staging.ndw.nu',
   ndw: {
     trafficSignUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/traffic-signs/v4/current-state',
-    accessibilityUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v1',
+    accessibilityUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v2',
     roadSectionsUrl: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/tiles/{z}/{x}/{y}.pbf',
     spriteUrl: 'https://maps.ndw.nu/styles/sprites/osm-default/osm-default',
     glyphsUrl: 'https://maps.ndw.nu/styles/glyphs/{fontstack}/{range}.pbf',

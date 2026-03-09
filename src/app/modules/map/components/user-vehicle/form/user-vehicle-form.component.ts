@@ -30,8 +30,13 @@ import { ToastService } from '@ndwnu/design-system';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
 import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
-import { AccessibilityDataService, MapService, MunicipalityService, PdokLookupService } from '@shared/services';
-import { DestinationDataService } from '@shared/services/destination-data.service';
+import {
+  AccessibilityDataOldService,
+  AccessibilityDataService,
+  MapService,
+  MunicipalityService,
+  PdokLookupService,
+} from '@shared/services';
 import { RoadOperatorService } from '@shared/services/road-operator.service';
 import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
 import { LngLatLike } from 'maplibre-gl';
@@ -57,9 +62,9 @@ export class UserVehicleFormComponent implements OnInit {
 
   readonly #pdokLookupService = inject(PdokLookupService);
   readonly #destroyRef = inject(DestroyRef);
+  private readonly accessibilityDataOldService = inject(AccessibilityDataOldService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly dataInputService = inject(DataInputService);
-  private readonly destinationDataService = inject(DestinationDataService);
   private readonly mapService = inject(MapService);
   private readonly municipalityService = inject(MunicipalityService);
   private readonly roadOperatorService = inject(RoadOperatorService);
@@ -112,7 +117,7 @@ export class UserVehicleFormComponent implements OnInit {
     this.goToStep(1);
     this.listenToVehicleTypeChanges();
 
-    this.accessibilityDataService.showDisclaimer$.subscribe(() => {
+    this.accessibilityDataOldService.showDisclaimer$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe(() => {
       this.showDisclaimer();
     });
   }
@@ -131,40 +136,15 @@ export class UserVehicleFormComponent implements OnInit {
   goToMap() {
     this.loading.set(true);
     this.accessibilityDataService
-      .getInaccessibleRoadSections(this.mapFormToFilterCriteria())
+      .getRoadAccessibility(this.mapFormToFilterCriteria(), { showDisclaimer: !this.disclaimerAccepted })
       .pipe(
-        map(([response, ezResponse]) => {
-          this.destinationDataService.clearDestinationPoint();
-          this.accessibilityDataService.setInaccessibleRoadSectionsDetailed(
-            response.inaccessibleRoadSections,
-            ezResponse.inaccessibleRoadSections,
-          );
-          this.accessibilityDataService.setMatchedRoadSection(response.matchedRoadSection);
+        map(() => {
+          this.accessibilityDataOldService.setFilter(this.mapFormToFilterCriteria());
           this.zoomToDestination();
-          return response.matchedRoadSection;
         }),
-        delay(100), // Needed to be sure the map has jumped to the destination
-        switchMap((matchedRoadSection) =>
-          this.roadOperatorService.loadRoadOperators().pipe(map(() => matchedRoadSection)),
-        ),
         takeUntilDestroyed(this.#destroyRef),
       )
       .subscribe({
-        next: (matchedRoadSection) => {
-          const features = this.mapService.getRenderedFeatures(['accessibility-layer']);
-          const properties = features.find((f) => f.id === matchedRoadSection?.roadSectionId)?.properties;
-          if (!properties) {
-            return;
-          }
-
-          const roadOperator = this.roadOperatorService.getRoadOperator(properties.roadOperatorCode);
-          if (!roadOperator) {
-            this.toastService.open('Er is geen wegbeheerder gevonden voor deze weg');
-            return;
-          }
-
-          this.accessibilityDataService.setRoadOperator(roadOperator);
-        },
         error: (err) => {
           console.error(err);
           this.toastService.open('Er is iets misgegaan bij het ophalen van de data');
@@ -266,8 +246,10 @@ export class UserVehicleFormComponent implements OnInit {
 
   private mapFormToFilterCriteria(): AccessibilityFilter {
     const { stepOne, stepTwo, stepThree } = this.form.getRawValue();
-    const municipalityId = this.#pdokLookupService.pdokLookup()?.gemeentecode;
-    const centerPoint = this.#pdokLookupService.centerPoint();
+    const pdokLookup = this.#pdokLookupService.pdokLookup();
+    const municipalityId = pdokLookup?.gemeentecode;
+    const isStreet = pdokLookup?.type !== 'gemeente';
+    const centerPoint = isStreet ? this.#pdokLookupService.centerPoint() : undefined;
     return {
       municipalityId: municipalityId ? `GM${municipalityId}` : '',
       vehicleType: mapToNlsVehicleType(stepOne.vehicleType!),
@@ -291,7 +273,7 @@ export class UserVehicleFormComponent implements OnInit {
 
   private zoomToDestination() {
     const chosenMunicipality = this.municipalityService.getMunicipality(this.#pdokLookupService.municipalityId()!);
-    if (!chosenMunicipality) throw Error('Municipality is required');
+    if (!chosenMunicipality) throw new Error('Municipality is required');
 
     // Always set max bounds, as every destination always has a municipality
     this.mapService.setMaxBounds(chosenMunicipality.properties.bounds);
@@ -301,7 +283,6 @@ export class UserVehicleFormComponent implements OnInit {
     const centerPoint = extractPdokLngLatValue(pdokLookup.centroide_ll);
 
     if (pdokLookup.type !== 'gemeente') {
-      this.destinationDataService.setDestinationPoint(centerPoint);
       this.mapService.jumpTo(centerPoint as LngLatLike);
     } else {
       this.mapService.setCenter(centerPoint as LngLatLike);

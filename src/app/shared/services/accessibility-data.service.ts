@@ -1,184 +1,117 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { environment } from '@env/environment';
-import { DataInputService } from '@modules/data-input/services/data-input.service';
-import {
-  AccessibilityFilter,
-  InaccessibleRoadSection,
-  InaccessibleRoadSectionsResponse,
-  RoadOperator,
-} from '@shared/models';
-import { BehaviorSubject, forkJoin, map, Observable, shareReplay, Subject } from 'rxjs';
-import { CalculatedAccessibility } from '@shared/models/calculated.accessibility';
-import { PdokLookupService } from '@shared/services/pdok-lookup.service';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { AccessibilityFilter } from '@shared/models';
+import { DestinationProperties } from '@shared/models/destination.model';
+import { AccessibilityDataOldService } from '@shared/services/accessibility-data-old.service';
+import { FeatureCollection } from 'geojson';
+import { BehaviorSubject, tap } from 'rxjs';
 
-export function isAccessibleSection(section: InaccessibleRoadSection): boolean {
-  return !!section.forwardAccessible || !!section.backwardAccessible;
+export enum DetailOption {
+  Vehicle = 'vehicle',
+  Emission = 'emission',
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccessibilityDataService {
-  readonly #pdokLookupService = inject(PdokLookupService);
-  private readonly _http = inject(HttpClient);
-  baseURL = environment.ndw.accessibilityUrl;
+  readonly #http = inject(HttpClient);
+  readonly #accessibilityDataOldService = inject(AccessibilityDataOldService);
+  readonly #baseURL = environment.ndw.accessibilityUrl;
 
-  selectedMunicipalityId$ = toObservable(this.#pdokLookupService.municipalityId);
+  roadAccessibilityBS = new BehaviorSubject<FeatureCollection>({
+    type: 'FeatureCollection',
+    features: [],
+  });
+  roadAccessibility$ = this.roadAccessibilityBS.asObservable();
+  roadAccessibility = toSignal(this.roadAccessibility$);
 
-  private readonly inaccessibleRoadSections = new BehaviorSubject<CalculatedAccessibility[]>([]);
-  inaccessibleRoadSections$ = this.inaccessibleRoadSections.asObservable();
+  destinationResults = computed(() => {
+    const destinationFeature = this.roadAccessibility()?.features.find(
+      (feature) => feature.properties?.type === 'destination',
+    );
+    return destinationFeature ? (destinationFeature.properties as DestinationProperties) : undefined;
+  });
 
-  private readonly matchedRoadSection = new BehaviorSubject<InaccessibleRoadSection | undefined>(undefined);
-  matchedRoadSection$ = this.matchedRoadSection.asObservable();
+  readonly #currentFilter = signal<AccessibilityFilter | undefined>(undefined);
 
-  private readonly roadOperator = new BehaviorSubject<RoadOperator | undefined>(undefined);
-  roadOperator$ = this.roadOperator.asObservable();
+  showDetailedAccessibility = signal(false);
 
-  private readonly _filter = new BehaviorSubject<AccessibilityFilter | undefined>(undefined);
-  filter$ = this._filter.asObservable();
-  filterContainsCoordinates$ = this.filter$.pipe(map((filter) => filter?.latitude && filter?.longitude));
+  selectedDetailValue = signal(DetailOption.Vehicle);
 
-  roadSectionInaccessible$ = this.matchedRoadSection$.pipe(
-    map((roadSection) => !roadSection?.backwardAccessible && !roadSection?.forwardAccessible),
-    map((inaccessible) => inaccessible && this.#pdokLookupService.pdokLookup()?.type !== 'gemeente'),
-  );
+  constructor() {
+    effect(() => {
+      const filter = this.#currentFilter();
+      const showDetails = this.showDetailedAccessibility();
+      const detailValue = this.selectedDetailValue();
 
-  showDisclaimer$ = new Subject<void>();
-  private readonly showDetailedAccessibility = new BehaviorSubject<boolean>(false);
-  showDetailedAccessibility$ = this.showDetailedAccessibility.asObservable();
+      if (!filter) {
+        return;
+      }
 
-  get filter(): AccessibilityFilter | undefined {
-    return this._filter.value;
-  }
+      const options = showDetails ? { showDisclaimer: false, details: detailValue } : { showDisclaimer: false };
 
-  getInaccessibleRoadSections(
-    filter: AccessibilityFilter,
-    geoJSON = false,
-  ): Observable<[InaccessibleRoadSectionsResponse, InaccessibleRoadSectionsResponse]> {
-    this._filter.next(filter);
-
-    const municipalityId = filter.municipalityId;
-    const geojson = geoJSON ? '.geojson' : '';
-
-    let params = new HttpParams();
-    let ezParams = new HttpParams();
-    Object.keys(filter)
-      .filter((key) => key !== 'municipalityId')
-      .forEach((key) => {
-        const filterValue = filter[key as keyof AccessibilityFilter];
-        if (filterValue && key !== 'emissionClass' && key !== 'fuelTypes') {
-          params = params.append(key, filterValue.toString());
-        }
-        if (
-          filterValue &&
-          (key === 'vehicleType' ||
-            key === 'emissionClass' ||
-            key === 'fuelTypes' ||
-            key === 'latitude' ||
-            key === 'longitude')
-        ) {
-          ezParams = ezParams.append(key, filterValue.toString());
-        }
-      });
-
-    const url = `${this.baseURL}/municipalities/${municipalityId}/road-sections${geojson}`;
-
-    const basicResponse = this._http.get<InaccessibleRoadSectionsResponse>(url, { params }).pipe(shareReplay(1));
-    if (ezParams.has('fuelTypes') || ezParams.has('emissionClass')) {
-      const ezResponse = this._http
-        .get<InaccessibleRoadSectionsResponse>(url, { params: ezParams })
-        .pipe(shareReplay(1));
-      return forkJoin([basicResponse, ezResponse]);
-    } else {
-      return forkJoin([basicResponse, basicResponse]);
-    }
-  }
-
-  setInaccessibleRoadSectionsDetailed(
-    rvvInaccessible: InaccessibleRoadSection[],
-    ezInaccessible: InaccessibleRoadSection[],
-  ) {
-    // Create a map for quick lookup of EZ sections by roadSectionId
-    const ezMap = new Map<number, InaccessibleRoadSection>();
-    ezInaccessible.forEach((ez) => ezMap.set(ez.roadSectionId, ez));
-
-    // Create a map for quick lookup of RVV sections by roadSectionId
-    const rvvMap = new Map<number, InaccessibleRoadSection>();
-    rvvInaccessible.forEach((rvv) => rvvMap.set(rvv.roadSectionId, rvv));
-
-    // Get all unique road section IDs from both datasets
-    const allRoadSectionIds = new Set([
-      ...rvvInaccessible.map((section) => section.roadSectionId),
-      ...ezInaccessible.map((section) => section.roadSectionId),
-    ]);
-
-    // Process each road section
-    const detailedAccessibility: CalculatedAccessibility[] = Array.from(allRoadSectionIds).map((roadSectionId) => {
-      const rvvSection = rvvMap.get(roadSectionId);
-      const ezSection = ezMap.get(roadSectionId);
-
-      // Determine inaccessibility for each regulation type
-      const rvvInaccessible = rvvSection ? !isAccessibleSection(rvvSection) : false; // If no RVV restriction, not inaccessible
-      const ezInaccessible = ezSection ? !isAccessibleSection(ezSection) : false; // If no EZ restriction, not inaccessible
-
-      // A road section is inaccessible if it's inaccessible under EITHER regulation
-      const overallInaccessible = rvvInaccessible || ezInaccessible;
-
-      return {
-        roadSectionId,
-        inaccessible: overallInaccessible,
-        inaccessible_rvv: rvvInaccessible,
-        inaccessible_ez: ezInaccessible,
-      };
+      this.#fetchRoadAccessibility(filter, options).subscribe();
     });
-
-    // Update the behavior subject with the calculated accessibility data
-    this.inaccessibleRoadSections.next(detailedAccessibility);
   }
 
-  setMatchedRoadSection(matchedRoadSection: InaccessibleRoadSection | undefined) {
-    this.matchedRoadSection.next(matchedRoadSection);
+  getRoadAccessibility(filter: AccessibilityFilter, options?: { showDisclaimer: boolean; details?: DetailOption }) {
+    this.#currentFilter.set(filter);
+    return this.#fetchRoadAccessibility(filter, options);
   }
 
-  setRoadOperator(roadOperator: RoadOperator) {
-    this.roadOperator.next(roadOperator);
-  }
+  #fetchRoadAccessibility(filter: AccessibilityFilter, options?: { showDisclaimer: boolean; details?: DetailOption }) {
+    this.roadAccessibilityBS.next({ type: 'FeatureCollection', features: [] });
 
-  setShowDetailedAccessibility(showDetailedAccessibility: boolean) {
-    this.showDetailedAccessibility.next(showDetailedAccessibility);
-  }
+    const vehicle: Record<string, unknown> = {
+      type: filter.vehicleType,
+    };
 
-  getRvvCodes(filter: AccessibilityFilter | undefined) {
-    const defaultRvvCodes = ['C1', 'C2', 'C3', 'C6', 'C12', 'C17', 'C18', 'C19', 'C20', 'C21', 'C22a', 'C22b'];
-
-    const vehicleSpecificRvvCodes: string[] = defaultRvvCodes;
-
-    switch (filter?.vehicleType) {
-      case 'truck':
-        vehicleSpecificRvvCodes.push(...['C7', 'C7b', 'C22c', 'C22d']);
-        break;
-      case 'light_commercial_vehicle':
-        vehicleSpecificRvvCodes.push(...['C22c', 'C22d']);
-        break;
-      case 'bus':
-        vehicleSpecificRvvCodes.push(...['C7a', 'C7b']);
-        break;
-      case 'tractor':
-        vehicleSpecificRvvCodes.push(...['C8', 'C9']);
-        break;
-      case 'motorcycle':
-        vehicleSpecificRvvCodes.push(...['C11']);
-        break;
-      default:
-        break;
+    if (options?.details !== DetailOption.Emission) {
+      vehicle.width = filter.vehicleWidth;
+      vehicle.height = filter.vehicleHeight;
+      vehicle.weight = filter.vehicleWeight;
+      vehicle.length = filter.vehicleLength;
+      vehicle.axleLoad = filter.vehicleAxleLoad;
+      vehicle.hasTrailer = filter.vehicleHasTrailer;
     }
 
-    if (filter?.vehicleHasTrailer) {
-      vehicleSpecificRvvCodes.push('C10');
+    if (options?.details !== DetailOption.Vehicle) {
+      vehicle.emissionClass = filter.emissionClass;
+      vehicle.fuelTypes = filter.fuelTypes;
     }
 
-    return vehicleSpecificRvvCodes;
+    const body: Record<string, unknown> = {
+      area: {
+        type: 'municipality',
+        id: filter.municipalityId,
+      },
+      vehicle,
+    };
+
+    if (filter.latitude !== undefined && filter.longitude !== undefined) {
+      body.destination = {
+        latitude: filter.latitude,
+        longitude: filter.longitude,
+      };
+    }
+
+    return this.#http
+      .post<FeatureCollection>(`${this.#baseURL}/accessibility.geojson`, body, {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/geo+json',
+        },
+      })
+      .pipe(
+        tap((data) => {
+          this.roadAccessibilityBS.next(data);
+          if (options?.showDisclaimer) {
+            this.#accessibilityDataOldService.showDisclaimer$.next();
+          }
+        }),
+      );
   }
 }

@@ -1,5 +1,5 @@
 import { AccessibilityFilter } from '@shared/models';
-import { AccessibilityDataService, TrafficSignService } from '@shared/services';
+import { AccessibilityDataOldService, TrafficSignService } from '@shared/services';
 import { ExpressionSpecification, FilterSpecification, Map, SourceSpecification } from 'maplibre-gl';
 import { combineLatest, filter, switchMap } from 'rxjs';
 import { MapSource } from '../base/map-source';
@@ -15,7 +15,7 @@ export class TrafficSignSource extends MapSource {
   constructor(
     map: Map,
     private readonly trafficSignService: TrafficSignService,
-    private readonly accessibilityDataService: AccessibilityDataService,
+    private readonly accessibilityDataService: AccessibilityDataOldService,
   ) {
     super('traffic-signs', map);
 

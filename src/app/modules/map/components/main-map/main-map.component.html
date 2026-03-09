@@ -1,11 +1,7 @@
 <div class="map-wrapper__map" #map></div>
 
 @if (showControlPanel()) {
-  <ber-control-panel
-    (openModal)="openPanel.emit()"
-    (showTrafficSignsLayer)="handleTrafficSignVisible($event)"
-    (showDetailedAccessibilityLayer)="handleDetailedAccessibilityVisible($event)"
-  />
+  <ber-control-panel (openModal)="openPanel.emit()" (showTrafficSignsLayer)="handleTrafficSignVisible($event)" />
 }
 
 <ng-template #trafficSignsPopup>

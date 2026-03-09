@@ -1,24 +1,18 @@
-import { environment } from '@env/environment';
-import { AccessibilityDataService } from '@shared/services';
 import { Map, SourceSpecification } from 'maplibre-gl';
 import { MapSource } from '../base/map-source';
-import { AccessibilityArrowLayer } from './accessibility-arrow-layer';
-import { AccessibilityLayer } from './accessibility-layer';
+import { AccessibilityLayer } from '@modules/map/elements/accessibility/accessibility-layer';
+import { EMPTY_SOURCE_SPECIFICATION } from '@modules/map/elements/constants';
+import { AccessibilityDataService } from '@shared/services';
 
 export class AccessibilitySource extends MapSource {
   constructor(map: Map, accessibilityDataService: AccessibilityDataService) {
     super('accessibility', map);
 
-    this.layers = [
-      new AccessibilityLayer(map, this.id, accessibilityDataService),
-      new AccessibilityArrowLayer(map, this.id),
-    ];
+    this.featureCollection$ = accessibilityDataService.roadAccessibility$;
+    this.layers = [new AccessibilityLayer(map, this.id)];
   }
 
   protected getSpecification(): Partial<SourceSpecification> {
-    return {
-      type: 'vector',
-      tiles: [environment.ndw.roadSectionsUrl],
-    };
+    return EMPTY_SOURCE_SPECIFICATION;
   }
 }
