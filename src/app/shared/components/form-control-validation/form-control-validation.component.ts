@@ -26,7 +26,7 @@ export class FormControlValidationComponent implements AfterViewInit {
     return this.getErrorMessage(name, data);
   }
 
-  error: { name: string; data: any } | undefined = undefined;
+  error: { name: string; data: { [key: string]: string } } | undefined = undefined;
   errorMessages: Record<string, string> = {
     required: 'Dit veld is verplicht',
     emailIsInvalid: 'E-mailadres is niet geldig',

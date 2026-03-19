@@ -13,7 +13,7 @@ export class LineLayer implements LineLayerSpecification {
   id: string;
   source: string;
   ['source-layer']?: string;
-  type: 'line' = 'line';
+  type = 'line' as const;
   minzoom = MIN_ZOOM;
 
   layout: Pick<LineLayerSpecification, 'layout'>['layout'] = {
@@ -44,7 +44,7 @@ export class LineLayer implements LineLayerSpecification {
     colorObject: { [key: string]: string },
     propertyString: string,
   ): DataDrivenPropertyValueSpecification<ColorSpecification> {
-    const colorExpression: any[] = ['case'];
+    const colorExpression: unknown[] = ['case'];
     Object.entries(colorObject).forEach(([key, value]) => {
       colorExpression.push(['==', ['get', propertyString], key], value);
     });

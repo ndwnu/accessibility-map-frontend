@@ -2,15 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { environment } from '@env/environment';
-import { AccessibilityFilter } from '@shared/models';
 import { DestinationProperties } from '@shared/models/destination.model';
 import { AccessibilityDataOldService } from '@shared/services/accessibility-data-old.service';
 import { FeatureCollection } from 'geojson';
+import { AccessibilityFilter, InaccessibleRoadSection } from '@shared/models';
 import { BehaviorSubject, tap } from 'rxjs';
 
 export enum DetailOption {
   Vehicle = 'vehicle',
   Emission = 'emission',
+}
+export function isAccessibleSection(section: InaccessibleRoadSection): boolean {
+  return !!section.forwardAccessible || !!section.backwardAccessible;
 }
 
 @Injectable({

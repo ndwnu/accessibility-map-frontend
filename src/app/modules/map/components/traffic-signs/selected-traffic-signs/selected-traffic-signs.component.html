@@ -62,6 +62,7 @@
       } @else {
         <div class="list">
           @for (trafficSign of trafficSigns; track trafficSign.id) {
+            <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
             <div class="list-item" role="button" (click)="setTrafficSign(trafficSign.id)">
               @if (trafficSign.imageUrl) {
                 <img [src]="trafficSign.imageUrl" alt="{{ trafficSign.rvvCode }} verkeersbord" />

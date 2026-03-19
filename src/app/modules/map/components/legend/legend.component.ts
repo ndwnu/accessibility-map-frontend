@@ -1,9 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component } from '@angular/core';
 import {
-  ACCESSIBLE_EZ_BUT_NOT_RVV_COLOR,
   ACCESSIBLE_ROAD_SECTION_COLOR,
-  ACCESSIBLE_RVV_BUT_NOT_EZ_COLOR,
   INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR,
   INACCESSIBLE_ROAD_SECTION_COLOR,
 } from '@modules/map/elements/constants';

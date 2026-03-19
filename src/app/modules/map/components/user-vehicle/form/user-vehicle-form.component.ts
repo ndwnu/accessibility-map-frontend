@@ -40,7 +40,7 @@ import {
 import { RoadOperatorService } from '@shared/services/road-operator.service';
 import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
 import { LngLatLike } from 'maplibre-gl';
-import { delay, map, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'ber-user-vehicle-form',
@@ -245,6 +245,7 @@ export class UserVehicleFormComponent implements OnInit {
   }
 
   private mapFormToFilterCriteria(): AccessibilityFilter {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { stepOne, stepTwo, stepThree } = this.form.getRawValue();
     const pdokLookup = this.#pdokLookupService.pdokLookup();
     const municipalityId = pdokLookup?.gemeentecode;

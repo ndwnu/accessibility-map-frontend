@@ -86,4 +86,4 @@ export abstract class MapLayer {
 
 export type clickEvent = MapMouseEvent & {
   features?: MapGeoJSONFeature[];
-} & Object;
+} & object;

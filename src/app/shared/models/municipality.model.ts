@@ -3,7 +3,7 @@ import { LngLatBoundsLike } from 'maplibre-gl';
 
 export type MuncipalityFeatureCollection = FeatureCollection<Point, MuncipalityProperties>;
 
-export interface MuncipalityFeature extends Feature<Point, MuncipalityProperties> {}
+export type MuncipalityFeature = Feature<Point, MuncipalityProperties>;
 
 export interface MuncipalityProperties {
   name: string;

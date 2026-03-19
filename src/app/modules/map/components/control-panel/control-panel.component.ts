@@ -2,12 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, output, signal } from '@angular/core';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { LegendComponent } from '@modules/map/components/legend/legend.component';
-import { CheckboxComponent, FormFieldComponent, SwitcherComponent, SwitcherOption } from '@ndwnu/design-system';
+import {
+  CheckboxComponent,
+  FormFieldComponent,
+  SwitcherComponent,
+  SwitcherOption,
+  SwitcherValue,
+} from '@ndwnu/design-system';
 import {
   AccessibilityDataOldService,
   AccessibilityDataService,
-  DetailOption,
   PdokLookupService,
+  DetailOption,
 } from '@shared/services';
 
 @Component({
@@ -68,7 +74,7 @@ export class ControlPanelComponent {
     { value: DetailOption.Emission, label: 'Emissie', icon: 'nature' },
   ];
 
-  onDetailChange(event: string) {
+  onDetailChange(event: SwitcherValue) {
     this.selectedDetailValue.set(event as DetailOption);
   }
 

@@ -2,7 +2,6 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { VehicleType } from '@modules/map/models';
 import { EmissionClass } from '@shared/models/emission-class.model';
 import { FuelType } from '@shared/models/fuel-type.model';
-import { PdokLookup } from '@shared/models/pdok.model';
 
 export interface StepOneFormGroup {
   licensePlate: FormControl<string | null>;

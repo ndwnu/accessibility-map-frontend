@@ -1,7 +1,7 @@
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Geometry } from 'geojson';
 import { LngLat } from 'maplibre-gl';
 
-export type TrafficSignFeatureCollection = FeatureCollection<any, TrafficSign>;
+export type TrafficSignFeatureCollection = FeatureCollection<Geometry, TrafficSign>;
 
 export interface TrafficSign {
   id: string;

@@ -31,7 +31,7 @@ export class MapOverviewComponent {
   showControlPanel = signal<boolean>(false);
   expressions: FilterSpecification | undefined = undefined;
 
-  open(templateRef: TemplateRef<any>) {
+  open(templateRef: TemplateRef<unknown>) {
     if (this.overlayRef) {
       return; // Already open
     }

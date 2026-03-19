@@ -34,7 +34,6 @@
             ],
             "styles": [
               "src/assets/styles/main.scss",
-              "node_modules/boxicons/css/boxicons.min.css",
               "node_modules/maplibre-gl/dist/maplibre-gl.css",
               "node_modules/@ndwnu/design-system/styles/index.scss"
             ],
