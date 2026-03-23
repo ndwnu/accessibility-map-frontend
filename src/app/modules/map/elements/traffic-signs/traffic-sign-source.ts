@@ -1,5 +1,5 @@
 import { AccessibilityFilter } from '@shared/models';
-import { AccessibilityDataOldService, TrafficSignService } from '@shared/services';
+import { AccessibilityFilterService, TrafficSignService } from '@shared/services';
 import { ExpressionSpecification, FilterSpecification, Map, SourceSpecification } from 'maplibre-gl';
 import { combineLatest, filter, switchMap } from 'rxjs';
 import { MapSource } from '../base/map-source';
@@ -15,7 +15,7 @@ export class TrafficSignSource extends MapSource {
   constructor(
     map: Map,
     private readonly trafficSignService: TrafficSignService,
-    private readonly accessibilityDataService: AccessibilityDataOldService,
+    private readonly accessibilityFilterService: AccessibilityFilterService,
   ) {
     super('traffic-signs', map);
 
@@ -33,11 +33,11 @@ export class TrafficSignSource extends MapSource {
   override onInit() {
     super.onInit();
 
-    this.filter$ = this.accessibilityDataService.filter$;
+    this.filter$ = this.accessibilityFilterService.filter$;
 
     this.featureCollection$ = combineLatest([
-      this.accessibilityDataService.filter$,
-      this.accessibilityDataService.selectedMunicipalityId$,
+      this.accessibilityFilterService.filter$,
+      this.accessibilityFilterService.selectedMunicipalityId$,
     ]).pipe(
       filter(([, municipalityId]) => !!municipalityId),
       switchMap(([filter, municipalityId]) =>
@@ -47,7 +47,7 @@ export class TrafficSignSource extends MapSource {
   }
 
   getRvvCodes(filter: AccessibilityFilter | undefined) {
-    return this.accessibilityDataService.getRvvCodes(filter);
+    return this.accessibilityFilterService.getRvvCodes(filter);
   }
 
   protected getSpecification(): Partial<SourceSpecification> {

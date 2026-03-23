@@ -3,10 +3,10 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { environment } from '@env/environment';
 import { DestinationProperties } from '@shared/models/destination.model';
-import { AccessibilityDataOldService } from '@shared/services/accessibility-data-old.service';
 import { FeatureCollection } from 'geojson';
 import { AccessibilityFilter, InaccessibleRoadSection } from '@shared/models';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, finalize, tap } from 'rxjs';
+import { AccessibilityModalService } from '@shared/services';
 
 export enum DetailOption {
   Vehicle = 'vehicle',
@@ -21,7 +21,7 @@ export function isAccessibleSection(section: InaccessibleRoadSection): boolean {
 })
 export class AccessibilityDataService {
   readonly #http = inject(HttpClient);
-  readonly #accessibilityDataOldService = inject(AccessibilityDataOldService);
+  readonly #accessibilityModalService = inject(AccessibilityModalService);
   readonly #baseURL = environment.ndw.accessibilityUrl;
 
   roadAccessibilityBS = new BehaviorSubject<FeatureCollection>({
@@ -30,6 +30,8 @@ export class AccessibilityDataService {
   });
   roadAccessibility$ = this.roadAccessibilityBS.asObservable();
   roadAccessibility = toSignal(this.roadAccessibility$);
+
+  isLoading = signal(false);
 
   destinationResults = computed(() => {
     const destinationFeature = this.roadAccessibility()?.features.find(
@@ -67,6 +69,7 @@ export class AccessibilityDataService {
 
   #fetchRoadAccessibility(filter: AccessibilityFilter, options?: { showDisclaimer: boolean; details?: DetailOption }) {
     this.roadAccessibilityBS.next({ type: 'FeatureCollection', features: [] });
+    this.isLoading.set(true);
 
     const vehicle: Record<string, unknown> = {
       type: filter.vehicleType,
@@ -112,9 +115,10 @@ export class AccessibilityDataService {
         tap((data) => {
           this.roadAccessibilityBS.next(data);
           if (options?.showDisclaimer) {
-            this.#accessibilityDataOldService.showDisclaimer$.next();
+            this.#accessibilityModalService.openDisclaimer();
           }
         }),
+        finalize(() => this.isLoading.set(false)),
       );
   }
 }

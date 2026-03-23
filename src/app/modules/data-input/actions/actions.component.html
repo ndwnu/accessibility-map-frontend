@@ -3,12 +3,12 @@
   @if (currentStep() !== steps()) {
     <button ndwButton large [disabled]="disableNext()" (click)="onNext()">Volgende</button>
   } @else {
-    @if (isLoading()) {
-      <div class="spinning">
-        <ndw-icon>progress_activity</ndw-icon>
-      </div>
-    }
-    <button ndwButton large [disabled]="disableComplete() || isLoading()" (click)="onComplete()">Bekijk kaart</button>
+    <button ndwButton large [disabled]="disableComplete() || isLoading()" (click)="onComplete()">
+      @if (isLoading()) {
+        <ndw-loader />
+      }
+      Bekijk kaart
+    </button>
   }
 </div>
 @if (currentStep() > 1) {

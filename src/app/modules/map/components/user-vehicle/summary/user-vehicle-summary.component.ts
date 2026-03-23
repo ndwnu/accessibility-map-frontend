@@ -5,8 +5,9 @@ import { DataInputService } from '@modules/data-input/services/data-input.servic
 import { IconComponent, PopoverTriggerDirective, ToastService } from '@ndwnu/design-system';
 import { DataInputFormGroup } from '@shared/models';
 import {
-  AccessibilityDataOldService,
+  AccessibilityFilterService,
   AccessibilityDataService,
+  AccessibilityModalService,
   MunicipalityService,
   PdokLookupService,
   TrafficSignService,
@@ -26,7 +27,8 @@ export class UserVehicleSummaryComponent {
   readonly #pdokLookupService = inject(PdokLookupService);
   private readonly municipalityService = inject(MunicipalityService);
   private readonly dataInputService = inject(DataInputService);
-  private readonly accessibilityDataOldService = inject(AccessibilityDataOldService);
+  private readonly modalService = inject(AccessibilityModalService);
+  private readonly accessibilityFilterService = inject(AccessibilityFilterService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly trafficSignService = inject(TrafficSignService);
   private readonly toastService = inject(ToastService);
@@ -34,7 +36,7 @@ export class UserVehicleSummaryComponent {
   loadingRoadSections = signal(false);
   loadingTrafficSigns = signal(false);
 
-  roadOperator$ = this.accessibilityDataOldService.roadOperator$;
+  roadOperator$ = this.accessibilityFilterService.roadOperator$;
   roadOperatorRequestExemptionUrl$ = this.roadOperator$?.pipe(map((roadOperator) => roadOperator?.requestExemptionUrl));
 
   get form(): FormGroup<DataInputFormGroup> {
@@ -103,7 +105,7 @@ export class UserVehicleSummaryComponent {
   }
 
   onEditStep(step: number) {
-    this.dataInputService.setActiveStep(step);
+    this.modalService.openStep(step);
     this.emitClose();
   }
 
@@ -113,7 +115,7 @@ export class UserVehicleSummaryComponent {
 
   startWithNewInput() {
     this.dataInputService.resetForm();
-    this.dataInputService.setActiveStep(1);
+    this.modalService.openStep(1);
     this.emitClose();
   }
 
@@ -129,7 +131,7 @@ export class UserVehicleSummaryComponent {
   }
 
   downloadRoadSections() {
-    const filter = this.accessibilityDataOldService.filter;
+    const filter = this.accessibilityFilterService.filter;
     if (!filter) {
       return;
     }
@@ -153,8 +155,8 @@ export class UserVehicleSummaryComponent {
 
   downloadTrafficSigns() {
     this.loadingTrafficSigns.set(true);
-    const filter = this.accessibilityDataOldService.filter;
-    const vehicleSpecificRvvCodes = this.accessibilityDataOldService.getRvvCodes(filter);
+    const filter = this.accessibilityFilterService.filter;
+    const vehicleSpecificRvvCodes = this.accessibilityFilterService.getRvvCodes(filter);
     this.trafficSignService.getTrafficSigns(this.municipalityId, vehicleSpecificRvvCodes).subscribe({
       next: (response) => {
         FileDownloadService.downloadFile(

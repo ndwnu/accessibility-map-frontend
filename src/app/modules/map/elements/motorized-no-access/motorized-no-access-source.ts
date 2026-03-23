@@ -2,14 +2,14 @@ import { FilterSpecification, Map, SourceSpecification } from 'maplibre-gl';
 import { MapSource } from '@modules/map/elements/base/map-source';
 import { environment } from '@env/environment';
 import { MotorizedNoAccessLayer } from '@modules/map/elements/motorized-no-access/motorized-no-access-layer';
-import { AccessibilityDataOldService } from '@shared/services';
+import { AccessibilityFilterService } from '@shared/services';
 import { AccessibilityFilter } from '@shared/models';
 import { convertMunicipalityToNLS } from '@shared/utils/convert-municipality-id';
 
 export class MotorizedNoAccessSource extends MapSource {
   constructor(
     map: Map,
-    private readonly accessibilityDataService: AccessibilityDataOldService,
+    private readonly accessibilityFilterService: AccessibilityFilterService,
   ) {
     super('motorized-no-access', map);
 
@@ -19,7 +19,7 @@ export class MotorizedNoAccessSource extends MapSource {
   override onInit(): void {
     super.onInit();
 
-    this.filter$ = this.accessibilityDataService.filter$;
+    this.filter$ = this.accessibilityFilterService.filter$;
   }
 
   protected getSpecification(): Partial<SourceSpecification> {

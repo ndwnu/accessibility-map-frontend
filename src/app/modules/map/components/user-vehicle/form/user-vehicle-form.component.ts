@@ -1,18 +1,5 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-
-import {
-  Component,
-  DestroyRef,
-  effect,
-  inject,
-  OnInit,
-  output,
-  signal,
-  TemplateRef,
-  viewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Component, DestroyRef, effect, inject, OnInit, output, signal, TemplateRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { environment } from '@env/environment';
@@ -26,18 +13,18 @@ import {
 } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
-import { ToastService } from '@ndwnu/design-system';
+import { ModalService as DesignSystemModalService, ToastService } from '@ndwnu/design-system';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
-import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
 import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
 import {
-  AccessibilityDataOldService,
+  AccessibilityFilterService,
   AccessibilityDataService,
   MapService,
+  ModalEnum,
+  AccessibilityModalService,
   MunicipalityService,
   PdokLookupService,
 } from '@shared/services';
-import { RoadOperatorService } from '@shared/services/road-operator.service';
 import { extractPdokLngLatValue } from '@shared/utils/geo-utils';
 import { LngLatLike } from 'maplibre-gl';
 import { map } from 'rxjs';
@@ -57,28 +44,25 @@ export class UserVehicleFormComponent implements OnInit {
   loading = signal(false);
   modalClosed = output();
 
-  private readonly overlay = inject(Overlay);
-  private readonly viewContainerRef = inject(ViewContainerRef);
-
   readonly #pdokLookupService = inject(PdokLookupService);
   readonly #destroyRef = inject(DestroyRef);
-  private readonly accessibilityDataOldService = inject(AccessibilityDataOldService);
+  private readonly accessibilityFilterService = inject(AccessibilityFilterService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
   private readonly dataInputService = inject(DataInputService);
   private readonly mapService = inject(MapService);
+  private readonly modalService = inject(AccessibilityModalService);
+  private readonly designSystemModalService = inject(DesignSystemModalService);
   private readonly municipalityService = inject(MunicipalityService);
-  private readonly roadOperatorService = inject(RoadOperatorService);
   private readonly toastService = inject(ToastService);
 
-  private overlayRef!: OverlayRef;
-  private currentStep = -1;
+  private currentModalRef: DialogRef<unknown> | null = null;
   private disclaimerAccepted = false;
 
   protected form = this.dataInputService.form;
 
   constructor() {
     effect(() => {
-      this.openModal(this.dataInputService.activeStep());
+      this.openModal(this.modalService.activeModal());
     });
   }
 
@@ -107,30 +91,18 @@ export class UserVehicleFormComponent implements OnInit {
       this.disclaimerAccepted = true;
     }
 
-    const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically();
-    this.overlayRef = this.overlay.create({
-      ...OVERLAY_MODAL_BASE_CONFIG,
-      positionStrategy,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    });
-
     this.goToStep(1);
     this.listenToVehicleTypeChanges();
-
-    this.accessibilityDataOldService.showDisclaimer$.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe(() => {
-      this.showDisclaimer();
-    });
   }
 
-  closeModal(isDisclaimer?: boolean) {
-    this.overlayRef?.detach();
-    if (this.currentStep === 3 && !this.disclaimerAccepted) {
-      this.showDisclaimer();
-      return;
-    }
-    if (isDisclaimer) {
-      this.disclaimerAccepted = true;
-    }
+  closeModal() {
+    this.modalService.close();
+  }
+
+  confirmDisclaimer() {
+    this.disclaimerAccepted = true;
+    this.modalService.close();
+    this.modalClosed.emit();
   }
 
   goToMap() {
@@ -139,7 +111,7 @@ export class UserVehicleFormComponent implements OnInit {
       .getRoadAccessibility(this.mapFormToFilterCriteria(), { showDisclaimer: !this.disclaimerAccepted })
       .pipe(
         map(() => {
-          this.accessibilityDataOldService.setFilter(this.mapFormToFilterCriteria());
+          this.accessibilityFilterService.setFilter(this.mapFormToFilterCriteria());
           this.zoomToDestination();
         }),
         takeUntilDestroyed(this.#destroyRef),
@@ -152,16 +124,20 @@ export class UserVehicleFormComponent implements OnInit {
         },
         complete: () => {
           this.loading.set(false);
-          this.dataInputService.setActiveStep(0);
+          const shouldShowDisclaimer = !this.disclaimerAccepted;
           this.dataInputService.markFormAsPristine();
-          this.closeModal();
-          this.modalClosed.emit();
+          if (shouldShowDisclaimer) {
+            this.modalService.openDisclaimer();
+          } else {
+            this.modalService.close();
+            this.modalClosed.emit();
+          }
         },
       });
   }
 
   goToStep(step: number) {
-    this.dataInputService.setActiveStep(step);
+    this.modalService.openStep(step);
   }
 
   setVehicleInfo(vehicleInfo: VehicleInfo) {
@@ -216,21 +192,30 @@ export class UserVehicleFormComponent implements OnInit {
     this.vehicleInfo.set(vehicleInfo);
   }
 
-  private openModal(step: number) {
-    this.currentStep = step;
-    if (step === 0) return;
+  private openModal(modal: ModalEnum | null) {
+    // Close any existing modal first
+    this.currentModalRef?.close();
+    this.currentModalRef = null;
 
-    let contentRef: TemplateRef<unknown> = this.stepOneRef();
-    if (step === 2) {
-      contentRef = this.stepTwoRef();
-    }
-    if (step === 3) {
-      contentRef = this.stepThreeRef();
+    if (modal === null) return;
+
+    let contentRef: TemplateRef<unknown>;
+    switch (modal) {
+      case ModalEnum.Step1:
+        contentRef = this.stepOneRef();
+        break;
+      case ModalEnum.Step2:
+        contentRef = this.stepTwoRef();
+        break;
+      case ModalEnum.Step3:
+        contentRef = this.stepThreeRef();
+        break;
+      case ModalEnum.Disclaimer:
+        contentRef = this.disclaimerRef();
+        break;
     }
 
-    this.overlayRef.detach();
-    const templatePortal = new TemplatePortal(contentRef, this.viewContainerRef);
-    this.overlayRef.attach(templatePortal);
+    this.currentModalRef = this.designSystemModalService.open(contentRef);
   }
 
   private listenToVehicleTypeChanges() {
@@ -265,11 +250,6 @@ export class UserVehicleFormComponent implements OnInit {
       emissionClass: stepThree.vehicleEmissionClass ?? undefined,
       fuelTypes: stepThree.vehicleFuelTypes ?? undefined,
     };
-  }
-
-  private showDisclaimer() {
-    const templatePortal = new TemplatePortal(this.disclaimerRef(), this.viewContainerRef);
-    this.overlayRef.attach(templatePortal);
   }
 
   private zoomToDestination() {

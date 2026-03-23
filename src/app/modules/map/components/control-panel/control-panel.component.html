@@ -23,7 +23,7 @@
         </div>
       }
     </div>
-    @if (filterContainsCoordinates$ | async) {
+    @if (destinationResults()) {
       @if (destinationResults()?.accessible) {
         <span>{{ address }} is toegankelijk voor uw voertuig.</span>
       } @else {
@@ -42,6 +42,10 @@
       <ndw-checkbox [checked]="showDetailedAccessibility()" (checkedChange)="toggleDetailedAccessibility()">
         Gedetailleerde weergave
       </ndw-checkbox>
+      @if (isLoading()) {
+        <ndw-loader class="loading-spinner" />
+        <small> Gegevens worden geladen... </small>
+      }
     </ndw-form-field>
     @if (showDetailedAccessibility()) {
       <ndw-form-field label="Gedetailleerde Weergave" [hideLabel]="true">

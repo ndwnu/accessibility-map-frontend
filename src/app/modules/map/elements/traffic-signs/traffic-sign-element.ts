@@ -1,12 +1,16 @@
-import { AccessibilityDataOldService, TrafficSignService } from '@shared/services';
+import { AccessibilityFilterService, TrafficSignService } from '@shared/services';
 import { Map } from 'maplibre-gl';
 import { MapElement } from '../base';
 import { TrafficSignSource } from './traffic-sign-source';
 
 export class TrafficSignElement extends MapElement {
-  constructor(map: Map, trafficSignService: TrafficSignService, accessibilityDataService: AccessibilityDataOldService) {
+  constructor(
+    map: Map,
+    trafficSignService: TrafficSignService,
+    accessibilityFilterService: AccessibilityFilterService,
+  ) {
     super(map);
 
-    this.sources = [new TrafficSignSource(map, trafficSignService, accessibilityDataService)];
+    this.sources = [new TrafficSignSource(map, trafficSignService, accessibilityFilterService)];
   }
 }

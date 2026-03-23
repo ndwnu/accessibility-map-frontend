@@ -1,9 +1,7 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LayoutComponent, MenuItem } from '@ndwnu/design-system';
-import { OVERLAY_MODAL_BASE_CONFIG } from '@shared/constants/overlay.constants';
-import { AccessibilityDataOldService, MunicipalityService } from '@shared/services';
+import { AccessibilityModalService, MunicipalityService } from '@shared/services';
 
 @Component({
   selector: 'ber-root',
@@ -12,12 +10,8 @@ import { AccessibilityDataOldService, MunicipalityService } from '@shared/servic
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  readonly #overlay = inject(Overlay);
-
-  readonly #accessibilityDataService = inject(AccessibilityDataOldService);
+  readonly #modalService = inject(AccessibilityModalService);
   readonly #municipalityService = inject(MunicipalityService);
-
-  private overlayRef!: OverlayRef;
 
   footerTexts = ['Versie 0.0.3-beta'];
 
@@ -43,21 +37,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.#municipalityService.loadMunicipalities();
-
-    const positionStrategy = this.#overlay.position().global().centerHorizontally().centerVertically();
-    this.overlayRef = this.#overlay.create({
-      ...OVERLAY_MODAL_BASE_CONFIG,
-      positionStrategy,
-      scrollStrategy: this.#overlay.scrollStrategies.reposition(),
-    });
-  }
-
-  closeDisclaimerModal() {
-    this.overlayRef.detach();
   }
 
   openDisclaimerModal() {
-    this.#accessibilityDataService.showDisclaimer$.next();
+    this.#modalService.openDisclaimer();
   }
 
   openFeedbackMail() {

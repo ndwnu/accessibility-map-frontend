@@ -1,8 +1,10 @@
 :host {
-  max-width: 100%;
-  width: 40rem;
+  ndw-card {
+    max-width: 100%;
+    width: 40rem;
 
-  ndw-card-content p:last-child {
-    margin-bottom: 0;
+    ndw-card-content p:last-child {
+      margin-bottom: 0;
+    }
   }
 }

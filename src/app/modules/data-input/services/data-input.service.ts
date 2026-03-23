@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -16,7 +16,6 @@ import { FuelType } from '@shared/models/fuel-type.model';
   providedIn: 'root',
 })
 export class DataInputService {
-  activeStep = signal(0);
   form: FormGroup<DataInputFormGroup>;
 
   constructor() {
@@ -151,10 +150,6 @@ export class DataInputService {
 
   get vehicleFuelTypes() {
     return this.vehicleFuelTypesControl?.value;
-  }
-
-  setActiveStep(step: number) {
-    this.activeStep.set(step);
   }
 
   resetForm() {

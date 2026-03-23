@@ -1,9 +1,9 @@
 import { Component, input, output } from '@angular/core';
-import { IconComponent } from '@ndwnu/design-system';
+import { LoaderComponent } from '@ndwnu/design-system';
 
 @Component({
   selector: 'ber-actions',
-  imports: [IconComponent],
+  imports: [LoaderComponent],
   templateUrl: './actions.component.html',
   styleUrl: './actions.component.scss',
 })

@@ -134,3 +134,11 @@
 ndw-form-field {
   margin-bottom: 0;
 }
+
+.loading-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: var(--ndw-spacing-2xs);
+  height: var(--ndw-spacing-md);
+  width: var(--ndw-spacing-md);
+}

@@ -18,7 +18,7 @@ import { DestinationElement } from '@modules/map/elements/destination/destinatio
 import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
 import { BrtElement } from '@modules/map/elements/brt/brt-element';
 import { AerialElement } from '@modules/map/elements/aerial/aerial-element';
-import { AccessibilityDataOldService, AccessibilityDataService, TrafficSignService } from '@shared/services';
+import { AccessibilityFilterService, AccessibilityDataService, TrafficSignService } from '@shared/services';
 
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs';
 import { MapBackgroundOption, MapDisplayComponent, MapButtonComponent } from '@ndwnu/design-system';
@@ -35,7 +35,7 @@ const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
   styleUrl: './main-map.component.scss',
 })
 export class MainMapComponent extends MapComponent implements AfterViewInit {
-  readonly #accessibilityDataOldService = inject(AccessibilityDataOldService);
+  readonly #accessibilityFilterService = inject(AccessibilityFilterService);
   readonly #accessibilityDataService = inject(AccessibilityDataService);
   readonly #overlay = inject(Overlay);
   readonly #trafficSignService = inject(TrafficSignService);
@@ -91,10 +91,10 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.mapElements = [
       new BrtElement(this.map),
       new AerialElement(this.map),
-      new MotorizedNoAccessElement(this.map, this.#accessibilityDataOldService),
+      new MotorizedNoAccessElement(this.map, this.#accessibilityFilterService),
       new AccessibilityElement(this.map, this.#accessibilityDataService),
       new DrivingDirectionElement(this.map),
-      new TrafficSignElement(this.map, this.#trafficSignService, this.#accessibilityDataOldService),
+      new TrafficSignElement(this.map, this.#trafficSignService, this.#accessibilityFilterService),
       new DestinationElement(this.map, this.#accessibilityDataService),
     ];
 

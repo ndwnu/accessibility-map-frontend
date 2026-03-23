@@ -5,27 +5,22 @@ import { LegendComponent } from '@modules/map/components/legend/legend.component
 import {
   CheckboxComponent,
   FormFieldComponent,
+  LoaderComponent,
   SwitcherComponent,
   SwitcherOption,
   SwitcherValue,
 } from '@ndwnu/design-system';
-import {
-  AccessibilityDataOldService,
-  AccessibilityDataService,
-  PdokLookupService,
-  DetailOption,
-} from '@shared/services';
+import { AccessibilityDataService, PdokLookupService, DetailOption } from '@shared/services';
 
 @Component({
   selector: 'ber-control-panel',
-  imports: [CommonModule, LegendComponent, FormFieldComponent, CheckboxComponent, SwitcherComponent],
+  imports: [CommonModule, LegendComponent, FormFieldComponent, CheckboxComponent, LoaderComponent, SwitcherComponent],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss',
 })
 export class ControlPanelComponent {
   readonly #dataInputService = inject(DataInputService);
   readonly #accessibilityDataService = inject(AccessibilityDataService);
-  readonly #accessibilityDataOldService = inject(AccessibilityDataOldService);
   readonly #pdokLookupService = inject(PdokLookupService);
 
   openModal = output();
@@ -34,8 +29,8 @@ export class ControlPanelComponent {
   showTrafficSigns = signal(true);
   showDetailedAccessibility = this.#accessibilityDataService.showDetailedAccessibility;
   selectedDetailValue = this.#accessibilityDataService.selectedDetailValue;
+  isLoading = this.#accessibilityDataService.isLoading;
   destinationResults = this.#accessibilityDataService.destinationResults;
-  filterContainsCoordinates$ = this.#accessibilityDataOldService.filterContainsCoordinates$;
 
   get isAddressControlDirty() {
     return this.#dataInputService.municipalityIdControl.dirty;
@@ -85,7 +80,5 @@ export class ControlPanelComponent {
 
   toggleDetailedAccessibility() {
     this.showDetailedAccessibility.update((b) => !b);
-    // Also update old service for backward compatibility with AccessibilityLayer
-    this.#accessibilityDataOldService.setShowDetailedAccessibility(this.showDetailedAccessibility());
   }
 }
