@@ -56,6 +56,7 @@ export class StepThreeComponent implements OnInit {
     if (!this.licensePlate) {
       return maxDummyVehicleTotalWeight;
     }
+
     const vehicleWeight = this.vehicleInfo()?.weight ?? 0;
     const maxWeight = this.vehicleTrailerControl.value
       ? (this.vehicleInfo()?.combinedMaxWeight ?? defaultMaxCombinedWeight)

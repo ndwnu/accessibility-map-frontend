@@ -31,10 +31,10 @@ export enum SideEnum {
 }
 
 export enum TextSignType {
-  DIRECTION_ARROWS = 'DIRECTION_ARROWS',
-  EXCLUDING = 'EXCLUDING',
-  FREE_TEXT = 'FREE_TEXT',
-  LICENSE_PLATE = 'LICENSE_PLATE',
-  PRE_ANNOUNCEMENT = 'PRE_ANNOUNCEMENT',
-  TIME_PERIOD = 'TIME_PERIOD',
+  DirectionArrows = 'DIRECTION_ARROWS',
+  Excluding = 'EXCLUDING',
+  FreeText = 'FREE_TEXT',
+  LicensePlate = 'LICENSE_PLATE',
+  PreAnnouncement = 'PRE_ANNOUNCEMENT',
+  TimePeriod = 'TIME_PERIOD',
 }

@@ -21,12 +21,15 @@ export class FormControlValidationComponent implements AfterViewInit {
   readonly #destroyRef = inject(DestroyRef);
   @Input() control!: FormControl | AbstractControl | null;
   get errorMessage(): string {
-    if (!this.error) return '';
+    if (!this.error) {
+      return '';
+    }
+
     const { name, data } = this.error;
     return this.getErrorMessage(name, data);
   }
 
-  error: { name: string; data: { [key: string]: string } } | undefined = undefined;
+  error: { name: string; data: Record<string, string> } | undefined = undefined;
   errorMessages: Record<string, string> = {
     required: 'Dit veld is verplicht',
     emailIsInvalid: 'E-mailadres is niet geldig',
@@ -40,7 +43,9 @@ export class FormControlValidationComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.control?.statusChanges.pipe(takeUntilDestroyed(this.#destroyRef)).subscribe(() => {
-      if (!this.control) return;
+      if (!this.control) {
+        return;
+      }
 
       this.error = undefined;
 
@@ -56,7 +61,7 @@ export class FormControlValidationComponent implements AfterViewInit {
       this.cdr.detectChanges();
     });
   }
-  private getErrorMessage(errorName: string, data: { [key: string]: string }) {
+  private getErrorMessage(errorName: string, data: Record<string, string>) {
     if (errorName === 'minlength') {
       return this.errorMessages[errorName].replace('{data}', data['requiredLength']);
     }

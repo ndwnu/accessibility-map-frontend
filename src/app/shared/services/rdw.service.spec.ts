@@ -20,7 +20,7 @@ const MOCK_VEHICLE_DATA = {
 const MOCK_AXLE_DATA = [{ wettelijk_toegestane_maximum_aslast: '1000' }];
 
 // Helper function to create emission class objects
-function createEmissionClass(code: string, fuel: string = 'Diesel') {
+function createEmissionClass(code: string, fuel = 'Diesel') {
   return { emissiecode_omschrijving: code, brandstof_omschrijving: fuel };
 }
 
@@ -28,7 +28,7 @@ function createEmissionClass(code: string, fuel: string = 'Diesel') {
 function setupVehicleMocks(
   httpMock: HttpTestingController,
   licensePlate: string,
-  vehicleClasses: Array<{ emissiecode_omschrijving: string; brandstof_omschrijving: string }>,
+  vehicleClasses: { emissiecode_omschrijving: string; brandstof_omschrijving: string }[],
 ) {
   const cleanedPlate = licensePlate.replace(/-/g, '').toUpperCase();
 

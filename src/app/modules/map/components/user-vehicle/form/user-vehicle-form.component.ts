@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, DestroyRef, effect, inject, OnInit, output, signal, TemplateRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -150,6 +151,7 @@ export class UserVehicleFormComponent implements OnInit {
     if (this.trailerControl.value) {
       vehicleLoad += vehicleInfo.trailerWeight ?? 0;
     }
+
     const vehicleAxleLoad = vehicleInfo.maxAxleWeight ? vehicleInfo.maxAxleWeight : 0;
     this.stepThreeForm?.patchValue({
       vehicleCurbWeight: vehicleInfo.weight,
@@ -197,7 +199,9 @@ export class UserVehicleFormComponent implements OnInit {
     this.currentModalRef?.close();
     this.currentModalRef = null;
 
-    if (modal === null) return;
+    if (modal === null) {
+      return;
+    }
 
     let contentRef: TemplateRef<unknown>;
     switch (modal) {
@@ -254,12 +258,16 @@ export class UserVehicleFormComponent implements OnInit {
 
   private zoomToDestination() {
     const chosenMunicipality = this.municipalityService.getMunicipality(this.#pdokLookupService.municipalityId()!);
-    if (!chosenMunicipality) throw new Error('Municipality is required');
+    if (!chosenMunicipality) {
+      throw new Error('Municipality is required');
+    }
 
     // Always set max bounds, as every destination always has a municipality
     this.mapService.setMaxBounds(chosenMunicipality.properties.bounds);
     const pdokLookup = this.#pdokLookupService.pdokLookup();
-    if (!pdokLookup) return;
+    if (!pdokLookup) {
+      return;
+    }
 
     const centerPoint = extractPdokLngLatValue(pdokLookup.centroide_ll);
 

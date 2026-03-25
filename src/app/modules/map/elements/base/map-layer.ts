@@ -2,7 +2,7 @@ import { FilterSpecification, LayerSpecification, Map, MapGeoJSONFeature, MapMou
 import { Subject } from 'rxjs';
 
 export abstract class MapLayer {
-  show: boolean = true;
+  show = true;
 
   protected unsubscribe = new Subject<void>();
 
@@ -41,7 +41,9 @@ export abstract class MapLayer {
   protected abstract getSpecification(): Partial<LayerSpecification>;
 
   private setupClickHandlers() {
-    if (!this.onClick) return;
+    if (!this.onClick) {
+      return;
+    }
 
     // Attach click event
     this.map.on('click', this.id, (event) => {

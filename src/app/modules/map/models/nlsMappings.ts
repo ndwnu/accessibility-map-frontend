@@ -9,7 +9,7 @@ export enum NlsVehicleType {
   Truck = 'truck',
 }
 
-export const nlsVehicleMapping: Partial<{ [key in VehicleType]: NlsVehicleType }> = {
+export const nlsVehicleMapping: Partial<Record<VehicleType, NlsVehicleType>> = {
   bus: NlsVehicleType.Bus,
   car: NlsVehicleType.Car,
   light_commercial_vehicle: NlsVehicleType.LightCommercialVehicle,

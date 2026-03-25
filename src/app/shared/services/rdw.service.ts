@@ -66,6 +66,7 @@ export class RdwService {
     if (rdwVehicleType === 'Bedrijfsauto') {
       return 'truck' as VehicleType;
     }
+
     const vehicleType = Object.keys(VEHICLE_TYPES).find((key) => VEHICLE_TYPES[key as VehicleType] === rdwVehicleType);
     return vehicleType as VehicleType;
   }

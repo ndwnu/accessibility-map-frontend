@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class TrafficSignOrientationPipe implements PipeTransform {
-  readonly #translations: { [key: string]: string } = {
+  readonly #translations: Record<string, string> = {
     N: 'Noord',
     O: 'Oost',
     Z: 'Zuid',

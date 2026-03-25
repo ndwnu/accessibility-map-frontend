@@ -33,6 +33,7 @@ export class MotorizedNoAccessSource extends MapSource {
     if (!filter?.municipalityId) {
       return ['==', ['get', 'municipalityId'], ''];
     }
+
     const municipality = convertMunicipalityToNLS(filter?.municipalityId);
     return ['==', ['get', 'municipalityId'], municipality.roadOperatorCode];
   }

@@ -5,7 +5,7 @@ const LINE_OPACITY = 0.75;
 const DEFAULT_COLOR = 'rgba(0, 100, 200)';
 
 export interface LineLayerOptions {
-  color: string | { colorObject: { [key: string]: string }; propertyString: string };
+  color: string | { colorObject: Record<string, string>; propertyString: string };
   sourceLayer?: string;
 }
 
@@ -41,7 +41,7 @@ export class LineLayer implements LineLayerSpecification {
   }
 
   private lineColorMapper(
-    colorObject: { [key: string]: string },
+    colorObject: Record<string, string>,
     propertyString: string,
   ): DataDrivenPropertyValueSpecification<ColorSpecification> {
     const colorExpression: unknown[] = ['case'];

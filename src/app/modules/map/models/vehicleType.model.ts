@@ -15,6 +15,7 @@ export function mapToNlsVehicleType(vehicleType: VehicleType): NlsVehicleType {
   if (!vehicleType) {
     throw new Error('Vehicle type is required');
   }
+
   const nlsVehicleType = nlsVehicleMapping[vehicleType];
   if (!nlsVehicleType) {
     throw new Error(`Unknown vehicle type: ${vehicleType}`);

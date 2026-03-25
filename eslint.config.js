@@ -1,36 +1,22 @@
-const globals = require('globals');
-const eslint = require('@eslint/js');
-const tsPlugin = require('@typescript-eslint/eslint-plugin');
-const tsParser = require('@typescript-eslint/parser');
-const angularPlugin = require('@angular-eslint/eslint-plugin');
-const angularTemplatePlugin = require('@angular-eslint/eslint-plugin-template');
-const angularTemplateParser = require('@angular-eslint/template-parser');
-const prettierConfig = require('eslint-config-prettier');
+// TODO: #84569 #111452 uncomment when beta.6 is released
+// and remove @angular-eslint @typescript-eslint from package.json
+// and delete eslint.ndwnu.config.js
+// const baseConfig = require('@ndwnu/eslint-config/eslint.config.cjs');
+const ndwnuConfig = require('./eslint.ndwnu.config.js');
+const sonarConfig = require('./eslint.sonar.config.js');
 
 module.exports = [
   {
-    ignores: ['projects/**/*'],
+    ignores: ['node_modules', 'dist', '.angular', 'projects/**/*', 'src/assets/**/*'],
   },
+  // ...baseConfig,
+  ...ndwnuConfig,
+  ...sonarConfig,
   {
-    files: ['**/*.ts'],
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.jasmine,
-      },
-      parser: tsParser,
-      parserOptions: {
-        project: ['tsconfig.json', 'e2e/tsconfig.json'],
-      },
-    },
-    plugins: {
-      '@typescript-eslint': tsPlugin,
-      '@angular-eslint': angularPlugin,
-    },
+    files: ['src/**/*.ts'],
     rules: {
-      ...eslint.configs.recommended.rules,
-      ...tsPlugin.configs.recommended.rules,
-      ...angularPlugin.configs.recommended.rules,
+      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+      '@typescript-eslint/no-inferrable-types': ['warn', { ignoreProperties: true }],
       '@angular-eslint/component-selector': [
         'error',
         {
@@ -47,29 +33,6 @@ module.exports = [
           style: 'camelCase',
         },
       ],
-      '@typescript-eslint/no-unused-expressions': [
-        'error',
-        {
-          allowShortCircuit: true,
-          allowTernary: true,
-          allowTaggedTemplates: true,
-        },
-      ],
-      ...prettierConfig.rules,
-    },
-  },
-  {
-    files: ['**/*.html'],
-    languageOptions: {
-      parser: angularTemplateParser,
-    },
-    plugins: {
-      '@angular-eslint/template': angularTemplatePlugin,
-    },
-    rules: {
-      ...angularTemplatePlugin.configs.recommended.rules,
-      ...angularTemplatePlugin.configs.accessibility.rules,
-      ...prettierConfig.rules,
     },
   },
 ];

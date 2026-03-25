@@ -127,17 +127,17 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
   #loadImages() {
     this.loadImage('arrow-icon', 'assets/images/arrow.png');
     this.loadImage('black-arrow-icon', 'assets/images/black-arrow.png');
-    const all_zones_signs = ['C1', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
-    const begin_end_signs = ['C17', 'C18', 'C19', 'C20', 'C21'];
+    const allZonesSigns = ['C1', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
+    const beginEndSigns = ['C17', 'C18', 'C19', 'C20', 'C21'];
 
-    all_zones_signs.forEach((code) => {
+    allZonesSigns.forEach((code) => {
       this.#loadSign(code);
       this.#loadSign(code, 'ZB');
       this.#loadSign(code, 'ZE');
       this.#loadSign(code, 'ZH');
     });
 
-    begin_end_signs.forEach((code) => {
+    beginEndSigns.forEach((code) => {
       this.#loadSign(code);
       this.#loadSign(code, 'ZB');
       this.#loadSign(code, 'ZE');
@@ -172,12 +172,16 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
 
   #updatePositionStrategy(clickX: number, clickY: number) {
     const { height, width, x, y } = (this.mapElementRef().nativeElement as HTMLDivElement).getBoundingClientRect();
-    clickX > width / 2
-      ? this.#positionStrategy.right(`${(width - clickX).toFixed()}px`)
-      : this.#positionStrategy.left(`${(clickX + x).toFixed()}px`);
-    clickY > height / 2
-      ? this.#positionStrategy.bottom(`${(height - clickY).toFixed()}px`)
-      : this.#positionStrategy.top(`${(clickY + y).toFixed()}px`);
+    if (clickX > width / 2) {
+      this.#positionStrategy.right(`${(width - clickX).toFixed()}px`);
+    } else {
+      this.#positionStrategy.left(`${(clickX + x).toFixed()}px`);
+    }
+    if (clickY > height / 2) {
+      this.#positionStrategy.bottom(`${(height - clickY).toFixed()}px`);
+    } else {
+      this.#positionStrategy.top(`${(clickY + y).toFixed()}px`);
+    }
 
     this.#overlayRef.updatePositionStrategy(this.#positionStrategy);
   }

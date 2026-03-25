@@ -1,7 +1,7 @@
 export enum DestinationType {
-  roadSectionSegment = 'roadSectionSegment',
-  destination = 'destination',
-  unknown = 'unknown',
+  RoadSectionSegment = 'roadSectionSegment',
+  Destination = 'destination',
+  Unknown = 'unknown',
 }
 
 export interface DestinationProperties {

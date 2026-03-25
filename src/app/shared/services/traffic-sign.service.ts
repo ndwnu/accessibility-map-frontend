@@ -20,7 +20,7 @@ export class TrafficSignService {
       accept: 'application/geo+json',
     });
 
-    let params = new HttpParams()
+    const params = new HttpParams()
       .append('countyCode', municipalityId)
       .append('rvvCode', rvvCode.join(','))
       .append('status', 'PLACED');

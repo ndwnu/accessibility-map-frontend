@@ -191,8 +191,8 @@ export class DataInputService {
 
   private eitherVehicleTypeOrLicensePlate(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-      let licensePlate = group.get('licensePlate')?.value;
-      let vehicleType = group.get('vehicleType')?.value;
+      const licensePlate = group.get('licensePlate')?.value;
+      const vehicleType = group.get('vehicleType')?.value;
 
       return licensePlate || vehicleType ? null : { eitherVehicleTypeOrLicensePlate: true };
     };

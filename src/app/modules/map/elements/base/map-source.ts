@@ -86,7 +86,9 @@ export abstract class MapSource {
   }
 
   private subscribeToFilters() {
-    if (!this.isInitialized) return;
+    if (!this.isInitialized) {
+      return;
+    }
 
     if (this.filterSubscription) {
       this.filterSubscription.unsubscribe();
@@ -120,7 +122,9 @@ export abstract class MapSource {
    * https://github.com/mapbox/mapbox-gl-js/issues/7887
    */
   private applyFilterToSourceSpecification(filter: AccessibilityFilter | undefined) {
-    if (!this.getFilterSpecification) return;
+    if (!this.getFilterSpecification) {
+      return;
+    }
 
     const mapStyle = this.map.getStyle();
     const sourceSpecification = mapStyle.sources[this.id];

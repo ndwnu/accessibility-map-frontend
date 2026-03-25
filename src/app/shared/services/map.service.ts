@@ -10,8 +10,8 @@ import { LngLatBoundsLike, LngLatLike, Map, MapGeoJSONFeature } from 'maplibre-g
 export class MapService {
   private map!: Map;
 
-  private readonly LNG_LAT_BOUNDS_DECIMALS = 6; // Limit decimal places for longitude and latitude coords to prevent long floats breaking MapLibre bounds
-  private readonly PADDING = 0.05; // Padding for comfortable map usage, preventing restriction to screen corners
+  private readonly lngLatBoundsDecimals = 6; // Limit decimal places for longitude and latitude coords to prevent long floats breaking MapLibre bounds
+  private readonly padding = 0.05; // Padding for comfortable map usage, preventing restriction to screen corners
 
   createMap(container: HTMLElement): Map {
     this.map = new Map({
@@ -36,7 +36,9 @@ export class MapService {
   }
 
   private ensureMapInitialized() {
-    if (!this.map) throw new Error("Map is not initialized. Call 'createMap' first.");
+    if (!this.map) {
+      throw new Error("Map is not initialized. Call 'createMap' first.");
+    }
   }
 
   getRenderedFeatures(layers?: string[]): MapGeoJSONFeature[] {
@@ -47,7 +49,7 @@ export class MapService {
   setMaxBounds(bounds: LngLatBoundsLike) {
     this.ensureMapInitialized();
 
-    this.setPaddedMaxBounds(bounds, this.PADDING);
+    this.setPaddedMaxBounds(bounds, this.padding);
   }
 
   setCenter(center: LngLatLike) {
@@ -77,8 +79,8 @@ export class MapService {
 
   private addPaddingToBounds(lng: number, lat: number, padding: number): [number, number] {
     return [
-      parseFloat((lng + padding).toFixed(this.LNG_LAT_BOUNDS_DECIMALS)), // Adjust the longitude
-      parseFloat((lat + padding).toFixed(this.LNG_LAT_BOUNDS_DECIMALS)), // Adjust the latitude
+      parseFloat((lng + padding).toFixed(this.lngLatBoundsDecimals)), // Adjust the longitude
+      parseFloat((lat + padding).toFixed(this.lngLatBoundsDecimals)), // Adjust the latitude
     ];
   }
 }

@@ -36,7 +36,6 @@ export abstract class MapComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.createMap();
-    this.map.once('render', () => this.onRenderMap());
     this.map.once('load', () => this.initiateMapLoading());
   }
 
@@ -69,8 +68,6 @@ export abstract class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
   }
-
-  private onRenderMap() {}
 
   protected abstract onLoadMap(): void;
 
