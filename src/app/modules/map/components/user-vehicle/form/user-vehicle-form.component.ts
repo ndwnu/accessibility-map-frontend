@@ -219,7 +219,7 @@ export class UserVehicleFormComponent implements OnInit {
         break;
     }
 
-    this.currentModalRef = this.designSystemModalService.open(contentRef);
+    this.currentModalRef = this.designSystemModalService.open(contentRef, { disableClose: true });
   }
 
   private listenToVehicleTypeChanges() {
