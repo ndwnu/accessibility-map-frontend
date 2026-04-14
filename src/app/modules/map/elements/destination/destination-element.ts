@@ -6,5 +6,6 @@ export class DestinationElement extends BerMapElement {
   constructor(config: BerMapElementConfig, accessibilityDataService: AccessibilityDataService) {
     super(config);
     this.sources = [new DestinationSource(config, accessibilityDataService)];
+    this.isVisible = true;
   }
 }

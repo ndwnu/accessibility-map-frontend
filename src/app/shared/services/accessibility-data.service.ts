@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { environment } from '@env/environment';
 import { DestinationProperties } from '@shared/models/destination.model';
@@ -52,19 +52,24 @@ export class AccessibilityDataService {
       const showDetails = this.showDetailedAccessibility();
       const detailValue = this.selectedDetailValue();
 
-      if (!filter) {
+      if (!filter || !showDetails) {
         return;
       }
-
-      const options = showDetails ? { showDisclaimer: false, details: detailValue } : { showDisclaimer: false };
-
-      this.#fetchRoadAccessibility(filter, options).subscribe();
+      untracked(() => {
+        this.#fetchRoadAccessibility(filter, { showDisclaimer: false, details: detailValue }).subscribe();
+      });
     });
   }
 
   getRoadAccessibility(filter: AccessibilityFilter, options?: { showDisclaimer: boolean; details?: DetailOption }) {
     this.#currentFilter.set(filter);
-    return this.#fetchRoadAccessibility(filter, options);
+    return this.#fetchRoadAccessibility(filter, options).pipe(
+      tap(() => {
+        if (options?.showDisclaimer) {
+          this.#accessibilityModalService.openDisclaimer();
+        }
+      }),
+    );
   }
 
   #fetchRoadAccessibility(filter: AccessibilityFilter, options?: { showDisclaimer: boolean; details?: DetailOption }) {
@@ -114,9 +119,6 @@ export class AccessibilityDataService {
       .pipe(
         tap((data) => {
           this.roadAccessibilityBS.next(data);
-          if (options?.showDisclaimer) {
-            this.#accessibilityModalService.openDisclaimer();
-          }
         }),
         finalize(() => this.isLoading.set(false)),
       );

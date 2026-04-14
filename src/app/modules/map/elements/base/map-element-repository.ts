@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
 import { MapElementEnum } from '@modules/map/elements/base/map-element.enum';
+import { DestinationElement } from '@modules/map/elements/destination/destination-element';
 import { DrivingDirectionElement } from '@modules/map/elements/driving-direction/driving-direction-element';
 import { MotorizedNoAccessElement } from '@modules/map/elements/motorized-no-access/motorized-no-access-element';
 import { NdwAerialElement } from '@modules/map/elements/ndw/ndw-aerial-element';
@@ -50,6 +51,10 @@ export class BerMapElementRepository extends MapElementRepository<MapElementEnum
         { ...mapElementConfig, elementId: MapElementEnum.TrafficSigns, elementOrder: 100 },
         this.#trafficSignService,
         this.#accessibilityFilterService,
+      ),
+      new DestinationElement(
+        { ...mapElementConfig, elementId: MapElementEnum.Destination, elementOrder: 200 },
+        this.#accessibilityDataService,
       ),
     ].forEach((element) => this.addMapElement(element));
   }
