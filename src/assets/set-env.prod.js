@@ -8,6 +8,7 @@ window.environment = {
     trafficSignUrl: '${NDW_TRAFFIC_SIGN_CURRENT_STATE_URL}',
     accessibilityUrl: '${NDW_ACCESSIBILITY_URL}',
     roadSectionsUrl: '${NDW_ROAD_SECTIONS_URL}',
+    baseMap: '${NDW_BASE_MAP_URL}',
     spriteUrl: '${NDW_SPRITE_URL}',
     glyphsUrl: '${NDW_GLYPHS_URL}',
   },

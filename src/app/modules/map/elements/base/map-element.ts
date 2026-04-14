@@ -1,27 +1,8 @@
-import { Map } from 'maplibre-gl';
-import { MapSource } from './map-source';
-import { Subject } from 'rxjs';
+import { BerMapSource, MapElementEnum } from '@modules/map/elements/base';
+import { MapElement, MapElementConfig } from '@ndwnu/map';
 
-export abstract class MapElement {
-  sources: MapSource[] = [];
-  protected unsubscribe = new Subject<void>();
+export type BerMapElementConfig = MapElementConfig<MapElementEnum>;
 
-  constructor(protected readonly map: Map) {
-    this.map = map;
-  }
-
-  onInit() {
-    this.sources.forEach((source) => source.onInit());
-  }
-
-  onDestroy() {
-    this.sources.forEach((source) => source.onDestroy());
-
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
-  }
-
-  setVisible(visible: boolean) {
-    this.sources.forEach((source) => source.setVisible(visible));
-  }
+export abstract class BerMapElement extends MapElement<MapElementEnum> {
+  override sources: BerMapSource[] = [];
 }

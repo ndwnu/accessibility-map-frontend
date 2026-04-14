@@ -8,13 +8,12 @@ export interface Environment {
     trafficSignUrl: string;
     accessibilityUrl: string;
     roadSectionsUrl: string;
+    baseMap: string;
     spriteUrl: string;
     glyphsUrl: string;
   };
   pdok: {
     roadDataUrl: string;
-    aerialTilesUrl: string;
-    brtTilesUrl: string;
   };
   rdw: {
     axleUrl: string;

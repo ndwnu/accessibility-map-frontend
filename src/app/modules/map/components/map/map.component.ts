@@ -9,7 +9,6 @@ import {
   output,
   viewChild,
 } from '@angular/core';
-import { MapElement } from '@modules/map/elements/base';
 import { MapState } from '@shared/models';
 import { MapService } from '@shared/services/map.service';
 import { Feature } from 'geojson';
@@ -26,7 +25,6 @@ export abstract class MapComponent implements AfterViewInit, OnDestroy {
   mapElementRef = viewChild.required<ElementRef>('map');
 
   map!: Map;
-  mapElements: MapElement[] = [];
 
   constructor() {
     effect(() => {

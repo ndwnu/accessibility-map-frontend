@@ -1,5 +1,5 @@
+import { BerMapLayer } from '@modules/map/elements/base';
 import { LayerSpecification } from 'maplibre-gl';
-import { MapLayer } from '../base/map-layer';
 
 const ONE_WAY_ARROW_SIZE_MIN = 0.4;
 const ONE_WAY_ARROW_SIZE_MAX = 0.5;
@@ -7,7 +7,7 @@ const ONE_WAY_ARROW_OPACITY_MIN = 0.6;
 const ONE_WAY_ARROW_OPACITY_MAX = 1;
 const ONE_WAY_DRIVING_DIRECTION = 'H';
 
-export class DrivingDirectionLayer extends MapLayer {
+export class DrivingDirectionLayer extends BerMapLayer {
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,

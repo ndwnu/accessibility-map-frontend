@@ -28,7 +28,9 @@ export class AccessibilityModalService {
 
   readonly activeStep = computed(() => {
     const modal = this.activeModal();
-    if (modal === null) return 0;
+    if (modal === null) {
+      return 0;
+    }
     return MODAL_TO_STEP[modal] ?? 0;
   });
 

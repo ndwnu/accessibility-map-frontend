@@ -14,14 +14,12 @@ export const environment: Environment = {
     trafficSignUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/traffic-signs/v4/current-state',
     accessibilityUrl: 'https://data.staging.ndw.nu/api/rest/static-road-data/accessibility-map/v2',
     roadSectionsUrl: 'https://maps.ndw.nu/api/v1/nwb/latest/mbtiles/roadSections/tiles/{z}/{x}/{y}.pbf',
+    baseMap: 'https://maps.ndw.nu/styles/ndw-basemap/dev/style.json',
     spriteUrl: 'https://maps.ndw.nu/styles/sprites/osm-default/osm-default',
     glyphsUrl: 'https://maps.ndw.nu/styles/glyphs/{fontstack}/{range}.pbf',
   },
   pdok: {
     roadDataUrl: 'https://api.pdok.nl/bzk/locatieserver/search/v3_1',
-    aerialTilesUrl: 'https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:3857/{z}/{x}/{y}.jpeg',
-    brtTilesUrl:
-      'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?layer=grijs&style=default&tilematrixset=EPSG%3A3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
   },
   rdw: {
     axleUrl: 'https://opendata.rdw.nl/resource/3huj-srit.json',

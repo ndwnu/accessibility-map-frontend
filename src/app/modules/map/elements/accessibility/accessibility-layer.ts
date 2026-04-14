@@ -1,19 +1,16 @@
-import { LayerSpecification, Map } from 'maplibre-gl';
-import { MapLayer } from '../base/map-layer';
-import {
-  ACCESSIBLE_ROAD_SECTION_COLOR,
-  INACCESSIBLE_ROAD_SECTION_COLOR,
-  lineWidthFrcSpecification,
-} from '@modules/map/elements/constants';
+import { LayerSpecification } from 'maplibre-gl';
+import { ACCESSIBLE_ROAD_SECTION_COLOR, INACCESSIBLE_ROAD_SECTION_COLOR } from '@modules/map/elements/constants';
+import { BerMapElementConfig, BerMapLayer } from '@modules/map/elements/base';
+import { lineWidthFrcSpecification } from '@ndwnu/map';
 
 export const INACCESSIBLE_CARRIAGEWAY_TYPES = ['BU', 'BUS', 'CADO', 'FP', 'OVB', 'RP', 'VDF', 'VDV', 'VP', 'VV', 'VZ'];
 
-export class AccessibilityLayer extends MapLayer {
-  constructor(map: Map, sourceId: string) {
-    super(map, sourceId);
+export class AccessibilityLayer extends BerMapLayer {
+  constructor(config: BerMapElementConfig, sourceId: string) {
+    super(config, sourceId);
   }
 
-  protected override getSpecification(): Partial<LayerSpecification> {
+  protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,
       type: 'line',

@@ -1,19 +1,19 @@
-import { FilterSpecification, Map, SourceSpecification } from 'maplibre-gl';
-import { MapSource } from '@modules/map/elements/base/map-source';
+import { FilterSpecification, SourceSpecification } from 'maplibre-gl';
 import { environment } from '@env/environment';
 import { MotorizedNoAccessLayer } from '@modules/map/elements/motorized-no-access/motorized-no-access-layer';
 import { AccessibilityFilterService } from '@shared/services';
 import { AccessibilityFilter } from '@shared/models';
 import { convertMunicipalityToNLS } from '@shared/utils/convert-municipality-id';
+import { BerMapElementConfig, BerMapSource } from '@modules/map/elements/base';
 
-export class MotorizedNoAccessSource extends MapSource {
+export class MotorizedNoAccessSource extends BerMapSource {
   constructor(
-    map: Map,
+    config: BerMapElementConfig,
     private readonly accessibilityFilterService: AccessibilityFilterService,
   ) {
-    super('motorized-no-access', map);
+    super('motorized-no-access', config);
 
-    this.layers = [new MotorizedNoAccessLayer(map, this.id)];
+    this.layers = [new MotorizedNoAccessLayer(config, this.id)];
   }
 
   override onInit(): void {

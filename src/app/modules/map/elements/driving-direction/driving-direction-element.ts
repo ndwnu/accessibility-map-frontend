@@ -1,11 +1,11 @@
-import { Map } from 'maplibre-gl';
-import { MapElement } from '../base';
 import { DrivingDirectionSource } from '@modules/map/elements/driving-direction/driving-direction-source';
+import { BerMapElement, BerMapElementConfig } from '@modules/map/elements/base';
 
-export class DrivingDirectionElement extends MapElement {
-  constructor(map: Map) {
-    super(map);
+export class DrivingDirectionElement extends BerMapElement {
+  constructor(config: BerMapElementConfig) {
+    super(config);
 
-    this.sources = [new DrivingDirectionSource(map)];
+    this.sources = [new DrivingDirectionSource(config)];
+    this.isVisible = true;
   }
 }

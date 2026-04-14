@@ -1,24 +1,25 @@
+import { BerMapElementConfig, BerMapLayer } from '@modules/map/elements/base';
+import { ClickEvent } from '@ndwnu/map';
 import { TrafficSign } from '@shared/models/traffic-sign.model';
 import { TrafficSignService } from '@shared/services';
-import { FilterSpecification, LayerSpecification, Map } from 'maplibre-gl';
-import { clickEvent, MapLayer } from '../base/map-layer';
+import { FilterSpecification, LayerSpecification } from 'maplibre-gl';
 
 const RVV_CODE_UNKNOWN = 'onbekend';
 
-export class TrafficSignLayer extends MapLayer {
+export class TrafficSignLayer extends BerMapLayer {
   constructor(
-    map: Map,
+    config: BerMapElementConfig,
     sourceId: string,
     private readonly trafficSignService: TrafficSignService,
   ) {
-    super(map, sourceId);
+    super(config, sourceId);
   }
 
   override getFilterSpecification(): FilterSpecification {
     return ['!', ['has', 'point_count']];
   }
 
-  protected override onClick(event: clickEvent): void {
+  protected override onClick(event: ClickEvent): void {
     const trafficSigns = event.features?.map(
       (feature) =>
         ({

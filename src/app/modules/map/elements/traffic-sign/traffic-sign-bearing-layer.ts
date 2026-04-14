@@ -1,9 +1,9 @@
-import { FilterSpecification, LayerSpecification, Map } from 'maplibre-gl';
-import { MapLayer } from '../base/map-layer';
+import { BerMapElementConfig, BerMapLayer } from '@modules/map/elements/base';
+import { FilterSpecification, LayerSpecification } from 'maplibre-gl';
 
-export class TrafficSignBearingLayer extends MapLayer {
-  constructor(map: Map, sourceId: string) {
-    super(map, sourceId);
+export class TrafficSignBearingLayer extends BerMapLayer {
+  constructor(config: BerMapElementConfig, sourceId: string) {
+    super(config, sourceId);
   }
   override get id(): string {
     return `${this.sourceId}-bearing-layer`;

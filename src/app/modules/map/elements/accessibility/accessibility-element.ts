@@ -1,12 +1,12 @@
-import { Map } from 'maplibre-gl';
-import { MapElement } from '../base';
+import { BerMapElement, BerMapElementConfig } from '../base';
 import { AccessibilitySource } from '@modules/map/elements/accessibility/accessibility-source';
 import { AccessibilityDataService } from '@shared/services';
 
-export class AccessibilityElement extends MapElement {
-  constructor(map: Map, accessibilityDataService: AccessibilityDataService) {
-    super(map);
+export class AccessibilityElement extends BerMapElement {
+  constructor(config: BerMapElementConfig, accessibilityDataService: AccessibilityDataService) {
+    super(config);
 
-    this.sources = [new AccessibilitySource(map, accessibilityDataService)];
+    this.sources = [new AccessibilitySource(config, accessibilityDataService)];
+    this.isVisible = true;
   }
 }

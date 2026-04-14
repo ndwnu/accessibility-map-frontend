@@ -14,17 +14,12 @@ import {
 } from '@angular/core';
 import { MapComponent } from '@modules/map/components/map';
 import { ControlPanelComponent } from '@modules/map/components/control-panel';
-import { DestinationElement } from '@modules/map/elements/destination/destination-element';
-import { TrafficSignElement } from '@modules/map/elements/traffic-signs/traffic-sign-element';
-import { BrtElement } from '@modules/map/elements/brt/brt-element';
-import { AerialElement } from '@modules/map/elements/aerial/aerial-element';
-import { AccessibilityFilterService, AccessibilityDataService, TrafficSignService } from '@shared/services';
+import { TrafficSignService } from '@shared/services';
 
 import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs';
 import { MapBackgroundOption, MapDisplayComponent, MapButtonComponent } from '@ndwnu/design-system';
-import { AccessibilityElement } from '@modules/map/elements/accessibility/accessibility-element';
-import { MotorizedNoAccessElement } from '@modules/map/elements/motorized-no-access/motorized-no-access-element';
-import { DrivingDirectionElement } from '@modules/map/elements/driving-direction/driving-direction-element';
+import { BerMapElementRepository } from '@modules/map/elements/base/map-element-repository';
+import { MapElementEnum } from '@modules/map/elements/base';
 
 const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
 
@@ -35,11 +30,10 @@ const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
   styleUrl: './main-map.component.scss',
 })
 export class MainMapComponent extends MapComponent implements AfterViewInit {
-  readonly #accessibilityFilterService = inject(AccessibilityFilterService);
-  readonly #accessibilityDataService = inject(AccessibilityDataService);
   readonly #overlay = inject(Overlay);
   readonly #trafficSignService = inject(TrafficSignService);
   readonly #viewContainerRef = inject(ViewContainerRef);
+  readonly #berMapElementRepository = inject(BerMapElementRepository);
 
   showControlPanel = input(true);
   openPanel = output();
@@ -49,16 +43,17 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
   lngLat = computed(() => this.#trafficSignService.selectedTrafficSigns()?.[0].lnglat);
 
   backgroundOptions: MapBackgroundOption[] = [
-    { id: 'brt', name: 'BRT', style: '', imageLink: 'assets/images/background-layer-icon/brt.jpg' },
-    { id: 'aerial', name: 'Luchtfoto', style: '', imageLink: 'assets/images/background-layer-icon/aerial.jpg' },
+    { id: MapElementEnum.BaseMap, name: 'NDW', style: '', imageLink: 'assets/images/background-layer-icon/brt.jpg' },
+    {
+      id: MapElementEnum.Aerial,
+      name: 'Luchtfoto',
+      style: '',
+      imageLink: 'assets/images/background-layer-icon/aerial.jpg',
+    },
   ];
 
   #overlayRef!: OverlayRef;
   #positionStrategy = this.#overlay.position().global();
-
-  get trafficSignElement(): TrafficSignElement | undefined {
-    return this.mapElements.find((element) => element instanceof TrafficSignElement);
-  }
 
   constructor() {
     super();
@@ -87,18 +82,8 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     this.map.zoomOut();
   }
 
-  protected async onLoadMap() {
-    this.mapElements = [
-      new BrtElement(this.map),
-      new AerialElement(this.map),
-      new MotorizedNoAccessElement(this.map, this.#accessibilityFilterService),
-      new AccessibilityElement(this.map, this.#accessibilityDataService),
-      new DrivingDirectionElement(this.map),
-      new TrafficSignElement(this.map, this.#trafficSignService, this.#accessibilityFilterService),
-      new DestinationElement(this.map, this.#accessibilityDataService),
-    ];
-
-    this.#initializeMapElements();
+  protected onLoadMap() {
+    this.#berMapElementRepository.registerMapElements(this.map);
     this.#loadImages();
   }
 
@@ -107,21 +92,13 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
   }
 
   handleTrafficSignVisible(visible: boolean) {
-    this.trafficSignElement?.setVisible(visible);
+    this.#berMapElementRepository.setMapElementVisibility(MapElementEnum.TrafficSigns, visible);
   }
 
-  onBackgroundChange(backgroundOptions: MapBackgroundOption) {
-    this.mapElements.find((element) => element instanceof BrtElement)?.setVisible(backgroundOptions.id === 'brt');
-    this.mapElements.find((element) => element instanceof AerialElement)?.setVisible(backgroundOptions.id === 'aerial');
-  }
-
-  #initializeMapElements() {
-    this.mapElements.forEach((element) => {
-      element.onInit();
-    });
-    this.mapElements.find((element) => element instanceof TrafficSignElement)?.setVisible(true);
-    this.mapElements.find((element) => element instanceof AccessibilityElement)?.setVisible(true);
-    this.mapElements.find((element) => element instanceof MotorizedNoAccessElement)?.setVisible(true);
+  onBackgroundChange(backgroundOption: MapBackgroundOption) {
+    const baseMapVisible = backgroundOption.id === MapElementEnum.BaseMap;
+    this.#berMapElementRepository.setMapElementVisibility(MapElementEnum.BaseMap, baseMapVisible);
+    this.#berMapElementRepository.setMapElementVisibility(MapElementEnum.Aerial, !baseMapVisible);
   }
 
   #loadImages() {

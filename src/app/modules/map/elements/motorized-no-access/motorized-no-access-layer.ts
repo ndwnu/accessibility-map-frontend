@@ -1,9 +1,10 @@
 import { FilterSpecification, LayerSpecification } from 'maplibre-gl';
-import { MapLayer } from '@modules/map/elements/base/map-layer';
-import { INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR, lineWidthFrcSpecification } from '@modules/map/elements/constants';
+import { BerMapLayer } from '@modules/map/elements/base/map-layer';
+import { INACCESSIBLE_CARRIAGEWAY_TYPE_COLOR } from '@modules/map/elements/constants';
 import { INACCESSIBLE_CARRIAGEWAY_TYPES } from '@modules/map/elements/accessibility/accessibility-layer';
+import { lineWidthFrcSpecification } from '@ndwnu/map';
 
-export class MotorizedNoAccessLayer extends MapLayer {
+export class MotorizedNoAccessLayer extends BerMapLayer {
   protected getSpecification(): Partial<LayerSpecification> {
     return {
       id: this.id,

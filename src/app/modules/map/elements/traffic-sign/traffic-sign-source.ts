@@ -1,32 +1,32 @@
 import { AccessibilityFilter } from '@shared/models';
 import { AccessibilityFilterService, TrafficSignService } from '@shared/services';
-import { ExpressionSpecification, FilterSpecification, Map, SourceSpecification } from 'maplibre-gl';
+import { ExpressionSpecification, FilterSpecification, SourceSpecification } from 'maplibre-gl';
 import { combineLatest, filter, switchMap } from 'rxjs';
-import { MapSource } from '../base/map-source';
 import { TrafficSignBlackCodeLayer } from './traffic-sign-black-code-layer';
 import { TrafficSignBlackCodeSuffixLayer } from './traffic-sign-black-code-suffix-layer';
 import { TrafficSignClusterLabelLayer } from './traffic-sign-cluster-label-layer';
 import { TrafficSignClusterLayer } from './traffic-sign-cluster-layer';
 import { TrafficSignLayer } from './traffic-sign-layer';
 import { TrafficSignTextSignLayer } from './traffic-sign-text-sign-layer';
-import { TrafficSignBearingLayer } from '@modules/map/elements/traffic-signs/traffic-sign-bearing-layer';
+import { TrafficSignBearingLayer } from '@modules/map/elements/traffic-sign/traffic-sign-bearing-layer';
+import { BerMapElementConfig, BerMapSource } from '@modules/map/elements/base';
 
-export class TrafficSignSource extends MapSource {
+export class TrafficSignSource extends BerMapSource {
   constructor(
-    map: Map,
+    config: BerMapElementConfig,
     private readonly trafficSignService: TrafficSignService,
     private readonly accessibilityFilterService: AccessibilityFilterService,
   ) {
-    super('traffic-signs', map);
+    super('traffic-signs', config);
 
     this.layers = [
-      new TrafficSignLayer(map, this.id, trafficSignService),
-      new TrafficSignBearingLayer(map, this.id),
-      new TrafficSignClusterLayer(map, this.id),
-      new TrafficSignClusterLabelLayer(map, this.id),
-      new TrafficSignTextSignLayer(map, this.id),
-      new TrafficSignBlackCodeSuffixLayer(map, this.id),
-      new TrafficSignBlackCodeLayer(map, this.id),
+      new TrafficSignLayer(config, this.id, trafficSignService),
+      new TrafficSignBearingLayer(config, this.id),
+      new TrafficSignClusterLayer(config, this.id),
+      new TrafficSignClusterLabelLayer(config, this.id),
+      new TrafficSignTextSignLayer(config, this.id),
+      new TrafficSignBlackCodeSuffixLayer(config, this.id),
+      new TrafficSignBlackCodeLayer(config, this.id),
     ];
   }
 

@@ -1,9 +1,9 @@
-import { LayerSpecification, Map } from 'maplibre-gl';
-import { MapLayer } from '../base/map-layer';
+import { BerMapElementConfig, BerMapLayer } from '@modules/map/elements/base';
+import { LayerSpecification } from 'maplibre-gl';
 
-export class DestinationLayer extends MapLayer {
-  constructor(map: Map, sourceId: string) {
-    super(map, sourceId);
+export class DestinationLayer extends BerMapLayer {
+  constructor(config: BerMapElementConfig, sourceId: string) {
+    super(config, sourceId);
   }
 
   protected getSpecification(): Partial<LayerSpecification> {

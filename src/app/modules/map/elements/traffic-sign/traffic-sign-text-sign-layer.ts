@@ -1,7 +1,7 @@
+import { BerMapLayer } from '@modules/map/elements/base';
 import { FilterSpecification, LayerSpecification } from 'maplibre-gl';
-import { MapLayer } from '../base/map-layer';
 
-export class TrafficSignTextSignLayer extends MapLayer {
+export class TrafficSignTextSignLayer extends BerMapLayer {
   override get id(): string {
     return `${this.sourceId}-text-sign-layer`;
   }
