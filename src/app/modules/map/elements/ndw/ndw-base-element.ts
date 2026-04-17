@@ -10,6 +10,7 @@ export class NdwBaseElement extends ApiElement<MapElementEnum> {
     const layerFilter: NdwLayerFilterFunction = (layer) => {
       return (
         layer.metadata.group === 'context-map' ||
+        (layer.metadata.group === 'context-labels' && layer.metadata['sub-group'] === 'BGT-huisnummers') ||
         (layer.metadata.group === 'context-roads' &&
           layer.metadata['sub-group'] !== 'NWB-hectometersigns' &&
           layer.metadata.group === 'context-roads' &&
