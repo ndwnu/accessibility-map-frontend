@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.reasons-list {
+  list-style: disc;
+  margin: 0;
+  padding-left: var(--ndw-spacing-md);
+  display: grid;
+  gap: var(--ndw-spacing-2xs);
+}

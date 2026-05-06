@@ -1,0 +1,20 @@
+@if (destinationResults(); as destination) {
+  <ndw-card>
+    <ndw-card-header>
+      <span class="title">Niet bereikbaar</span>
+      <button ndwButton ndwTooltip="Sluit popup" tertiary alternative aria-label="Sluit popup" (click)="close()">
+        <ndw-icon>close</ndw-icon>
+      </button>
+    </ndw-card-header>
+    <ndw-card-content>
+      @if (address(); as address) {
+        <p class="address">{{ address }}</p>
+      }
+      @if (destination.reasons.length) {
+        <ber-reasons-list [reasons]="destination.reasons" />
+      } @else {
+        <p>Geen specifieke redenen beschikbaar.</p>
+      }
+    </ndw-card-content>
+  </ndw-card>
+}

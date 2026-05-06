@@ -7,3 +7,4 @@ export * from './pdok-suggestion.service';
 export * from './rdw.service';
 export * from './traffic-sign.service';
 export * from './accessibility-modal.service';
+export * from './map-popup.service';

@@ -10,11 +10,20 @@ import {
   SwitcherOption,
   SwitcherValue,
 } from '@ndwnu/design-system';
+import { ReasonsListComponent } from '@shared/components/reasons-list';
 import { AccessibilityDataService, PdokLookupService, DetailOption } from '@shared/services';
 
 @Component({
   selector: 'ber-control-panel',
-  imports: [CommonModule, LegendComponent, FormFieldComponent, CheckboxComponent, LoaderComponent, SwitcherComponent],
+  imports: [
+    CommonModule,
+    LegendComponent,
+    FormFieldComponent,
+    CheckboxComponent,
+    LoaderComponent,
+    SwitcherComponent,
+    ReasonsListComponent,
+  ],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss',
 })

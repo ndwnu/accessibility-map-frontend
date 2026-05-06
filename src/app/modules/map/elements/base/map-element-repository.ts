@@ -10,7 +10,12 @@ import { NdwBaseElement } from '@modules/map/elements/ndw/ndw-base-element';
 import { NdwLabelsElement } from '@modules/map/elements/ndw/ndw-labels-element';
 import { TrafficSignElement } from '@modules/map/elements/traffic-sign/traffic-sign-element';
 import { MapElementRepository, MaplibreCursorService } from '@ndwnu/map';
-import { AccessibilityDataService, AccessibilityFilterService, TrafficSignService } from '@shared/services';
+import {
+  AccessibilityDataService,
+  AccessibilityFilterService,
+  MapPopupService,
+  TrafficSignService,
+} from '@shared/services';
 import { Map } from 'maplibre-gl';
 
 @Injectable({
@@ -21,6 +26,7 @@ export class BerMapElementRepository extends MapElementRepository<MapElementEnum
   readonly #accessibilityFilterService = inject(AccessibilityFilterService);
   readonly #http = inject(HttpClient);
   readonly #maplibreCursorService = inject(MaplibreCursorService);
+  readonly #mapPopupService = inject(MapPopupService);
   readonly #trafficSignService = inject(TrafficSignService);
 
   registerMapElements(mapObject: Map) {
@@ -55,6 +61,7 @@ export class BerMapElementRepository extends MapElementRepository<MapElementEnum
       new DestinationElement(
         { ...mapElementConfig, elementId: MapElementEnum.Destination, elementOrder: 200 },
         this.#accessibilityDataService,
+        this.#mapPopupService,
       ),
     ].forEach((element) => this.addMapElement(element));
   }

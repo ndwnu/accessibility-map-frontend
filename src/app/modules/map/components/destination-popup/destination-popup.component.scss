@@ -1,0 +1,34 @@
+:host {
+  width: 16rem;
+
+  ndw-card {
+    gap: var(--ndw-spacing-sm);
+
+    ndw-card-header {
+      align-items: center;
+      display: grid;
+      gap: var(--ndw-spacing-sm);
+      grid-template-columns: 1fr auto;
+    }
+
+    ndw-card-content {
+      display: grid;
+      gap: var(--ndw-spacing-sm);
+
+      .address {
+        color: var(--ndw-color-grey-600);
+        font-size: var(--ndw-font-size-sm);
+        margin: 0;
+      }
+
+      ber-reasons-list {
+        font-size: var(--ndw-font-size-sm);
+      }
+    }
+  }
+
+  .title {
+    color: var(--ndw-color-critical-500);
+    font-weight: var(--ndw-font-weight-bold);
+  }
+}

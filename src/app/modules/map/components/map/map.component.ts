@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   effect,
   ElementRef,
@@ -17,12 +18,13 @@ import { FilterSpecification, StyleImageMetadata, Map } from 'maplibre-gl';
 @Component({ standalone: true, template: '' })
 export abstract class MapComponent implements AfterViewInit, OnDestroy {
   readonly #map = inject(MapService);
+  readonly #cdr = inject(ChangeDetectorRef);
 
   expressions = input<FilterSpecification>();
   featureClick = output<Feature[]>();
   mapIdle = output<MapState>();
 
-  mapElementRef = viewChild.required<ElementRef>('map');
+  mapElementRef = viewChild.required<ElementRef>('mapContainer');
 
   map!: Map;
 
@@ -35,6 +37,7 @@ export abstract class MapComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.createMap();
     this.map.once('load', () => this.initiateMapLoading());
+    this.#cdr.detectChanges();
   }
 
   ngOnDestroy() {

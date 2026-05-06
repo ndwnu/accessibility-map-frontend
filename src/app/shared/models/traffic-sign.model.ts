@@ -15,7 +15,7 @@ export interface TrafficSign {
   bearing: number;
   side: SideEnum;
   textSigns: TextSign[];
-  lnglat?: LngLat;
+  lnglat: LngLat;
 }
 
 export interface TextSign {

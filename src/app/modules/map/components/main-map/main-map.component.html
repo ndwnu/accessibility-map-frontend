@@ -1,12 +1,12 @@
-<div class="map-wrapper__map" #map></div>
+<div class="map-wrapper__map" #mapContainer></div>
 
 @if (showControlPanel()) {
   <ber-control-panel (openModal)="openPanel.emit()" (showTrafficSignsLayer)="handleTrafficSignVisible($event)" />
 }
 
-<ng-template #trafficSignsPopup>
-  <ber-selected-traffic-signs (closed)="closePopup()" />
-</ng-template>
+@if (map) {
+  <ber-map-popup [map]="map" [mapElementRef]="mapElementRef()" />
+}
 
 <div class="map-controls">
   <ndw-map-button icon="zoom-in" (click)="zoomIn()" />

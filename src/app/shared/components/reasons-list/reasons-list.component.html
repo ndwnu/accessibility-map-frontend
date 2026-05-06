@@ -1,0 +1,12 @@
+<ul class="reasons-list">
+  @for (reasonSet of reasons(); track $index) {
+    @for (reason of reasonSet; track $index) {
+      <li>
+        {{ reason.type | destinationReasonType }}:
+        {{ reason.condition | condition }}
+        {{ reason.value ?? reason.values?.join(', ') }}
+        {{ reason.unitSymbol | unitSymbol }}
+      </li>
+    }
+  }
+</ul>

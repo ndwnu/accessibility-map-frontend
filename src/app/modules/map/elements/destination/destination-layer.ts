@@ -1,9 +1,28 @@
 import { BerMapElementConfig, BerMapLayer } from '@modules/map/elements/base';
+import { ClickEvent } from '@ndwnu/map';
 import { LayerSpecification } from 'maplibre-gl';
+import { MapPopupService } from '@shared/services';
 
 export class DestinationLayer extends BerMapLayer {
-  constructor(config: BerMapElementConfig, sourceId: string) {
+  constructor(
+    config: BerMapElementConfig,
+    sourceId: string,
+    private readonly mapPopupService: MapPopupService,
+  ) {
     super(config, sourceId);
+  }
+
+  protected override onClick(event: ClickEvent): void {
+    const feature = event.features?.[0];
+    if (!feature) {
+      return;
+    }
+
+    if (feature.properties?.['accessible'] === false) {
+      this.mapPopupService.openDestinationPopup(event.lngLat);
+    } else {
+      this.mapPopupService.closePopup();
+    }
   }
 
   protected getSpecification(): Partial<LayerSpecification> {

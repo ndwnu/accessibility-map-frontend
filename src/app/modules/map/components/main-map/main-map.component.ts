@@ -1,46 +1,22 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  output,
-  TemplateRef,
-  viewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { MapComponent } from '@modules/map/components/map';
 import { ControlPanelComponent } from '@modules/map/components/control-panel';
-import { TrafficSignService } from '@shared/services';
-
-import { SelectedTrafficSignsComponent } from '../traffic-signs/selected-traffic-signs';
 import { MapBackgroundOption, MapDisplayComponent, MapButtonComponent } from '@ndwnu/design-system';
 import { BerMapElementRepository } from '@modules/map/elements/base/map-element-repository';
 import { MapElementEnum } from '@modules/map/elements/base';
-
-const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
+import { MapPopupComponent } from '../map-popup';
 
 @Component({
   selector: 'ber-main-map',
-  imports: [ControlPanelComponent, SelectedTrafficSignsComponent, MapDisplayComponent, MapButtonComponent],
+  imports: [ControlPanelComponent, MapDisplayComponent, MapButtonComponent, MapPopupComponent],
   templateUrl: './main-map.component.html',
   styleUrl: './main-map.component.scss',
 })
-export class MainMapComponent extends MapComponent implements AfterViewInit {
-  readonly #overlay = inject(Overlay);
-  readonly #trafficSignService = inject(TrafficSignService);
-  readonly #viewContainerRef = inject(ViewContainerRef);
+export class MainMapComponent extends MapComponent {
   readonly #berMapElementRepository = inject(BerMapElementRepository);
 
   showControlPanel = input(true);
   openPanel = output();
-
-  popupRef = viewChild.required<TemplateRef<SelectedTrafficSignsComponent>>('trafficSignsPopup');
-
-  lngLat = computed(() => this.#trafficSignService.selectedTrafficSigns()?.[0].lnglat);
 
   backgroundOptions: MapBackgroundOption[] = [
     { id: MapElementEnum.BaseMap, name: 'NDW', style: '', imageLink: 'assets/images/background-layer-icon/brt.jpg' },
@@ -52,43 +28,12 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     },
   ];
 
-  #overlayRef!: OverlayRef;
-  #positionStrategy = this.#overlay.position().global();
-
-  constructor() {
-    super();
-    effect(() => {
-      const templatePortal = new TemplatePortal(this.popupRef(), this.#viewContainerRef);
-      this.#overlayRef?.detach();
-      this.#updatePopupPosition();
-      this.#overlayRef?.attach(templatePortal);
-    });
-  }
-
-  override ngAfterViewInit() {
-    super.ngAfterViewInit();
-    this.#overlayRef = this.#overlay.create();
-
-    this.map?.on('move', () => {
-      this.#updatePopupPosition();
-    });
-  }
-
   zoomIn() {
     this.map.zoomIn();
   }
 
   zoomOut() {
     this.map.zoomOut();
-  }
-
-  protected onLoadMap() {
-    this.#berMapElementRepository.registerMapElements(this.map);
-    this.#loadImages();
-  }
-
-  closePopup() {
-    this.#overlayRef.detach();
   }
 
   handleTrafficSignVisible(visible: boolean) {
@@ -99,6 +44,11 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
     const baseMapVisible = backgroundOption.id === MapElementEnum.BaseMap;
     this.#berMapElementRepository.setMapElementVisibility(MapElementEnum.BaseMap, baseMapVisible);
     this.#berMapElementRepository.setMapElementVisibility(MapElementEnum.Aerial, !baseMapVisible);
+  }
+
+  protected onLoadMap() {
+    this.#berMapElementRepository.registerMapElements(this.map);
+    this.#loadImages();
   }
 
   #loadImages() {
@@ -129,37 +79,12 @@ export class MainMapComponent extends MapComponent implements AfterViewInit {
   }
 
   #loadSign(code: string, zoneCode?: 'ZB' | 'ZH' | 'ZE') {
+    const zoneCodeNames = { ZB: 'BEGIN', ZE: 'END', ZH: 'REPEAT' };
     const imageName = zoneCode ? `${code}-${zoneCode}` : code;
+
     const path = zoneCode
       ? `assets/images/traffic-signs/${code}-${zoneCodeNames[zoneCode]}.png`
       : `assets/images/traffic-signs/${code}.png`;
     this.loadImage(imageName, path, { pixelRatio: 2.5 });
-  }
-
-  #updatePopupPosition() {
-    const lngLat = this.lngLat();
-    if (!lngLat) {
-      return;
-    }
-
-    const { x, y } = this.map.project(lngLat);
-    this.#updatePositionStrategy(x, y);
-    this.#overlayRef.updatePosition();
-  }
-
-  #updatePositionStrategy(clickX: number, clickY: number) {
-    const { height, width, x, y } = (this.mapElementRef().nativeElement as HTMLDivElement).getBoundingClientRect();
-    if (clickX > width / 2) {
-      this.#positionStrategy.right(`${(width - clickX).toFixed()}px`);
-    } else {
-      this.#positionStrategy.left(`${(clickX + x).toFixed()}px`);
-    }
-    if (clickY > height / 2) {
-      this.#positionStrategy.bottom(`${(height - clickY).toFixed()}px`);
-    } else {
-      this.#positionStrategy.top(`${(clickY + y).toFixed()}px`);
-    }
-
-    this.#overlayRef.updatePositionStrategy(this.#positionStrategy);
   }
 }

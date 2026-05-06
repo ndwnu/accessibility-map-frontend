@@ -5,24 +5,22 @@
 
   <ndw-card-content>
     <div class="content">
-      <form>
-        <ndw-form-field label="Selecteer de gemeente of het adres van uw bestemming">
-          <input
-            ndwInput
-            type="search"
-            placeholder="Voer gemeente of adres in"
-            [ndwAutosuggest]="autoSuggestPanel"
-            (input)="addressSearchChanged($event)"
-            [value]="pdokLookupService.pdokLookup()?.weergavenaam"
-          />
-          <ndw-autosuggest
-            #autoSuggestPanel
-            [options]="autosuggestOptions()"
-            [noResultText]="noResultText()"
-            (optionSelected)="onOptionSelected($event)"
-          />
-        </ndw-form-field>
-      </form>
+      <ndw-form-field label="Selecteer de gemeente of het adres van uw bestemming">
+        <input
+          ndwInput
+          type="search"
+          placeholder="Voer gemeente of adres in"
+          [ndwAutosuggest]="autoSuggestPanel"
+          (input)="addressSearchChanged($event)"
+          [value]="pdokLookupService.pdokLookup()?.weergavenaam"
+        />
+        <ndw-autosuggest
+          #autoSuggestPanel
+          [options]="autosuggestOptions()"
+          [noResultText]="noResultText()"
+          (optionSelected)="onOptionSelected($event)"
+        />
+      </ndw-form-field>
       <small>
         {{ lookupIsLoading() ? 'Laden...' : '' }}
       </small>
