@@ -1,8 +1,11 @@
 import { httpResource } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { environment } from '@env/environment';
-import { PdokLookupResponse } from '@shared/models/pdok.model';
+import { PdokLookup, PdokLookupResponse } from '@shared/models/pdok.model';
 import { Position } from 'geojson';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +30,7 @@ export class PdokLookupService {
   });
 
   pdokLookup = computed(() => this.pdokLookupResponse.value()?.response.docs[0] ?? undefined);
+  pdokLookup$: Observable<PdokLookup> = toObservable(this.pdokLookup).pipe(filter((lookup) => !!lookup));
   municipalityId = computed(() => (this.pdokLookup() ? `GM${this.pdokLookup()?.gemeentecode}` : undefined));
   centerPoint = computed(() => {
     const pdokLookup = this.pdokLookup();

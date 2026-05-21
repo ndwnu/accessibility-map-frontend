@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+/* eslint-disable max-lines */
+import { Injectable, signal } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,8 +9,19 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import {
+  defaultMaxCombinedWeight,
+  maxDummyAxleWeight,
+  maxDummyVehicleTotalWeight,
+} from '@modules/data-input/constants';
 import { VEHICLE_TYPES } from '@modules/map/models';
-import { DataInputFormGroup, StepOneFormGroup, StepThreeFormGroup, StepTwoFormGroup } from '@shared/models';
+import {
+  DataInputFormGroup,
+  StepOneFormGroup,
+  StepThreeFormGroup,
+  StepTwoFormGroup,
+  VehicleInfo,
+} from '@shared/models';
 import { FuelType } from '@shared/models/fuel-type.model';
 
 @Injectable({
@@ -17,6 +29,7 @@ import { FuelType } from '@shared/models/fuel-type.model';
 })
 export class DataInputService {
   form: FormGroup<DataInputFormGroup>;
+  vehicleInfo = signal<VehicleInfo | undefined>(undefined);
 
   constructor() {
     this.form = this.createForm();
@@ -158,6 +171,49 @@ export class DataInputService {
 
   markFormAsPristine() {
     this.form.markAsPristine();
+  }
+
+  setVehicleInfo(vehicleInfo: VehicleInfo) {
+    this.vehicleTypeControl.setValue(vehicleInfo.type, { emitEvent: false });
+
+    const maxWeight = this.trailer
+      ? (vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight)
+      : vehicleInfo.maxWeight;
+    let vehicleLoad = maxWeight && vehicleInfo.weight ? Math.round(maxWeight - vehicleInfo.weight) : 0;
+    if (this.trailer) {
+      vehicleLoad += vehicleInfo.trailerWeight ?? 0;
+    }
+
+    const vehicleAxleLoad = vehicleInfo.maxAxleWeight ?? 0;
+    this.stepThreeForm.patchValue({
+      vehicleCurbWeight: vehicleInfo.weight,
+      vehicleLoad,
+      vehicleTotalWeight: this.trailer
+        ? (vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight)
+        : vehicleInfo.maxWeight,
+      vehicleAxleLoad,
+      vehicleLength: vehicleInfo.length,
+      vehicleWidth: vehicleInfo.width,
+      vehicleEmissionClass: vehicleInfo.emissionClass,
+    });
+
+    if (vehicleInfo.fuelTypes) {
+      this.vehicleFuelTypesControl.clear();
+      vehicleInfo.fuelTypes.forEach((fuelType) => {
+        this.vehicleFuelTypesControl.push(new FormControl(fuelType, { nonNullable: true }));
+      });
+    }
+
+    if (this.licensePlate) {
+      this.vehicleLoadControl.setValidators([Validators.required, Validators.max(vehicleLoad)]);
+      this.vehicleAxleLoadControl.setValidators([Validators.required, Validators.max(vehicleAxleLoad)]);
+      this.vehicleInfo.set(vehicleInfo);
+    } else {
+      this.vehicleLoadControl.setValidators([Validators.required, Validators.max(maxDummyVehicleTotalWeight)]);
+      this.vehicleTotalWeightControl.setValidators([Validators.required, Validators.max(maxDummyVehicleTotalWeight)]);
+      this.vehicleAxleLoadControl.setValidators([Validators.required, Validators.max(maxDummyAxleWeight)]);
+      this.vehicleInfo.set({ ...vehicleInfo, maxAxleWeight: maxDummyAxleWeight });
+    }
   }
 
   private createForm() {

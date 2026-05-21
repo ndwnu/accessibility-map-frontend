@@ -1,28 +1,21 @@
-/* eslint-disable max-lines */
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, DestroyRef, effect, inject, OnInit, output, signal, TemplateRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, Validators } from '@angular/forms';
 import { environment } from '@env/environment';
-import {
-  defaultMaxCombinedWeight,
-  maxDummyAxleWeight,
-  maxDummyVehicleTotalWeight,
-  StepOneComponent,
-  StepThreeComponent,
-  StepTwoComponent,
-} from '@modules/data-input';
+import { StepOneComponent, StepThreeComponent, StepTwoComponent } from '@modules/data-input';
 import { DataInputService } from '@modules/data-input/services/data-input.service';
+import { DeepLinkService } from '@modules/data-input/services/deep-link.service';
 import { mapToNlsVehicleType } from '@modules/map/models';
 import { ModalService as DesignSystemModalService, ToastService } from '@ndwnu/design-system';
 import { DisclaimerCardComponent } from '@shared/components/disclaimer-card';
-import { AccessibilityFilter, exampleVehicleInfoList, VehicleInfo } from '@shared/models';
+import { LoadingCardComponent } from '@shared/components/loading-card';
+import { AccessibilityFilter, exampleVehicleInfoList } from '@shared/models';
 import {
-  AccessibilityFilterService,
   AccessibilityDataService,
+  AccessibilityFilterService,
+  AccessibilityModalService,
   MapService,
   ModalEnum,
-  AccessibilityModalService,
   MunicipalityService,
   PdokLookupService,
 } from '@shared/services';
@@ -32,7 +25,7 @@ import { map } from 'rxjs';
 
 @Component({
   selector: 'ber-user-vehicle-form',
-  imports: [DisclaimerCardComponent, StepOneComponent, StepThreeComponent, StepTwoComponent],
+  imports: [DisclaimerCardComponent, LoadingCardComponent, StepOneComponent, StepThreeComponent, StepTwoComponent],
   templateUrl: './user-vehicle-form.component.html',
 })
 export class UserVehicleFormComponent implements OnInit {
@@ -40,8 +33,8 @@ export class UserVehicleFormComponent implements OnInit {
   stepTwoRef = viewChild.required<TemplateRef<StepTwoComponent>>('stepTwo');
   stepThreeRef = viewChild.required<TemplateRef<StepThreeComponent>>('stepThree');
   disclaimerRef = viewChild.required<TemplateRef<DisclaimerCardComponent>>('disclaimer');
+  loadingRef = viewChild.required<TemplateRef<unknown>>('loadingModal');
 
-  vehicleInfo = signal<VehicleInfo | undefined>(undefined);
   loading = signal(false);
   modalClosed = output();
 
@@ -49,7 +42,8 @@ export class UserVehicleFormComponent implements OnInit {
   readonly #destroyRef = inject(DestroyRef);
   private readonly accessibilityFilterService = inject(AccessibilityFilterService);
   private readonly accessibilityDataService = inject(AccessibilityDataService);
-  private readonly dataInputService = inject(DataInputService);
+  protected readonly dataInputService = inject(DataInputService);
+  private readonly deepLinkService = inject(DeepLinkService);
   private readonly mapService = inject(MapService);
   private readonly modalService = inject(AccessibilityModalService);
   private readonly designSystemModalService = inject(DesignSystemModalService);
@@ -92,8 +86,20 @@ export class UserVehicleFormComponent implements OnInit {
       this.disclaimerAccepted = true;
     }
 
-    this.goToStep(1);
+    this.modalService.openLoading();
+
     this.listenToVehicleTypeChanges();
+
+    this.deepLinkService
+      .tryApplyDeepLink()
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((applied) => {
+        if (applied) {
+          this.goToMap();
+        } else {
+          this.goToStep(1);
+        }
+      });
   }
 
   closeModal() {
@@ -114,6 +120,7 @@ export class UserVehicleFormComponent implements OnInit {
         map(() => {
           this.accessibilityFilterService.setFilter(this.mapFormToFilterCriteria());
           this.zoomToDestination();
+          this.deepLinkService.writeToUrl();
         }),
         takeUntilDestroyed(this.#destroyRef),
       )
@@ -141,59 +148,6 @@ export class UserVehicleFormComponent implements OnInit {
     this.modalService.openStep(step);
   }
 
-  setVehicleInfo(vehicleInfo: VehicleInfo) {
-    this.stepOneForm?.get('vehicleType')?.setValue(vehicleInfo.type, { emitEvent: false });
-    const maxWeight = this.trailerControl.value
-      ? (vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight)
-      : vehicleInfo.maxWeight;
-
-    let vehicleLoad = maxWeight && vehicleInfo.weight ? Math.round(maxWeight - vehicleInfo.weight) : 0;
-    if (this.trailerControl.value) {
-      vehicleLoad += vehicleInfo.trailerWeight ?? 0;
-    }
-
-    const vehicleAxleLoad = vehicleInfo.maxAxleWeight ? vehicleInfo.maxAxleWeight : 0;
-    this.stepThreeForm?.patchValue({
-      vehicleCurbWeight: vehicleInfo.weight,
-      vehicleLoad,
-      vehicleTotalWeight: this.trailerControl.value
-        ? (vehicleInfo.combinedMaxWeight ?? defaultMaxCombinedWeight)
-        : vehicleInfo.maxWeight,
-      vehicleAxleLoad,
-      vehicleLength: vehicleInfo.length,
-      vehicleWidth: vehicleInfo.width,
-      vehicleEmissionClass: vehicleInfo.emissionClass,
-    });
-
-    const fuelTypeArray = this.stepThreeForm?.get('vehicleFuelTypes') as FormArray;
-    if (fuelTypeArray && vehicleInfo.fuelTypes) {
-      fuelTypeArray.clear();
-      vehicleInfo.fuelTypes.forEach((fuelType) => {
-        fuelTypeArray.push(new FormControl(fuelType));
-      });
-    }
-
-    if (this.licensePlate) {
-      this.stepThreeForm?.get('vehicleLoad')?.setValidators([Validators.required, Validators.max(vehicleLoad)]);
-      this.stepThreeForm?.get('vehicleAxleLoad')?.setValidators([Validators.required, Validators.max(vehicleAxleLoad)]);
-    } else {
-      vehicleInfo = {
-        ...vehicleInfo,
-        maxAxleWeight: 11500,
-      };
-      this.stepThreeForm
-        ?.get('vehicleLoad')
-        ?.setValidators([Validators.required, Validators.max(maxDummyVehicleTotalWeight)]);
-      this.stepThreeForm
-        ?.get('vehicleTotalWeight')
-        ?.setValidators([Validators.required, Validators.max(maxDummyVehicleTotalWeight)]);
-      this.stepThreeForm
-        ?.get('vehicleAxleLoad')
-        ?.setValidators([Validators.required, Validators.max(maxDummyAxleWeight)]);
-    }
-    this.vehicleInfo.set(vehicleInfo);
-  }
-
   private openModal(modal: ModalEnum | null) {
     // Close any existing modal first
     this.currentModalRef?.close();
@@ -217,6 +171,9 @@ export class UserVehicleFormComponent implements OnInit {
       case ModalEnum.Disclaimer:
         contentRef = this.disclaimerRef();
         break;
+      case ModalEnum.Loading:
+        contentRef = this.loadingRef();
+        break;
     }
 
     this.currentModalRef = this.designSystemModalService.open(contentRef, { disableClose: true });
@@ -227,21 +184,20 @@ export class UserVehicleFormComponent implements OnInit {
       if (vehicleType) {
         this.stepOneForm?.get('licensePlate')?.setValue(null);
         const vehicleInfo = exampleVehicleInfoList.find((info) => info.type === vehicleType)!;
-        this.setVehicleInfo(vehicleInfo);
+        this.dataInputService.setVehicleInfo(vehicleInfo);
         this.stepOneForm.get('height')?.setValue(vehicleInfo.height);
       }
     });
   }
 
   private mapFormToFilterCriteria(): AccessibilityFilter {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { stepOne, stepTwo, stepThree } = this.form.getRawValue();
     const pdokLookup = this.#pdokLookupService.pdokLookup();
-    const municipalityId = pdokLookup?.gemeentecode;
+    const pdokMunicipalityId = pdokLookup?.gemeentecode ? `GM${pdokLookup.gemeentecode}` : undefined;
     const isStreet = pdokLookup?.type !== 'gemeente';
     const centerPoint = isStreet ? this.#pdokLookupService.centerPoint() : undefined;
     return {
-      municipalityId: municipalityId ? `GM${municipalityId}` : '',
+      municipalityId: pdokMunicipalityId ?? stepTwo.municipalityId ?? '',
       vehicleType: mapToNlsVehicleType(stepOne.vehicleType!),
       vehicleLength: stepThree.vehicleLength!,
       vehicleWidth: stepThree.vehicleWidth!,

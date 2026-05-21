@@ -5,6 +5,7 @@ export enum ModalEnum {
   Step2 = 'step2',
   Step3 = 'step3',
   Disclaimer = 'disclaimer',
+  Loading = 'loading',
 }
 
 const STEP_TO_MODAL: Record<number, ModalEnum> = {
@@ -18,6 +19,7 @@ const MODAL_TO_STEP: Record<ModalEnum, number> = {
   [ModalEnum.Step2]: 2,
   [ModalEnum.Step3]: 3,
   [ModalEnum.Disclaimer]: 0,
+  [ModalEnum.Loading]: 0,
 };
 
 @Injectable({
@@ -67,5 +69,9 @@ export class AccessibilityModalService {
 
   openDisclaimer(): void {
     this.open(ModalEnum.Disclaimer);
+  }
+
+  openLoading(): void {
+    this.open(ModalEnum.Loading);
   }
 }
